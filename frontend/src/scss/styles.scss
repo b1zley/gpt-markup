@@ -1,0 +1,10 @@
+// import modified bootstrap sass variables
+@import './variables';
+
+
+
+//import debug - hide when viewing, use for debugging css
+// @import './debug.css';
+
+// import bootstrap
+@import "bootstrap/scss/bootstrap";

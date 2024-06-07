@@ -1,0 +1,42 @@
+
+// colour themeing
+$dark: #151a1e;
+$primary: #00929f;
+$danger: #fa7035;
+$light: #e3e3e3;
+$secondary: #333333;
+$info:  #ffca40;
+$warning: #FF0000;
+
+
+
+$dropdown-min-width: 1px;
+
+
+// $btn-color: red;
+
+$grid-breakpoints: (
+  xs: 0,
+  sm: 400px,
+  md: 600px,
+//   completely inexplicably, lg works without
+//   weird div centering on y axis bug on nav bar
+// a win is a win, works, not messing with it further
+
+// note: after some thinking, this isnt actually inexplicable!
+// i was using md as the screenwidth breakpoint before, which meant moving from the xxl to the md breakpoint
+// would cross 4 breakpoint values
+
+// crossing the final lg breakpoint value caused an @media trigger to change the div height
+
+// this is EXTRAORDINARILY difficult to override, this is a value buried DEEP in bootstrap's sass variables
+// so rather than fixing this problem directly, we sidestep it, by moving the lg breakpoint to the desired value
+
+// if modifying - check dependencies - footer carries out javascript powered reordering below lg breakpoint
+// 790px at time of writing, modify this comment if further changes are made
+  lg: 790px,
+  xl: 1200px,
+  xxl: 1400px
+);
+
+
