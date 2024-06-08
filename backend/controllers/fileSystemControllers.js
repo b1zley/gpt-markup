@@ -26,6 +26,8 @@ async function uploadFile(req, res) {
         const file_system_id = await handleUpload(uploadType, tempFilePath)
         return res.status(201).json(file_system_id)
     } catch (err) {
+        console.log('heelo from error')
+        console.log(err)
         return res.status(500)
     }
 }

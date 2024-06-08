@@ -4,10 +4,12 @@ const path = require('path') // file and directory paths
 const fs = require('fs') // used to delete and read files
 const unzipper = require('unzipper') // used to unzip zip files
 const { db, PORT, axios } = require('./routesCommonDependencies')
+const cors = require('cors')
 
 const app = express()
 const upload = multer({ dest: 'uploads/' }); // destination directory...
 app.use(express.json())
+app.use(cors())
 
 app.get('/test', async (req, res) => {
     // get from student
