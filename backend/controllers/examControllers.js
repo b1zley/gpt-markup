@@ -7,7 +7,8 @@ const { db, axios, backendRoot, storageDirectory } = require('../routesCommonDep
  * @param {*} res 
  */
 async function createNewExam(req, res) {
-    const module_id = req.body.module_id
+    console.log(req.params)
+    const module_id = req.params.module_id
     const exam_name = req.body.exam_name
 
     if (!module_id || !exam_name) {
@@ -98,10 +99,29 @@ async function getAllExamIds(req, res) {
     }
 }
 
+async function getExamsByModule(req, res) {
+
+    try {
+        const module_id = req.params.module_id
+        return res.status(200).json(await handleQueryExamsByModuleId(module_id))
+    } catch (err) {
+        return res.status(500).send()
+    }
+}
+
+async function handleQueryExamsByModuleId(moduleId) {
+    const sqlQuery = 'SELECT * FROM module INNER JOIN exam ON module.module_id = exam.module_id WHERE exam.module_id = ?'
+    const bindingParams = [moduleId]
+    const [responseFromModuleIdSearch] = await db.query(sqlQuery, bindingParams)
+    return responseFromModuleIdSearch
+}
+
+
 
 module.exports = {
     createNewExam,
     updateExam,
     getExamById,
-    getAllExamIds
+    getAllExamIds,
+    getExamsByModule
 }

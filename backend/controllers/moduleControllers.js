@@ -22,13 +22,15 @@ async function getModuleDataByModuleId(req, res) {
     }
 }
 
-async function getExamsByModule(req, res) {
-    try {
-        const sqlQuery = 'SELECT * FROM module INNER JOIN exam ON module.module_id = exam.module_id WHERE exam.module_id = ?'
-        const bindingParams = [req.params.module_id]
-        const [responseFromModuleIdSearch] = await db.query(sqlQuery, bindingParams)
-        return res.status(200).json(responseFromModuleIdSearch)
-    } catch (err) {
+
+
+async function createNewModule(req,res){
+    try{
+        const module_name = req.body.module_name
+        const sqlQuery = "INSERT INTO `module` (`module_id`, `module_name`) VALUES (NULL, ?);"
+        const [responseFromInsertModule] = await db.query(sqlQuery, [module_name])
+        return res.status(201).json({module_id : responseFromInsertModule.insertId})
+    } catch (err){
         return res.status(500).send()
     }
 }
@@ -36,5 +38,5 @@ async function getExamsByModule(req, res) {
 module.exports = {
     getAllModuleIds,
     getModuleDataByModuleId,
-    getExamsByModule
+    createNewModule
 }
