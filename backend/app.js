@@ -22,6 +22,11 @@ app.get('/test', async (req, res) => {
 const fileSystemRoutes = require('./routes/fileSystemRoutes')
 app.use('/file_system', fileSystemRoutes)
 
+const examRoutes = require('./routes/examRoutes')
+app.use('/exam', examRoutes)
+
+const moduleRoutes = require('./routes/moduleRoutes')
+app.use('/module', moduleRoutes)
 
 // create exam submission routes
 

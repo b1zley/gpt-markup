@@ -1,6 +1,6 @@
 
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import {useState} from 'react'
+import {useState, useEffect} from 'react'
 
 // components
 import SharedNavBar from './components/shared/SharedNavBar';
@@ -15,6 +15,10 @@ const App = () => {
 
 
   const [responseFromUpload, setResponseFromUpload] = useState(null)
+
+  useEffect(() => {
+    console.log('Value of responseFromUpload:', responseFromUpload);
+  });
 
   return (
     <Router>
