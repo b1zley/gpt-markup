@@ -36,8 +36,8 @@ function SharedNavBar({ logoImageSrc = logoImage, brandName = 'MarkUp-GPT' }) {
             <LinkContainer to='/about'>
               <Nav.Link className='mx-2 '>About</Nav.Link>
             </LinkContainer>
-            <LinkContainer to='/upload'>
-              <Nav.Link className='mx-2 '>Upload</Nav.Link>
+            <LinkContainer to='/create_exam'>
+              <Nav.Link className='mx-2 '>Create Exam</Nav.Link>
             </LinkContainer>
           </Nav>
 

@@ -25,7 +25,7 @@ app.use('/file_system', fileSystemRoutes)
 const moduleRoutes = require('./routes/moduleRoutes')
 app.use('/module', moduleRoutes)
 
-// create exam submission routes
+
 
 // const examSubmissionRoutes;
 

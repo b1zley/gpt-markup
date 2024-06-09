@@ -24,13 +24,31 @@ async function getModuleDataByModuleId(req, res) {
 
 
 
-async function createNewModule(req,res){
-    try{
+async function createNewModule(req, res) {
+    try {
         const module_name = req.body.module_name
         const sqlQuery = "INSERT INTO `module` (`module_id`, `module_name`) VALUES (NULL, ?);"
         const [responseFromInsertModule] = await db.query(sqlQuery, [module_name])
-        return res.status(201).json({module_id : responseFromInsertModule.insertId})
-    } catch (err){
+        return res.status(201).json({ module_id: responseFromInsertModule.insertId })
+    } catch (err) {
+        return res.status(500).send()
+    }
+}
+
+
+async function getModulesBySuperUserId(req, res) {
+    try {
+        const module_id = req.params.module_id
+        const super_user_id = req.params.super_user_id
+        let sqlSearchAndJoin = "SELECT * FROM module INNER JOIN module_super_user ON module.module_id = module_super_user.module_id WHERE super_user_id = ? "
+        let bindingParams = [super_user_id]
+        if(module_id != '*'){
+            sqlSearchAndJoin += 'AND module_id = ?'
+            bindingParams.push(module_id)
+        }
+        const [responseFromSearchByModuleIdAndSuperUserId] = await db.query(sqlSearchAndJoin, bindingParams)
+        return res.status(200).json(responseFromSearchByModuleIdAndSuperUserId)
+    } catch (err) {
         return res.status(500).send()
     }
 }
@@ -38,5 +56,6 @@ async function createNewModule(req,res){
 module.exports = {
     getAllModuleIds,
     getModuleDataByModuleId,
-    createNewModule
+    createNewModule,
+    getModulesBySuperUserId
 }

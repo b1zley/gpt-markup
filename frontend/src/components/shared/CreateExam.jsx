@@ -12,14 +12,17 @@ const CreateExam = ({ loggedInSuperUser, createdExam }) => {
 
     const [selectedExamName, setSelectedExamName] = useState(null)
 
+    const [createdExamText, setCreatedExamText] = useState(null)
+
+    const fetchAndSetAccessibleModules = async (super_user_id) => {
+        const responseFromGetModulesBySuperUserId =  await axios.get(`${BASE_API_URL}module/*/super_user_id/${super_user_id}`)
+        setAccessibleModules(responseFromGetModulesBySuperUserId.data)
+    }
     
 
-    // simulate get request for now...
-    const firstModule = { module_name: 'First Module', module_id: 1 };
-    const secondModule = { module_name: 'Second Module', module_id: 2 };
 
     useEffect(() => {
-        setAccessibleModules([firstModule, secondModule]);
+        fetchAndSetAccessibleModules(loggedInSuperUser.super_user_id)
     }, []);
 
     const handleSelectModule = (eventKey) => {
@@ -36,20 +39,23 @@ const CreateExam = ({ loggedInSuperUser, createdExam }) => {
     }
 
 
-    const handleExamCreationSubmit = async (event) =>{
+    const handleExamCreationSubmit = async (event) => {
+        
         event.preventDefault()
         // build json object
         const moduleId = selectedModuleId
         const examCreationObject = {
-            "exam_name":selectedExamName
+            "exam_name": selectedExamName
         }
         const url = `${BASE_API_URL}module/${moduleId}/exam`
-        console.log(url)
+        const responseFromExamPost = await axios.post(url, examCreationObject)
 
+        if(responseFromExamPost.status === 201){
+            setCreatedExamText(`You created ${selectedExamName}`)
+        } else{
+            setCreatedExamText(`Failed to create ${selectedExamName}`)
+        }
 
-        const responseFromExamPost = await axios.post(url,examCreationObject)
-        console.log(responseFromExamPost)
-        
 
     }
 
@@ -59,7 +65,7 @@ const CreateExam = ({ loggedInSuperUser, createdExam }) => {
                 {/* handle module id */}
                 <Form.Group controlId="formDropdown">
                     <Form.Label>Select a module</Form.Label>
-                    <Dropdown  onSelect={handleSelectModule}>
+                    <Dropdown onSelect={handleSelectModule}>
                         <Dropdown.Toggle variant="success" id="dropdown-basic">
                             {selectedModuleName ? selectedModuleName : 'Select a module'}
                         </Dropdown.Toggle>
@@ -82,6 +88,7 @@ const CreateExam = ({ loggedInSuperUser, createdExam }) => {
                 <Button type='submit'>
                     Create Exam
                 </Button>
+                {createdExamText ? <div>{createdExamText}</div> : null}
             </Form>
         </Container>
     );
