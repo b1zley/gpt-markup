@@ -3,6 +3,7 @@ import { useState } from 'react'
 import axios from 'axios'
 import Button from 'react-bootstrap/Button'
 import Form from 'react-bootstrap/Form'
+import BASE_API_URL from "../../BASE_API_URL"
 
 /**
  * 
@@ -41,6 +42,7 @@ function UploadExamInfo({ submissionType, setResponseReturn }) {
 
     }
 
+    
 
     const handleSubmit = async (e) => {
         e.preventDefault()
@@ -51,7 +53,7 @@ function UploadExamInfo({ submissionType, setResponseReturn }) {
             formData.append('uploadType', submissionType)
 
             const postOptions = { headers: { 'Content-Type': 'multipart/form-data' } }
-            const responseFromPost = await axios.post('http://localhost:4000/file_system/upload', formData, postOptions)
+            const responseFromPost = await axios.post(`${BASE_API_URL}file_system/upload`, formData, postOptions)
             setResponseReturn(responseFromPost)
             console.log(file)
 
