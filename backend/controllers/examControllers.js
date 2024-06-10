@@ -117,11 +117,29 @@ async function handleQueryExamsByModuleId(moduleId) {
 }
 
 
+async function deleteExamController(req, res){
+    try{
+        deleteExam(req.params.exam_id)
+        return res.status(204).send() 
+    } catch(err){
+        return res.status(500).send()
+    }
+}
+
+async function deleteExam(exam_id){
+    const deleteSql = 'DELETE FROM exam WHERE `exam`.`exam_id` = ?'
+    const bindingParams = [exam_id]
+    const [responseFromDeleteExam] = await db.query(deleteSql, bindingParams)
+    return true
+}
+
+
 
 module.exports = {
     createNewExam,
     updateExam,
     getExamById,
     getAllExamIds,
-    getExamsByModule
+    getExamsByModule,
+    deleteExamController
 }

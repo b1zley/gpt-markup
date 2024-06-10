@@ -10,6 +10,9 @@ router.get('/:exam_id', examControllers.getExamById)
 router.get('/', examControllers.getExamsByModule)
 
 
+router.delete('/:exam_id', examControllers.deleteExamController)
+
+
 
 
 module.exports = router

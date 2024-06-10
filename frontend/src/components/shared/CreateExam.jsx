@@ -63,7 +63,7 @@ const CreateExam = ({ loggedInSuperUser, createdExam }) => {
         <Container>
             <Form onSubmit={handleExamCreationSubmit}>
                 {/* handle module id */}
-                <Form.Group controlId="formDropdown">
+                <Form.Group controlId="formDropdown" className='my-1'>
                     <Form.Label>Select a module</Form.Label>
                     <Dropdown onSelect={handleSelectModule}>
                         <Dropdown.Toggle variant="success" id="dropdown-basic">
@@ -81,11 +81,11 @@ const CreateExam = ({ loggedInSuperUser, createdExam }) => {
                 </Form.Group>
 
                 {/* handle exam name */}
-                <Form.Group>
+                <Form.Group className='my-1'>
                     <Form.Label>Exam Name</Form.Label>
                     <Form.Control type="text" placeholder="Enter exam name" onChange={handleExamNameChange} />
                 </Form.Group>
-                <Button type='submit'>
+                <Button type='submit' className='my-1'>
                     Create Exam
                 </Button>
                 {createdExamText ? <div>{createdExamText}</div> : null}
