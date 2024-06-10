@@ -1,3 +1,4 @@
+const { response } = require('express');
 const { db, axios, backendRoot, storageDirectory } = require('../routesCommonDependencies'); // Common dependencies
 
 
@@ -73,7 +74,7 @@ async function updateExam(req, res) {
  */
 async function getExamById(req, res) {
     try {
-        const sqlQuery = 'SELECT * FROM exam WHERE exam_id = ?'
+        const sqlQuery = 'SELECT * FROM exam INNER JOIN module ON exam.module_id = module.module_id LEFT JOIN trained_model ON exam.chosen_ai_model_id = trained_model.trained_model_id WHERE exam_id = ?'
         const exam_id = req.params.exam_id
         const [responseFromSqlQuery] = await db.query(sqlQuery, [exam_id])
         return res.status(200).json(responseFromSqlQuery[0])

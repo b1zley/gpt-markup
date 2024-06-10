@@ -11,6 +11,7 @@ import Home from './components/pages/Home';
 import AboutRouter from './routers/AboutRouter';
 import CreateExam from './components/shared/CreateExam';
 import ModuleView from './components/pages/Module/ModuleView'
+import ModuleRouter from './routers/ModuleRouter';
 
 const App = () => {
   return (
@@ -22,7 +23,7 @@ const App = () => {
           <Route exact path="/" element={<Home />} />
           <Route path="/about/*" element={<AboutRouter />} />
           <Route path='/create_exam' element={<CreateExam loggedInSuperUser={{"super_user_id":1}}/>} />
-          <Route path='/module/:module_id' element={<ModuleView loggedInSuperuser={{"super_user_id":1}}/>} />
+          <Route path='/module/*' element={<ModuleRouter />}  />
         </Routes>
       </div>
       <SharedFooter />

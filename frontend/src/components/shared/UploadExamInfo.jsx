@@ -1,5 +1,5 @@
 import { Container } from "react-bootstrap"
-import { useState } from 'react'
+import { useState, Fragment } from 'react'
 import axios from 'axios'
 import Button from 'react-bootstrap/Button'
 import Form from 'react-bootstrap/Form'
@@ -11,7 +11,7 @@ import BASE_API_URL from "../../BASE_API_URL"
  * @param {*} setResponseReturn - useState function to adjust response return externally - ie in parent component
  * @returns
  */
-function UploadExamInfo({ submissionType, setResponseReturn }) {
+function UploadExamInfo({ submissionType, handleExamUpload }) {
     //chosen file
     const [file, setFile] = useState(null)
     const [uploadedFile, setUploadedFile] = useState(null)
@@ -32,6 +32,9 @@ function UploadExamInfo({ submissionType, setResponseReturn }) {
         case 'TRAINING_EXAM':
             submissionTypeUserText = 'Training Exam'
             break;
+        case 'EXAM_MODEL_ANSWER':
+            submissionTypeUserText = 'Exam Model Answer'
+            break;
 
         default:
             return (
@@ -42,7 +45,7 @@ function UploadExamInfo({ submissionType, setResponseReturn }) {
 
     }
 
-    
+
 
     const handleSubmit = async (e) => {
         e.preventDefault()
@@ -54,47 +57,61 @@ function UploadExamInfo({ submissionType, setResponseReturn }) {
 
             const postOptions = { headers: { 'Content-Type': 'multipart/form-data' } }
             const responseFromPost = await axios.post(`${BASE_API_URL}file_system/upload`, formData, postOptions)
-            setResponseReturn(responseFromPost)
-            console.log(file)
+            handleExamUpload(responseFromPost)
 
 
             if (responseFromPost.status === 201) {
-                console.log('upload successful')
                 setUploadedFile(file)
 
             } else {
                 console.log('upload unsuccessful')
             }
 
+        } else {
+            window.alert('Please upload a zip file')
         }
     }
 
     const handleFileChange = (e) => {
-        setFile(e.target.files[0])
+        console.log('hello from file change')
+        const selectedFile = e.target.files[0];
+        if (selectedFile) {
+            console.log('hello from file change again')
+            if (selectedFile.type === 'application/zip' || selectedFile.name.endsWith('.zip')) {
+                setFile(selectedFile);
+            } else {
+                setFile(null);
+                window.alert('Please upload a zip file')
+            }
+        }
     }
 
     return (
 
-        <Container>
+
+        <div>
             <Form onSubmit={handleSubmit} >
                 <Form.Group className="mb-3">
-                    <Form.Label>
-                        Upload {submissionTypeUserText}
-                    </Form.Label>
                     <Form.Control
                         type="file"
                         name="file"
                         onChange={handleFileChange}
                     />
                 </Form.Group>
-                <Button variant="primary" type="submit">
-                    {uploadedFile ? <> Overwrite</> : <>Upload</>}
-                </Button>
 
+                {file ?
+                    <Button variant="primary" type="submit">
+                        Upload
+                    </Button> :
+                    <Button disabled variant="primary" type="submit">
+                        Upload
+                    </Button>
+                }
             </Form>
             {uploadedFile ? <div> File uploaded: {uploadedFile.name}</div>
-                : null}
-        </Container>
+                : <div> File uploaded: None New</div>}
+        </div>
+
     )
 
 }

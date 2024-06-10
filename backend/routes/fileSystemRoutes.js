@@ -20,4 +20,7 @@ router.post('/upload', upload.single('file'), fileSystemController.uploadFile);
  */
 router.get('/:file_system_id', fileSystemController.getFilePathsById)
 
+
+router.get('/download_zip/:download_type/:file_system_id', fileSystemController.downloadFileZipById)
+
 module.exports = router;

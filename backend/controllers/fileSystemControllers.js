@@ -16,7 +16,7 @@ async function getFilePathsById(req, res) {
 
 async function uploadFile(req, res) {
     const uploadType = req.body.uploadType
-
+    console.log('hello from upload file')
     if (!req.file) {
         return res.status(400).send('No file uploaded');
     }
@@ -57,6 +57,10 @@ async function handleUpload(uploadType, tempFilePath) {
 
         case 'TRAINING_EXAM':
             uploadSubDirectory = 'TRAINING_EXAM'
+            break;
+
+        case 'EXAM_MODEL_ANSWER':
+            uploadSubDirectory = 'EXAM_MODEL_ANSWER'
             break;
 
         default:
@@ -122,10 +126,22 @@ async function processFile(filePath, parentExtractPath, insertId) {
 
 }
 
+async function downloadFileZipById(req, res) {
+    try {
+        const downloadType = req.params.download_type
+        const file_system_id = req.params.file_system_id
 
+        const fileToDownloadPath = `/${downloadType}/zips/${file_system_id}`
+        const file = path.join(storageDirectory, fileToDownloadPath)
+        return res.status(200).download(file)
+    } catch (err) {
+        return res.status(500).send()
+    }
+}
 
 
 module.exports = {
     getFilePathsById,
-    uploadFile
+    uploadFile,
+    downloadFileZipById
 }
