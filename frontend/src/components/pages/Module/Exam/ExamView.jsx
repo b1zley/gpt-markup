@@ -8,10 +8,11 @@ import Container from "react-bootstrap/Container";
 import Accordion from "react-bootstrap/Accordion";
 import Button from 'react-bootstrap/Button'
 import LoadingSpinner from "../../../shared/LoadingSpinner";
-import EditableExamAccordion from "./EditableExamAccordion";
+import EditableExamAccordion from "./dependent components/EditableExamAccordion";
 import UploadExamInfo from "../../../shared/UploadExamInfo";
 import DownloadButton from "../../../shared/DownloadButton";
-import EditAiModelAccordion from "./EditAIModelAccordion";
+import EditAiModelAccordion from "./dependent components/EditAIModelAccordion";
+import EditAssignedMarkersAccordion from "./dependent components/EditAssignedMarkersAccordion";
 
 const ExamView = () => {
     let { module_id, exam_id } = useParams();
@@ -62,7 +63,7 @@ const ExamView = () => {
 
 
                 setFetchStatus('complete');
-                
+
             } catch (error) {
                 console.error("Error fetching exam information:", error);
                 setFetchStatus('error');
@@ -87,7 +88,6 @@ const ExamView = () => {
 
                 <h3>Module Name: <Link to={`/module/${module_id}`}>{examInformation.module_name}</Link> </h3>
                 <h4>Exam: {examInformation.exam_name}</h4>
-
                 <EditableExamAccordion
                     examInformation={examInformation}
                     setExamInformation={setExamInformation}
@@ -134,14 +134,16 @@ const ExamView = () => {
                         </Accordion.Body>
                     </Accordion.Item>
                 </Accordion>
-                
-                <EditAiModelAccordion 
+
+                <EditAiModelAccordion
                     setExamInformation={setExamInformation}
                     examInformation={examInformation}
-                    
+                />
+                <EditAssignedMarkersAccordion
+                lastDisplayed={true}
+                examInformation={examInformation}
                 />
 
-                
 
             </div>
         </Container>
