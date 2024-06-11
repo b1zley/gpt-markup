@@ -19,7 +19,6 @@ const ExamView = () => {
     const [examInformation, setExamInformation] = useState(null);
     const [fetchStatus, setFetchStatus] = useState('pending');
 
-    const [aIModelsToChoose, setAiModelsToChoose] = useState([])
 
 
 
@@ -59,10 +58,9 @@ const ExamView = () => {
                 const apiFetchUrl = `${BASE_API_URL}module/${module_id}/exam/${exam_id}`;
                 const responseFromGet = await axios.get(apiFetchUrl);
                 setExamInformation(responseFromGet.data);
-                console.log(responseFromGet.data)
 
-                // fetch ai model information from api
-                
+
+
                 setFetchStatus('complete');
                 
             } catch (error) {
@@ -138,11 +136,12 @@ const ExamView = () => {
                 </Accordion>
                 
                 <EditAiModelAccordion 
-                    aIModelName={examInformation.model_name}
                     setExamInformation={setExamInformation}
                     examInformation={examInformation}
                     
                 />
+
+                
 
             </div>
         </Container>

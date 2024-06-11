@@ -60,7 +60,7 @@ async function updateExam(req, res) {
     const [responseFromUpdate] = await db.query(sqlUpdateQuery, updateBindingParams)
 
     if (responseFromUpdate.affectedRows === 1) {
-        return res.status(200).send()
+        return await getExamById(req, res)
     } else {
         return res.status(500).send()
     }

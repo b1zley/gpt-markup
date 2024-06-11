@@ -25,6 +25,9 @@ app.use('/file_system', fileSystemRoutes)
 const moduleRoutes = require('./routes/moduleRoutes')
 app.use('/module', moduleRoutes)
 
+const aiModelRoutes = require('./routes/aiModelRoutes')
+app.use('/ai_model', aiModelRoutes)
+
 
 
 // const examSubmissionRoutes;
