@@ -42,10 +42,15 @@ const EditAssignedMarkersAccordion = ({ lastDisplayed, examInformation }) => {
         handleFetch()
     }, [examInformation])
 
-    async function handleRemoveAccessFromMarker(superUserId){
-        console.log(superUserId)
-        const apiRemoveEngagedSuperUserURL = `/modules/:module_id/exam/:exam_id/super_users/:super_user_id`
-        console.log(apiRemoveEngagedSuperUserURL)
+    async function handleRemoveAccessFromMarker(superUserId, indexToRemove){
+        const apiRemoveEngagedSuperUserURL = `${BASE_API_URL}module/${examInformation.module_id}/exam/${examInformation.exam_id}/super_user/${superUserId}`
+        const deleteRequestResponse = await axios.delete(apiRemoveEngagedSuperUserURL)
+        if(deleteRequestResponse.status === 204){
+            let newSuperUserArray = engagedSuperUsers.slice(0, indexToRemove).concat(engagedSuperUsers.slice(indexToRemove + 1))
+            setEngagedSuperUsers(newSuperUserArray)
+        } else{
+            window.alert('Deletion failed!')
+        }
     }
 
     // handle loading...
@@ -68,16 +73,16 @@ const EditAssignedMarkersAccordion = ({ lastDisplayed, examInformation }) => {
                 <Accordion.Header>Engaged SuperUsers</Accordion.Header>
                 <Accordion.Body>
                     <ListGroup>
-                        {engagedSuperUsers.map((superUser) =>
+                        {engagedSuperUsers.map((superUser, i) =>
                             <ListGroup.Item key={superUser.super_user_id}>
                                 <Row>
-                                    <Col xs={9}>
+                                    <Col xs={5} sm={6} md={8} lg={9}>
                                         {superUser.super_user_name}
                                     </Col>
                                     {superUser.super_user_type_id === 2 ?
-                                        <Col xs={3}>
+                                        <Col xs={7} sm={6} md={4} lg={3}>
                                             <Button
-                                                onClick={()=> {handleRemoveAccessFromMarker(superUser.super_user_id)}}
+                                                onClick={()=> {handleRemoveAccessFromMarker(superUser.super_user_id, i)}}
                                                 variant='warning'
                                                 style={{
                                                     height: '25px',
