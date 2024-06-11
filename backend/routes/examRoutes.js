@@ -13,6 +13,13 @@ router.get('/', examControllers.getExamsByModule)
 router.delete('/:exam_id', examControllers.deleteExamController)
 
 
+// remove access of super user (in practice, always a marker) to exam
+router.delete('/:exam_id/super_user/:super_user_id', examControllers.requestHandlerDeleteSuperUserInExam )
+
+// add access of super user (in practice, always a marker) to exam
+router.post('/:exam_id/super_user', examControllers.requestHandlerPostSuperUserInExam)
+
+
 
 
 module.exports = router

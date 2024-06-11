@@ -118,22 +118,45 @@ async function handleQueryExamsByModuleId(moduleId) {
 }
 
 
-async function deleteExamController(req, res){
-    try{
+async function deleteExamController(req, res) {
+    try {
         deleteExam(req.params.exam_id)
-        return res.status(204).send() 
-    } catch(err){
+        return res.status(204).send()
+    } catch (err) {
         return res.status(500).send()
     }
 }
 
-async function deleteExam(exam_id){
+async function deleteExam(exam_id) {
     const deleteSql = 'DELETE FROM exam WHERE `exam`.`exam_id` = ?'
     const bindingParams = [exam_id]
     const [responseFromDeleteExam] = await db.query(deleteSql, bindingParams)
     return true
 }
 
+async function requestHandlerDeleteSuperUserInExam(req, res) {
+    try {
+        console.log('hello from del req handler')
+        const super_user_id = req.params.super_user_id
+        const module_id = req.params.module_id
+        const exam_id = req.params.exam_id
+        await queryDeleteExamSuperUser(super_user_id, exam_id)
+        return res.status(204).send()
+    } catch (err) {
+        return res.status(500).send()
+    }
+}
+
+async function queryDeleteExamSuperUser(super_user_id, exam_id) {
+    const sqlQuery = 'DELETE FROM exam_super_user WHERE exam_id = ? AND super_user_id = ?'
+    const bindingParams = [exam_id, super_user_id]
+    const [responseFromDeleteQuery] = await db.query(sqlQuery, bindingParams)
+    return true
+}
+
+async function requestHandlerPostSuperUserInExam(req, res) {
+
+}
 
 
 module.exports = {
@@ -142,5 +165,7 @@ module.exports = {
     getExamById,
     getAllExamIds,
     getExamsByModule,
-    deleteExamController
+    deleteExamController,
+    requestHandlerDeleteSuperUserInExam,
+    requestHandlerPostSuperUserInExam
 }

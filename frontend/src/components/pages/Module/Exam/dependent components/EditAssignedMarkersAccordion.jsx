@@ -7,6 +7,7 @@ import Button from 'react-bootstrap/Button'
 import axios from 'axios'
 import LoadingSpinner from '../../../../shared/LoadingSpinner'
 import { Col, Row } from 'react-bootstrap'
+import BASE_API_URL from '../../../../../BASE_API_URL'
 const EditAssignedMarkersAccordion = ({ lastDisplayed, examInformation }) => {
 
     // fetch assigned markers from api
@@ -30,7 +31,7 @@ const EditAssignedMarkersAccordion = ({ lastDisplayed, examInformation }) => {
 
     useEffect(() => {
         async function handleFetch() {
-            const apiGetEngagedSuperUsersURL = `http://localhost:4000/super_user/exam_search?module_id=${examInformation.module_id}&exam_id=${examInformation.exam_id}`
+            const apiGetEngagedSuperUsersURL = `${BASE_API_URL}super_user/exam_search?module_id=${examInformation.module_id}&exam_id=${examInformation.exam_id}`
             const engagedSuperUsersResponse = await axios.get(apiGetEngagedSuperUsersURL)
             let engagedSuperUsers = engagedSuperUsersResponse.data
             // sort engagedSuperUsers according to super_user_type_id
@@ -43,7 +44,8 @@ const EditAssignedMarkersAccordion = ({ lastDisplayed, examInformation }) => {
 
     async function handleRemoveAccessFromMarker(superUserId){
         console.log(superUserId)
-        
+        const apiRemoveEngagedSuperUserURL = `/modules/:module_id/exam/:exam_id/super_users/:super_user_id`
+        console.log(apiRemoveEngagedSuperUserURL)
     }
 
     // handle loading...
