@@ -53,7 +53,28 @@ async function getExamAccessSuperUsersByQueryParams(req, res) {
     }
 }
 
+
+async function requestHandlerGetSuperUserBySuperUserType(req, res){
+    try{
+        const super_user_type_id = req.params.super_user_type_id
+        const [superUserData] = await querySuperUserBySuperUserType(super_user_type_id)
+        return res.status(200).json(superUserData)
+    } catch(err){
+        return res.status(500).send()
+    }
+}
+
+async function querySuperUserBySuperUserType(super_user_type_id){
+    const sqlQuery = 'SELECT super_user_id, super_user_name, super_user.super_user_type_id, super_user_type_name, access_rights FROM super_user INNER JOIN super_user_type ON super_user.super_user_type_id = super_user_type.super_user_type_id WHERE super_user.super_user_type_id = ?'
+    const bindingParameters = [super_user_type_id]
+    const [responseFromSqlQuery] = await db.query(sqlQuery, bindingParameters)
+    return responseFromSqlQuery
+}
+
+
+
 module.exports = {
     getAllSuperUsers,
-    getExamAccessSuperUsersByQueryParams
+    getExamAccessSuperUsersByQueryParams,
+    requestHandlerGetSuperUserBySuperUserType
 }
