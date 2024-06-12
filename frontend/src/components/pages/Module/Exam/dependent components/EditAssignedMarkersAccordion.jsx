@@ -100,15 +100,11 @@ const EditAssignedMarkersAccordion = ({ lastDisplayed, examInformation }) => {
         newSuperUserArray.push(JSON.parse(selectedNewMarker))
         newSuperUserArray.sort((a, b) => sortSuperUsers(a, b))
         // api post request
-
         const requestBody = {
             super_user_id: JSON.parse(selectedNewMarker).super_user_id
         }
-
         const apiUrl = `${BASE_API_URL}module/${examInformation.module_id}/exam/${examInformation.exam_id}/super_user/`
-
         const responseFromPost = await axios.post(apiUrl, requestBody)
-
         if (responseFromPost.status === 201) {
             // handle in render
             setEngagedSuperUsers(newSuperUserArray)
@@ -116,8 +112,6 @@ const EditAssignedMarkersAccordion = ({ lastDisplayed, examInformation }) => {
         } else{
             window.alert('Failed to add marker')
         }
-
-
     }
 
 

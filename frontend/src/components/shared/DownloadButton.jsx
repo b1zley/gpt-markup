@@ -25,7 +25,6 @@ const DownloadButton = ({ loadCondition, downloadUrl, fileName, height, classNam
         }
     }
 
-    console.log('Load Condition:', loadCondition);
 
     if (loadCondition) {
         return (

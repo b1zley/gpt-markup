@@ -13,6 +13,7 @@ import UploadExamInfo from "../../../shared/UploadExamInfo";
 import DownloadButton from "../../../shared/DownloadButton";
 import EditAiModelAccordion from "./dependent components/EditAIModelAccordion";
 import EditAssignedMarkersAccordion from "./dependent components/EditAssignedMarkersAccordion";
+import StudentsInExamAccordion from "./dependent components/ExamSubmissionsAccordion";
 
 const ExamView = () => {
     let { module_id, exam_id } = useParams();
@@ -140,8 +141,12 @@ const ExamView = () => {
                     examInformation={examInformation}
                 />
                 <EditAssignedMarkersAccordion
-                lastDisplayed={true}
-                examInformation={examInformation}
+                    lastDisplayed={false}
+                    examInformation={examInformation}
+                />
+
+                <StudentsInExamAccordion
+                    lastDisplayed={true}
                 />
 
 
