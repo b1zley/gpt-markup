@@ -22,6 +22,17 @@ async function handleGetExamSubmissionEntryByExamId(req, res) {
     }
 }
 
+async function handleDeleteExamSubmissionEntryByStudentExamSubmissionId(req,res) {
+    try{
+        const student_exam_submission_id = req.params.student_exam_submission_id
+        await queryDeleteExamSubmissionByStudentExamSubmissionId(student_exam_submission_id)
+        return res.status(204).send()
+    }catch (err){
+        console.log(err)
+        return res.status(500).send()
+    }
+}
+
 // query functions
 async function queryCreateNewExamSubmission(exam_id, student_id) {
     const sqlQuery = "INSERT INTO `student_exam_submission` (`student_exam_submission_id`, `exam_id`, `student_id`, `exam_submission`, `marker_mark`, `marker_critique`, `file_system_id`, `ai_critique_id`) VALUES (NULL, ?, ?, NULL, NULL, NULL, NULL, NULL);"
@@ -38,7 +49,16 @@ async function queryGetExamSubmissionByExamId(exam_id) {
     return queryResponse
 }
 
+async function queryDeleteExamSubmissionByStudentExamSubmissionId(student_exam_submission_id){
+    console.log(student_exam_submission_id)
+    const sqlQuery = 'DELETE FROM student_exam_submission WHERE `student_exam_submission`.`student_exam_submission_id` = ?'
+    const bindingParams = [student_exam_submission_id]
+    const [responseFromDeleteQuery] = await db.query(sqlQuery, bindingParams)
+    return true
+}
+
 module.exports = {
     handlePostCreateNewExamSubmissionEntry,
-    handleGetExamSubmissionEntryByExamId
+    handleGetExamSubmissionEntryByExamId,
+    handleDeleteExamSubmissionEntryByStudentExamSubmissionId
 }

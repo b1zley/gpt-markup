@@ -147,6 +147,7 @@ const ExamView = () => {
 
                 <StudentsInExamAccordion
                     lastDisplayed={true}
+                    examInformation={examInformation}
                 />
 
 

@@ -10,4 +10,7 @@ router.post('/', studentExamSubmissionControllers.handlePostCreateNewExamSubmiss
  */
 router.get('/', studentExamSubmissionControllers.handleGetExamSubmissionEntryByExamId)
 
+
+
+router.delete('/:student_exam_submission_id', studentExamSubmissionControllers.handleDeleteExamSubmissionEntryByStudentExamSubmissionId)
 module.exports = router
