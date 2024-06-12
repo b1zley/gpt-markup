@@ -155,7 +155,21 @@ async function queryDeleteExamSuperUser(super_user_id, exam_id) {
 }
 
 async function requestHandlerPostSuperUserInExam(req, res) {
+    try {
+        const super_user_id = req.body.super_user_id
+        const exam_id = req.params.exam_id
+        await queryInsertExamSuperUser(super_user_id, exam_id)
+        return res.status(201).send()
+    } catch(err){
+        return res.status(500).send()
+    }
+}
 
+async function queryInsertExamSuperUser(super_user_id, exam_id) {
+    const sqlQuery = 'INSERT INTO exam_super_user (`exam_super_user_id`, `exam_id`, `super_user_id`) VALUES (NULL, ?, ?)'
+    const bindingParams = [exam_id, super_user_id]
+    const [responseFromInsert] = await db.query(sqlQuery, bindingParams)
+    return true
 }
 
 

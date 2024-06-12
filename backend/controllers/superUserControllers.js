@@ -67,7 +67,7 @@ async function requestHandlerGetSuperUserBySuperUserType(req, res){
 async function querySuperUserBySuperUserType(super_user_type_id){
     const sqlQuery = 'SELECT super_user_id, super_user_name, super_user.super_user_type_id, super_user_type_name, access_rights FROM super_user INNER JOIN super_user_type ON super_user.super_user_type_id = super_user_type.super_user_type_id WHERE super_user.super_user_type_id = ?'
     const bindingParameters = [super_user_type_id]
-    const [responseFromSqlQuery] = await db.query(sqlQuery, bindingParameters)
+    const responseFromSqlQuery = await db.query(sqlQuery, bindingParameters)
     return responseFromSqlQuery
 }
 

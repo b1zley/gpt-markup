@@ -15,6 +15,12 @@ const EditAssignedMarkersAccordion = ({ lastDisplayed, examInformation }) => {
     const [engagedSuperUsers, setEngagedSuperUsers] = useState([])
     const [dataFetched, setDataFetched] = useState(null)
 
+
+    const [allMarkers, setAllMarkers] = useState([])
+    const [markersToDisplay, setMarkersToDisplay] = useState([])
+
+    const [selectedNewMarker, setSelectedNewMarker] = useState(undefined)
+
     function sortSuperUsers(a, b) {
         const aTypeId = a.super_user_type_id
         const bTypeId = b.super_user_type_id
@@ -30,24 +36,51 @@ const EditAssignedMarkersAccordion = ({ lastDisplayed, examInformation }) => {
         return 0
     }
 
+    async function handleEngagedMarkersChange(engagedSuperUsersPassed, allMarkersPassed) {
+        // find markers in engaged superusers
+        const marker_type_id = 2
+        const markersEngaged = engagedSuperUsersPassed.filter((superUser) => superUser.super_user_type_id === marker_type_id)
+        let newMarkersToDisplay = allMarkersPassed.filter((marker) => {
+            for (let i = 0; i < markersEngaged.length; i++) {
+                const markerEngaged = markersEngaged[i]
+                if (marker.super_user_id === markerEngaged.super_user_id) {
+                    return false
+                }
+            }
+            return true
+        })
+        setMarkersToDisplay(newMarkersToDisplay)
+
+    }
+
+
+
+
     useEffect(() => {
         async function handleFetch() {
             // get engaged super users
             const apiGetEngagedSuperUsersURL = `${BASE_API_URL}super_user/exam_search?module_id=${examInformation.module_id}&exam_id=${examInformation.exam_id}`
             const engagedSuperUsersResponse = await axios.get(apiGetEngagedSuperUsersURL)
-            let engagedSuperUsers = engagedSuperUsersResponse.data
+            let newEngagedSuperUsers = engagedSuperUsersResponse.data
             // sort engagedSuperUsers according to super_user_type_id
-            engagedSuperUsers.sort((a, b) => sortSuperUsers(a, b))
-            setEngagedSuperUsers(engagedSuperUsers)
+            newEngagedSuperUsers.sort((a, b) => sortSuperUsers(a, b))
+            setEngagedSuperUsers(newEngagedSuperUsers)
 
 
-            // get all super users
+            // get all markers
+            // super user type id corresponding to marker
+            const marker_type_id = 2
+            const getAllMarkersApiUrl = `${BASE_API_URL}super_user/super_user_type_id/${marker_type_id}`
+            const markersApiResponse = await axios.get(getAllMarkersApiUrl)
+            let markersFromApi = markersApiResponse.data
+            setAllMarkers(markersFromApi)
 
-
+            handleEngagedMarkersChange(newEngagedSuperUsers, markersFromApi)
             setDataFetched(true)
         }
         handleFetch()
     }, [examInformation])
+
 
     async function handleRemoveAccessFromMarker(superUserId, indexToRemove) {
         const apiRemoveEngagedSuperUserURL = `${BASE_API_URL}module/${examInformation.module_id}/exam/${examInformation.exam_id}/super_user/${superUserId}`
@@ -55,10 +88,38 @@ const EditAssignedMarkersAccordion = ({ lastDisplayed, examInformation }) => {
         if (deleteRequestResponse.status === 204) {
             let newSuperUserArray = engagedSuperUsers.slice(0, indexToRemove).concat(engagedSuperUsers.slice(indexToRemove + 1))
             setEngagedSuperUsers(newSuperUserArray)
+            handleEngagedMarkersChange(newSuperUserArray, allMarkers)
         } else {
             window.alert('Deletion failed!')
         }
     }
+
+    async function handleNewMarkerSubmit(event) {
+        event.preventDefault()
+        let newSuperUserArray = engagedSuperUsers.slice(0, engagedSuperUsers.length)
+        newSuperUserArray.push(JSON.parse(selectedNewMarker))
+        newSuperUserArray.sort((a, b) => sortSuperUsers(a, b))
+        // api post request
+
+        const requestBody = {
+            super_user_id: JSON.parse(selectedNewMarker).super_user_id
+        }
+
+        const apiUrl = `${BASE_API_URL}module/${examInformation.module_id}/exam/${examInformation.exam_id}/super_user/`
+
+        const responseFromPost = await axios.post(apiUrl, requestBody)
+
+        if (responseFromPost.status === 201) {
+            // handle in render
+            setEngagedSuperUsers(newSuperUserArray)
+            handleEngagedMarkersChange(newSuperUserArray, allMarkers)
+        } else{
+            window.alert('Failed to add marker')
+        }
+
+
+    }
+
 
     // handle loading...
     if (!dataFetched) {
@@ -117,10 +178,28 @@ const EditAssignedMarkersAccordion = ({ lastDisplayed, examInformation }) => {
                         <p className='ms-1'>
                             Add a new marker...
                         </p>
-                        <Form.Select aria-label="Default select example">
-                            <option>Select a new marker</option>
-                            <option value="1">One</option>
-                        </Form.Select>
+                        <Form onSubmit={handleNewMarkerSubmit}>
+                            <Form.Select
+                                aria-label="Default select example"
+                                onChange={(e) => setSelectedNewMarker(e.target.value)}
+                                value={selectedNewMarker}
+                            >
+                                <option>Select a new marker</option>
+                                {markersToDisplay.map((markerToDisplay) =>
+                                    <option
+                                        key={markerToDisplay.super_user_id}
+                                        value={JSON.stringify(markerToDisplay)}
+                                    >
+                                        {markerToDisplay.super_user_name} - {markerToDisplay.super_user_id}
+                                    </option>
+
+                                )}
+                            </Form.Select>
+                            <Button variant="primary" type="submit" className='my-1'>
+                                Add New Marker
+                            </Button>
+                        </Form>
+
                     </div>
 
 
