@@ -97,13 +97,6 @@ const ExamView = () => {
                     lastDisplayed={false}
                 />
 
-                <EditableExamAccordion
-                    examInformation={examInformation}
-                    setExamInformation={setExamInformation}
-                    examParam={'rubric'}
-                    userFriendlyExamParam={'Rubric'}
-                    lastDisplayed={false}
-                />
 
                 <EditableExamAccordion
                     examInformation={examInformation}

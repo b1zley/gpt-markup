@@ -9,6 +9,7 @@ const { db, axios, backendRoot, storageDirectory } = require('../routesCommonDep
  */
 async function createNewExam(req, res) {
     console.log(req.params)
+    console.log(req.body)
     const module_id = req.params.module_id
     const exam_name = req.body.exam_name
 
@@ -16,13 +17,14 @@ async function createNewExam(req, res) {
         return res.status(400).send()
     }
 
-    const createExamSqlQuery = "INSERT INTO `exam` (`exam_id`, `module_id`, `exam_name`, `rubric`, `exam_question`, `model_answer`, `file_system_id`, `prompt_specifications`, `chosen_ai_model_id`) VALUES (NULL, ?, ?, NULL, NULL, NULL, NULL, NULL, NULL);"
+    const createExamSqlQuery = "INSERT INTO `exam` (`exam_id`, `module_id`, `exam_name`, `exam_question`, `model_answer`, `file_system_id`, `prompt_specifications`, `chosen_ai_model_id`) VALUES (NULL, ?, ?, NULL, NULL, NULL, NULL, NULL);"
     const bindingParamsCreateExamQuery = [module_id, exam_name]
     try {
         const [responseFromInsert] = await db.query(createExamSqlQuery, bindingParamsCreateExamQuery)
         const insertId = responseFromInsert.insertId
         return res.status(201).json({ exam_id: insertId })
     } catch (err) {
+        console.log(err)
         return res.status(500)
     }
 }
@@ -77,11 +79,51 @@ async function getExamById(req, res) {
         const sqlQuery = 'SELECT * FROM exam INNER JOIN module ON exam.module_id = module.module_id LEFT JOIN trained_model ON exam.chosen_ai_model_id = trained_model.trained_model_id WHERE exam_id = ?'
         const exam_id = req.params.exam_id
         const [responseFromSqlQuery] = await db.query(sqlQuery, [exam_id])
-        return res.status(200).json(responseFromSqlQuery[0])
+
+        let examObject = responseFromSqlQuery[0]
+
+        // find rubric components which match exam_id
+        queryGetRubricComponentsByExamId(exam_id)
+
+        examObject = {
+            ...examObject,
+            rubric: await queryGetRubricComponentsByExamId(exam_id)
+        }
+
+
+        return res.status(200).json(examObject)
     } catch (err) {
         return res.status(500).send()
     }
 }
+
+
+async function queryGetRubricComponentsByExamId(exam_id) {
+    const sqlQuery = 'SELECT * FROM rubric_component WHERE exam_id = ?'
+    const bindingParams = [exam_id]
+    const [rubricComponents] = await db.query(sqlQuery, bindingParams)
+
+    for (let i = 0; i < rubricComponents.length; i++) {
+        const ratingRangesWithinRubric = await queryGetRatingRangesByRubricId(rubricComponents[i].rubric_component_id)
+        let newRubricComponentObject = {
+            ...rubricComponents[i],
+            rating_ranges: ratingRangesWithinRubric
+        }
+        rubricComponents[i] = newRubricComponentObject
+    }
+
+    return rubricComponents
+}
+
+
+async function queryGetRatingRangesByRubricId(rubric_component_id) {
+    const sqlQuery = 'SELECT * FROM rating_range WHERE rubric_component_id = ?'
+    const bindingParams = [rubric_component_id]
+    const [responseFromRatingRangeQuery] = await db.query(sqlQuery, bindingParams)
+    return responseFromRatingRangeQuery
+}
+
+
 
 /**
  * returns all exam ids
@@ -160,7 +202,7 @@ async function requestHandlerPostSuperUserInExam(req, res) {
         const exam_id = req.params.exam_id
         await queryInsertExamSuperUser(super_user_id, exam_id)
         return res.status(201).send()
-    } catch(err){
+    } catch (err) {
         return res.status(500).send()
     }
 }
