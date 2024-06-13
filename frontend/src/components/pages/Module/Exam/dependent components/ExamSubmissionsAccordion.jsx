@@ -10,6 +10,8 @@ import BASE_API_URL from '../../../../../BASE_API_URL'
 
 import { useLocation } from 'react-router-dom'
 import { LinkContainer } from 'react-router-bootstrap'
+import StudentExamSubmissionsTable from './StudentExamSubmissionsTable'
+import AddStudentExamSubmission from './AddStudentExamSubmission'
 
 
 
@@ -37,12 +39,6 @@ const StudentsInExamAccordion = ({ lastDisplayed, examInformation }) => {
     }, [examInformation])
 
 
-    async function handleStudentRemoveClick(i){
-        console.log(i)
-        console.log(studentExamSubmissions[i])
-    }
-
-
     return (
         <Accordion className="my-0">
             <Accordion.Item eventKey="0" className={lastDisplayed ? '' : "border-bottom-0"}>
@@ -50,53 +46,17 @@ const StudentsInExamAccordion = ({ lastDisplayed, examInformation }) => {
                     Student Submissions
                 </Accordion.Header>
                 <Accordion.Body >
-                    <Table bordered hover className=''>
-                        <thead>
-                            <tr>
-                                <th>Student Number</th>
-                                <th>Student Name</th>
-                                <th>Submitted</th>
-                                <th>Agreed Mark</th>
-                                <th>Controls</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {studentExamSubmissions.map((studentExamSubmission, i) =>
-
-                                <tr key={studentExamSubmission.student_exam_submission_id}>
-                                    <td>
-                                        {studentExamSubmission.student_number}
-                                    </td>
-                                    <td>
-                                        {studentExamSubmission.student_name}
-                                    </td>
-                                    <td className=''>
-                                        {studentExamSubmission.file_system_id ? <BootstrapTick size={20} /> : null}
-                                    </td>
-                                    <td>
-                                        {studentExamSubmission.marker_mark ? studentExamSubmission.marker_mark : '-'}
-                                    </td>
-                                    <td className='d-flex justify-content-center'>
-                                        <LinkContainer to={`${location.pathname}/student_exam_submission/${studentExamSubmission.student_exam_submission_id}`}>
-                                            <Button className='my-1 me-1'>
-                                                View
-                                            </Button>
-                                        </LinkContainer>
-                                        <Button className='my-1' variant='warning' onClick={()=>{handleStudentRemoveClick(i)}}>
-                                            Remove
-                                        </Button>
-
-                                    </td>
-                                </tr>
-                            )}
-                            <div className=' my-2'>
-                                <p>Add a student:</p>
-                            </div>
-
-
-                        </tbody>
-
-                    </Table>
+                    <StudentExamSubmissionsTable
+                        examInformation={examInformation}
+                        studentExamSubmissions={studentExamSubmissions}
+                        setStudentExamSubmissions={setStudentExamSubmissions}
+                    />
+                    <hr className='divider' />
+                    <AddStudentExamSubmission
+                        examInformation={examInformation}
+                        studentExamSubmissions={studentExamSubmissions}
+                        setStudentExamSubmissions={setStudentExamSubmissions}
+                    />
 
 
                 </Accordion.Body>

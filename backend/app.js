@@ -31,6 +31,9 @@ app.use('/ai_model', aiModelRoutes)
 const superUserRoutes = require('./routes/superUserRoutes')
 app.use('/super_user', superUserRoutes)
 
+const studentRoutes = require('./routes/studentRoutes')
+app.use('/student', studentRoutes)
+
 
 
 // const examSubmissionRoutes;

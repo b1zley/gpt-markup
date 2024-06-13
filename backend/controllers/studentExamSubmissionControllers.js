@@ -6,8 +6,9 @@ async function handlePostCreateNewExamSubmissionEntry(req, res) {
     try {
         const { module_id, exam_id } = req.params
         const student_id = req.body.student_id
-        return res.status(200).json(await queryCreateNewExamSubmission(exam_id, student_id))
+        return res.status(201).json(await queryCreateNewExamSubmission(exam_id, student_id))
     } catch (err) {
+        console.log(err)
         return res.status(500).send()
     }
 
