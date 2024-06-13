@@ -22,6 +22,8 @@ const StudentsInExamAccordion = ({ lastDisplayed, examInformation }) => {
     const [studentExamSubmissions, setStudentExamSubmissions] = useState([])
     const location = useLocation()
 
+    
+
     useEffect(() => {
         async function handleStudentExamSubmissionsFetch() {
             // fetch student exam submission from api

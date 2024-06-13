@@ -9,7 +9,10 @@ import Button from 'react-bootstrap/Button';
 
 const AddStudentExamSubmission = ({ examInformation, studentExamSubmissions, setStudentExamSubmissions }) => {
 
-    const [studentNumberToSearchFor, setStudentNumberToSearchFor] = useState(null)
+
+    
+
+    const [studentNumberToSearchFor, setStudentNumberToSearchFor] = useState('')
 
     // students matching search criteria
     const [studentsMatchingSearch, setStudentsMatchingSearch] = useState([])
