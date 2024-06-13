@@ -101,7 +101,7 @@ const ExamView = () => {
 
                 <RubricComponentsView
                     examInformation={examInformation}
-                    setExamInofmration={setExamInformation}
+                    setExamInformation={setExamInformation}
                     lastDisplayed={false}
                 />
 

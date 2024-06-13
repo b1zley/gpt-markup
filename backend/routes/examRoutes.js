@@ -15,5 +15,11 @@ router.post('/:exam_id/super_user', examControllers.requestHandlerPostSuperUserI
 const studentExamSubmissionRoutes = require('./studentExamSubmissionRoutes')
 router.use('/:exam_id/student_exam_submission', studentExamSubmissionRoutes)
 
+// endpoints for rubric
+const rubricRoutes = require('./rubricRoutes')
+router.use('/:exam_id/rubric', rubricRoutes)
+
+
+
 module.exports = router
 
