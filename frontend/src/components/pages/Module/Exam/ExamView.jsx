@@ -14,6 +14,7 @@ import DownloadButton from "../../../shared/DownloadButton";
 import EditAiModelAccordion from "./dependent components/EditAIModelAccordion";
 import EditAssignedMarkersAccordion from "./dependent components/EditAssignedMarkersAccordion";
 import StudentsInExamAccordion from "./dependent components/ExamSubmissionsAccordion";
+import RubricComponentsView from "./dependent components/RubricComponentsView";
 
 const ExamView = () => {
     let { module_id, exam_id } = useParams();
@@ -89,11 +90,18 @@ const ExamView = () => {
 
                 <h3>Module Name: <Link to={`/module/${module_id}`}>{examInformation.module_name}</Link> </h3>
                 <h4>Exam: {examInformation.exam_name}</h4>
+
                 <EditableExamAccordion
                     examInformation={examInformation}
                     setExamInformation={setExamInformation}
                     examParam={'exam_question'}
                     userFriendlyExamParam={'Exam Question'}
+                    lastDisplayed={false}
+                />
+
+                <RubricComponentsView
+                    examInformation={examInformation}
+                    setExamInofmration={setExamInformation}
                     lastDisplayed={false}
                 />
 
