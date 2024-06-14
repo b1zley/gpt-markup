@@ -9,6 +9,7 @@ import LoadingSpinner from '../../../../shared/LoadingSpinner';
 
 
 import EditableExamAccordion from '../dependent components/EditableExamAccordion';
+import EditableMarkingRanges from './dependencies/EditableMarkingRanges';
 
 const RubricComponentView = () => {
     let { module_id, exam_id, rubric_component_id } = useParams();
@@ -23,9 +24,6 @@ const RubricComponentView = () => {
         handleFetch()
     }, [module_id, exam_id, rubric_component_id])
 
-    useEffect(() => {
-        console.log(rubricComponent)
-    })
 
 
     if (!rubricComponent) {
@@ -68,9 +66,16 @@ const RubricComponentView = () => {
                         setParentObject={setRubricComponent}
                         param={'maximum'}
                         userFriendlyParam={'Maximum Points'}
-                        lastDisplayed={true}
+                        lastDisplayed={false}
                         putUrl={`${BASE_API_URL}module/${module_id}/exam/${exam_id}/rubric/${rubric_component_id}`}
                         inputType={'decimal'}
+                    />
+
+
+                    <EditableMarkingRanges
+                        lastDisplayed={true}
+                        rubricComponent={rubricComponent}
+                        setRubricComponent={setRubricComponent}
                     />
 
                 </div>

@@ -15,5 +15,17 @@ router.get('/:rubric_component_id', rubricControllers.handleGetRubricComponentBy
 router.put('/:rubric_component_id', rubricControllers.handlePutUpdateRubricComponentById)
 
 
+// rating range
+
+/**
+ * create
+ */
+router.post('/:rubric_component_id/rating_range/', rubricControllers.handlePostRatingRangeInRubricComponent )
+
+/**
+ * update
+ */
+router.put('/:rubric_component_id/rating_range/:rating_range_id', rubricControllers.handlePutRequestRatingRange)
+
 module.exports = router
 

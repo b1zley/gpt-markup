@@ -56,6 +56,35 @@ async function handlePutUpdateRubricComponentById(req, res) {
     }
 }
 
+async function handlePutRequestRatingRange(req, res) {
+    try {
+        // rating_range_id, updateArray
+        const { rating_range_id } = req.params
+
+        let updateArray = []
+
+        for (const paramToUpdate in req.body) {
+            const updateElement = {
+                paramToUpdate,
+                valueToUpdate: req.body[paramToUpdate]
+            }
+            updateArray.push(updateElement)
+        }
+
+        await queryUpdateRatingRange(rating_range_id, updateArray)
+
+        return res.status(200).send()
+    } catch (err) {
+        return res.status(500).send()
+    }
+
+}
+
+async function handlePostRatingRangeInRubricComponent(req, res) {
+    // to do
+    await queryInsertNewRatingRangeByRubricComponentId()
+}
+
 // query functions
 
 async function queryCreateNewRubric(exam_id, rubric_component_name) {
@@ -109,11 +138,11 @@ async function queryUpdateRubricComponent(rubric_component_id, updateArray) {
     updateArray.forEach((updateObject, i) => {
 
         // validate column names in request are present in table schema
-        if(!allowedColumnNames.includes(updateObject.paramToUpdate)){
+        if (!allowedColumnNames.includes(updateObject.paramToUpdate)) {
             throw new Error('Disallowed column name')
         }
         sqlQuery += `${updateObject.paramToUpdate} = ?`
-        if(i <updateArray.length - 1){
+        if (i < updateArray.length - 1) {
             sqlQuery += ','
         }
         sqlQuery += ' '
@@ -122,17 +151,58 @@ async function queryUpdateRubricComponent(rubric_component_id, updateArray) {
 
     sqlQuery += ' WHERE `rubric_component_id` = ?'
     bindingParams.push(rubric_component_id)
-    
+
     const [responseFromUpdate] = await db.query(sqlQuery, bindingParams)
     return true
 }
 
 
-async function getColumnNamesRubricComponent(){
+async function getColumnNamesRubricComponent() {
     const sqlQuery = "SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = 'gpt_markup' AND TABLE_NAME = 'rubric_component'"
     const [responseFromQuery] = await db.query(sqlQuery)
     const columnNames = responseFromQuery.map((row) => row.COLUMN_NAME)
     return columnNames
+}
+
+async function getColumnNamesRatingRange() {
+    const sqlQuery = "SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = 'gpt_markup' AND TABLE_NAME = 'rating_range'"
+    const [responseFromQuery] = await db.query(sqlQuery)
+    const columnNames = responseFromQuery.map((row) => row.COLUMN_NAME)
+    return columnNames
+}
+
+/**
+ * create new rating range
+ * @param {*} rubric_component_id 
+ */
+async function queryInsertNewRatingRangeByRubricComponentId(rubric_component_id) {
+    // to do
+}
+
+/**
+ * update rating range
+ * @param {*} rating_range_id 
+ * @param {*} updateArray 
+ */
+async function queryUpdateRatingRange(rating_range_id, updateArray) {
+    let bindingParams = []
+    let sqlQuery = "UPDATE rating_range SET "
+    const allowableNames = await getColumnNamesRatingRange()
+    updateArray.forEach((updateObject, i) => {
+        if (!allowableNames.includes(updateObject.paramToUpdate)) {
+            throw new Error('Parameter not recognised')
+        }
+        sqlQuery += `${updateObject.paramToUpdate} = ?`
+        if (i < updateArray.length - 1) {
+            sqlQuery += ','
+        }
+        sqlQuery += ' '
+        bindingParams.push(updateObject.valueToUpdate)
+    })
+    sqlQuery += ' WHERE rating_range_id = ?'
+    bindingParams.push(rating_range_id)
+    const [responseFromUpdateQuery] = await db.query(sqlQuery, bindingParams)
+    return true
 }
 
 module.exports = {
@@ -140,6 +210,8 @@ module.exports = {
     handleRemoveRubricFromExam,
     handlePostNewRubricToExam,
     handleGetRubricComponentById,
-    handlePutUpdateRubricComponentById
+    handlePutUpdateRubricComponentById,
+    handlePostRatingRangeInRubricComponent,
+    handlePutRequestRatingRange
 
 }
