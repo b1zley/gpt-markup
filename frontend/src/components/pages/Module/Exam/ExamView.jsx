@@ -92,11 +92,12 @@ const ExamView = () => {
                 <h4>Exam: {examInformation.exam_name}</h4>
 
                 <EditableExamAccordion
-                    examInformation={examInformation}
-                    setExamInformation={setExamInformation}
-                    examParam={'exam_question'}
-                    userFriendlyExamParam={'Exam Question'}
+                    parentObject={examInformation}
+                    setParentObject={setExamInformation}
+                    param={'exam_question'}
+                    userFriendlyParam={'Exam Question'}
                     lastDisplayed={false}
+                    putUrl={`${BASE_API_URL}module/${module_id}/exam/${exam_id}`}
                 />
 
                 <RubricComponentsView
@@ -107,11 +108,12 @@ const ExamView = () => {
 
 
                 <EditableExamAccordion
-                    examInformation={examInformation}
-                    setExamInformation={setExamInformation}
-                    examParam={'prompt_specifications'}
-                    userFriendlyExamParam={'Prompt Specifications'}
+                    parentObject={examInformation}
+                    setParentObject={setExamInformation}
+                    param={'prompt_specifications'}
+                    userFriendlyParam={'Prompt Specifications'}
                     lastDisplayed={false}
+                    putUrl={`${BASE_API_URL}module/${module_id}/exam/${exam_id}`}
                 />
 
 

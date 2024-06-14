@@ -11,18 +11,28 @@ import Form from 'react-bootstrap/Form'
 import BASE_API_URL from '../../../../../BASE_API_URL'
 
 const EditableExamAccordion = ({
-    examInformation, setExamInformation,
-    examParam, lastDisplayed,
-    userFriendlyExamParam
+    parentObject, setParentObject,
+    param, lastDisplayed,
+    userFriendlyParam, putUrl,
+    inputType
 }) => {
 
     const [editMode, setEditMode] = useState(false)
-    const [editText, setEditText] = useState(examInformation[examParam])
+    const [editText, setEditText] = useState(parentObject[param])
 
     const handleEditModeClicked = (event) => { setEditMode(!editMode) }
     const handleCommitClicked = async (event) => {
-        if (await sendExamPutRequest(examParam, editText)) {
-            setExamInformation({ ...examInformation, [examParam]: editText })
+        if(inputType && inputType === 'decimal'){
+            const regex = /^[0-9.]+$/;
+            if(!regex.test(editText)){
+                window.alert('Decimal values only!')
+                return
+            }
+        }
+
+
+        if (await sendExamPutRequest(param, editText)) {
+            setParentObject({ ...parentObject, [param]: editText })
             setEditMode(!editMode)
         } else {
             window.alert('Failed to update')
@@ -31,13 +41,13 @@ const EditableExamAccordion = ({
 
     const handleRevertClicked = (event) => {
         setEditMode(!editMode)
-        setEditText(examInformation[examParam])
+        setEditText(parentObject[param])
     }
 
     const handleEditTextChange = (event) => { setEditText(event.target.value) }
 
     async function sendExamPutRequest(param, newParamValue) {
-        const apiPutUrl = `${BASE_API_URL}module/${examInformation.module_id}/exam/${examInformation.exam_id}`
+        const apiPutUrl = putUrl
         const putBody = {
             [param]: newParamValue
         }
@@ -52,14 +62,14 @@ const EditableExamAccordion = ({
         return (
             <Accordion className="my-0 ">
                 <Accordion.Item eventKey="0" className={lastDisplayed ? null : "border-bottom-0"}>
-                    <Accordion.Header>{userFriendlyExamParam}</Accordion.Header>
+                    <Accordion.Header>{userFriendlyParam}</Accordion.Header>
                     <Accordion.Body>
 
                         <div className="d-flex">
                             <InputGroup className="me-1">
                                 <Form.Control
-                                    placeholder={userFriendlyExamParam}
-                                    aria-label={userFriendlyExamParam}
+                                    placeholder={userFriendlyParam}
+                                    aria-label={userFriendlyParam}
                                     as="textarea"
                                     onChange={handleEditTextChange}
                                     value={editText}
@@ -82,12 +92,12 @@ const EditableExamAccordion = ({
         return (
             <Accordion className="my-0 ">
                 <Accordion.Item eventKey="0" className={lastDisplayed ? null : "border-bottom-0"}>
-                    <Accordion.Header>{userFriendlyExamParam}</Accordion.Header>
+                    <Accordion.Header>{userFriendlyParam}</Accordion.Header>
                     <Accordion.Body>
 
                         <div className="d-flex">
                             <div>
-                                {examInformation[examParam] ? examInformation[examParam] : 'None added...'}
+                                {parentObject[param] ? parentObject[param] : 'None added...'}
                             </div>
                             <Button onClick={handleEditModeClicked} className="ms-auto" style={{ height: '38px' }}>Edit</Button>
 
