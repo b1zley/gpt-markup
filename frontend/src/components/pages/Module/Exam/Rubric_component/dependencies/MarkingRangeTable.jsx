@@ -18,6 +18,9 @@ const MarkingRangeTable = ({ rubricComponent, setRubricComponent }) => {
                                 <th >
                                     Maximum Inclusive
                                 </th>
+                                <th>
+                                    Controls
+                                </th>
                             </tr>
                         </thead>
                         <tbody>

@@ -61,7 +61,6 @@ const DoubleClickModifyCell = ({ parameterInCell, rubricComponent, setRubricComp
 
                 <Form.Control
                     as="textarea"
-                    placeholder="Description"
                     value={textPart}
                     onChange={handlePartChange}
                     onKeyDown={handlePartKeyDown}

@@ -27,5 +27,10 @@ router.post('/:rubric_component_id/rating_range/', rubricControllers.handlePostR
  */
 router.put('/:rubric_component_id/rating_range/:rating_range_id', rubricControllers.handlePutRequestRatingRange)
 
+/**
+ * delete rating range
+ */
+router.delete('/:rubric_component_id/rating_range/:rating_range_id', rubricControllers.handleDeleteRatingRange)
+
 module.exports = router
 

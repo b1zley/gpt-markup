@@ -81,8 +81,24 @@ async function handlePutRequestRatingRange(req, res) {
 }
 
 async function handlePostRatingRangeInRubricComponent(req, res) {
-    // to do
-    await queryInsertNewRatingRangeByRubricComponentId()
+    try {
+        const { rubric_component_id } = req.params
+        return res.status(201).json({ rating_range_id: await queryInsertNewRatingRangeByRubricComponentId(rubric_component_id) })
+    } catch (err) {
+        return res.status(500).send()
+    }
+}
+
+async function handleDeleteRatingRange(req,res){
+    try{
+        const {rating_range_id} = req.params
+        await queryDeleteRatingRange(rating_range_id)
+        return res.status(204).send()
+
+    } catch(err){
+        return res.status(500).send()
+    }
+    
 }
 
 // query functions
@@ -176,7 +192,10 @@ async function getColumnNamesRatingRange() {
  * @param {*} rubric_component_id 
  */
 async function queryInsertNewRatingRangeByRubricComponentId(rubric_component_id) {
-    // to do
+    const sqlQuery = "INSERT INTO `rating_range` (`rating_range_id`, `rating_min_incl`, `rating_max_incl`, `rating_desc`, `rubric_component_id`) VALUES (NULL, NULL, NULL, NULL, ?);"
+    const bindingParams = [rubric_component_id]
+    const [responseFromInsert] = await db.query(sqlQuery, bindingParams)
+    return responseFromInsert.insertId
 }
 
 /**
@@ -205,6 +224,17 @@ async function queryUpdateRatingRange(rating_range_id, updateArray) {
     return true
 }
 
+async function queryDeleteRatingRange(rating_range_id){
+    console.log(rating_range_id)
+
+    const sqlQuery = "DELETE FROM `rating_range` WHERE `rating_range`.`rating_range_id` = ?"
+    const bindingParams = [rating_range_id]
+    
+    const [responseFromDelete] = await db.query(sqlQuery, bindingParams)
+    return true
+
+}
+
 module.exports = {
 
     handleRemoveRubricFromExam,
@@ -212,6 +242,7 @@ module.exports = {
     handleGetRubricComponentById,
     handlePutUpdateRubricComponentById,
     handlePostRatingRangeInRubricComponent,
-    handlePutRequestRatingRange
+    handlePutRequestRatingRange,
+    handleDeleteRatingRange
 
 }

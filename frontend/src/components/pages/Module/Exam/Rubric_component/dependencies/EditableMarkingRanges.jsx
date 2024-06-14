@@ -4,8 +4,9 @@ import Table from 'react-bootstrap/Table'
 import Button from 'react-bootstrap/Button'
 import MarkingRangeTableRow from './MarkingRangeTableRow'
 import MarkingRangeTable from './MarkingRangeTable'
+import AddNewMarkingRangeButton from './AddNewMarkingRangeButton'
 
-const EditableMarkingRanges = ({lastDisplayed, rubricComponent, setRubricComponent }) => {
+const EditableMarkingRanges = ({ lastDisplayed, rubricComponent, setRubricComponent }) => {
 
     return (
         <Accordion>
@@ -19,6 +20,12 @@ const EditableMarkingRanges = ({lastDisplayed, rubricComponent, setRubricCompone
                         rubricComponent={rubricComponent}
                         setRubricComponent={setRubricComponent}
                     />
+                    <AddNewMarkingRangeButton
+                        rubricComponent={rubricComponent}
+                        setRubricComponent={setRubricComponent}
+                    />
+
+
                 </Accordion.Body>
 
             </Accordion.Item>
