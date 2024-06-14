@@ -36,6 +36,26 @@ async function handleGetRubricComponentById(req, res) {
 
 }
 
+async function handlePutUpdateRubricComponentById(req, res) {
+    try {
+        // parse request and pass values as argument to query function
+        let updateArray = []
+        for (const paramToUpdate in req.body) {
+            const updateElement = {
+                paramToUpdate,
+                valueToUpdate: req.body[paramToUpdate]
+            }
+            updateArray.push(updateElement)
+        }
+        const { rubric_component_id } = req.params
+        await queryUpdateRubricComponent(rubric_component_id, updateArray)
+        return res.status(200).send()
+    } catch (err) {
+        console.log(err)
+        return res.status(500).send()
+    }
+}
+
 // query functions
 
 async function queryCreateNewRubric(exam_id, rubric_component_name) {
@@ -55,25 +75,14 @@ async function queryDeleteRubric(rubric_component_id) {
 }
 
 async function queryGetRubricComponentInformationById(rubric_component_id) {
-    console.log('hello from get')
     const sqlQuery = 'SELECT * FROM rubric_component INNER JOIN exam ON rubric_component.exam_id = exam.exam_id INNER JOIN module ON exam.module_id = module.module_id WHERE rubric_component_id = ?'
     const bindingParams = [rubric_component_id]
     let [dbResult] = await db.query(sqlQuery, bindingParams)
-
     let rubricComponent = dbResult[0]
-    
     rubricComponent.rating_ranges = [];
-
-    // Fetch rating ranges
     let ratingRangesToAdd = await queryGetRatingRangesByRubricComponentId(rubric_component_id);
-    console.log('Rating ranges to add:', ratingRangesToAdd);
-
-    // Properly assign rating ranges
     rubricComponent.rating_ranges = ratingRangesToAdd;
-    console.log('Final rubric component with rating ranges:', rubricComponent);
-    
     return rubricComponent
-
 }
 
 
@@ -85,10 +94,52 @@ async function queryGetRatingRangesByRubricComponentId(rubric_component_id) {
     return ratingRanges
 }
 
+
+async function queryUpdateRubricComponent(rubric_component_id, updateArray) {
+    // structure of update array 
+    // [{paramToUpdate, valueToUpdate}]
+
+    // allowed column names
+    const allowedColumnNames = await getColumnNamesRubricComponent()
+
+    let bindingParams = []
+    let sqlQuery = 'UPDATE `rubric_component` SET '
+
+    // programmatically add params and values to binding params, and extend query string
+    updateArray.forEach((updateObject, i) => {
+
+        // validate column names in request are present in table schema
+        if(!allowedColumnNames.includes(updateObject.paramToUpdate)){
+            throw new Error('Disallowed column name')
+        }
+        sqlQuery += `${updateObject.paramToUpdate} = ?`
+        if(i <updateArray.length - 1){
+            sqlQuery += ','
+        }
+        sqlQuery += ' '
+        bindingParams.push(updateObject.valueToUpdate)
+    })
+
+    sqlQuery += ' WHERE `rubric_component_id` = ?'
+    bindingParams.push(rubric_component_id)
+    
+    const [responseFromUpdate] = await db.query(sqlQuery, bindingParams)
+    return true
+}
+
+
+async function getColumnNamesRubricComponent(){
+    const sqlQuery = "SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = 'gpt_markup' AND TABLE_NAME = 'rubric_component'"
+    const [responseFromQuery] = await db.query(sqlQuery)
+    const columnNames = responseFromQuery.map((row) => row.COLUMN_NAME)
+    return columnNames
+}
+
 module.exports = {
 
     handleRemoveRubricFromExam,
     handlePostNewRubricToExam,
-    handleGetRubricComponentById
+    handleGetRubricComponentById,
+    handlePutUpdateRubricComponentById
 
 }

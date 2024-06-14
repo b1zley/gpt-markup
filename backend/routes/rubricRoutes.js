@@ -12,6 +12,7 @@ router.post('/', rubricControllers.handlePostNewRubricToExam)
 
 router.get('/:rubric_component_id', rubricControllers.handleGetRubricComponentById)
 
+router.put('/:rubric_component_id', rubricControllers.handlePutUpdateRubricComponentById)
 
 
 module.exports = router
