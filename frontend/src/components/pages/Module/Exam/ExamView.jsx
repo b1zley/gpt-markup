@@ -15,6 +15,7 @@ import EditAiModelAccordion from "./dependent components/EditAIModelAccordion";
 import EditAssignedMarkersAccordion from "./dependent components/EditAssignedMarkersAccordion";
 import StudentsInExamAccordion from "./dependent components/ExamSubmissionsAccordion";
 import RubricComponentsView from "./dependent components/RubricComponentsView";
+import UploadDownloadFileAccordion from "../../../shared/UploadDownloadFileAccordion";
 
 const ExamView = () => {
     let { module_id, exam_id } = useParams();
@@ -116,28 +117,13 @@ const ExamView = () => {
                     putUrl={`${BASE_API_URL}module/${module_id}/exam/${exam_id}`}
                 />
 
-
-                <Accordion className="my-0 ">
-                    <Accordion.Item eventKey="0" className="border-bottom-0">
-                        <Accordion.Header>
-                            Model Answer
-                        </Accordion.Header>
-                        <Accordion.Body className="d-flex">
-                            <UploadExamInfo
-                                className='ms-0'
-                                submissionType={'EXAM_MODEL_ANSWER'}
-                                handleExamUpload={handleExamUpload}
-                            />
-                            <DownloadButton
-                                className='ms-auto'
-                                loadCondition={examInformation.file_system_id}
-                                downloadUrl={`${BASE_API_URL}file_system/download_zip/EXAM_MODEL_ANSWER/${examInformation.file_system_id}`}
-                                fileName={`modelAnswer${examInformation.exam_name}.zip`}
-                                height='120px'
-                            />
-                        </Accordion.Body>
-                    </Accordion.Item>
-                </Accordion>
+                <UploadDownloadFileAccordion
+                    parentObject={examInformation}
+                    setParentObject={setExamInformation}
+                    submissionType={'EXAM_MODEL_ANSWER'}
+                    accordionName={'Model Answer'}
+                    lastDisplayed={false}
+                />
 
                 <EditAiModelAccordion
                     setExamInformation={setExamInformation}

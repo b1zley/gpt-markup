@@ -101,10 +101,10 @@ function UploadExamInfo({ submissionType, handleExamUpload }) {
 
                 {file ?
                     <Button variant="primary" type="submit">
-                        Upload
+                        Upload New
                     </Button> :
                     <Button disabled variant="primary" type="submit">
-                        Upload
+                        Upload New
                     </Button>
                 }
             </Form>
