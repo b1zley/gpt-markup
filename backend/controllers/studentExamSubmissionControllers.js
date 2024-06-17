@@ -51,7 +51,16 @@ async function handlePutUpdateRubricComponentMark(req, res) {
     try {
         const { rubric_component_id, student_exam_submission_id } = req.params
         const { rubric_component_mark } = req.body
-        await queryUpdateRubricComponentMark(rubric_component_id, student_exam_submission_id, rubric_component_mark)
+        let updateArray = []
+
+        for (const param in req.body){
+            let updateObject = {}
+            updateObject.paramToUpdate = param
+            updateObject.valueToUpdate = req.body[param]
+            updateArray.push(updateObject)
+        }
+
+        await queryUpdateRubricComponentMark(rubric_component_id, student_exam_submission_id, updateArray)
         return res.status(200).send()
     } catch (err) {
         return res.status(500).send()
@@ -140,7 +149,7 @@ async function queryDeleteExamSubmissionByStudentExamSubmissionId(student_exam_s
 }
 
 
-async function queryUpdateRubricComponentMark(rubric_component_id, student_exam_submission_id, rubric_component_mark) {
+async function queryUpdateRubricComponentMark(rubric_component_id, student_exam_submission_id, updateArray) {
 
     const sqlQueryFindCurrent = 'SELECT * FROM rubric_component rc INNER JOIN rubric_component_submission_mark rcsm ON rc.rubric_component_id = rcsm.rubric_component_id WHERE rc.rubric_component_id = ? AND rcsm.student_exam_submission_id = ?'
     const bindingParams = [rubric_component_id, student_exam_submission_id]
@@ -149,16 +158,16 @@ async function queryUpdateRubricComponentMark(rubric_component_id, student_exam_
 
     if (responseFromFindCurrent.length === 0) {
         // create new
-        const insertSqlQuery = "INSERT INTO `rubric_component_submission_mark` (`rubric_component_submission_mark_id`, `student_exam_submission_id`, `rubric_component_id`, `rubric_component_mark`) VALUES (NULL, ?, ?, ?);"
-        const insertBindingParams = [student_exam_submission_id, rubric_component_id, rubric_component_mark]
+        console.log('hello from new')
+        const insertSqlQuery = `INSERT INTO rubric_component_submission_mark (rubric_component_submission_mark_id, student_exam_submission_id, rubric_component_id, ${updateArray[0].paramToUpdate}) VALUES (NULL, ?, ?, ?);`
+        const insertBindingParams = [student_exam_submission_id, rubric_component_id, updateArray[0].valueToUpdate]
         const [responseFromUpdateQuery] = await db.query(insertSqlQuery, insertBindingParams)
         return true
     } else {
         // update current
-        console.log('hello from udapte current')
         const { rubric_component_submission_mark_id } = responseFromFindCurrent[0]
-        const bindingParams = [rubric_component_mark, rubric_component_submission_mark_id]
-        const updateSqlQuery = "UPDATE `rubric_component_submission_mark` SET `rubric_component_mark` = ? WHERE `rubric_component_submission_mark`.`rubric_component_submission_mark_id` = ?"
+        const bindingParams = [updateArray[0].valueToUpdate, rubric_component_submission_mark_id]
+        const updateSqlQuery = `UPDATE rubric_component_submission_mark SET ${updateArray[0].paramToUpdate} = ? WHERE rubric_component_submission_mark.rubric_component_submission_mark_id = ?`
         const [responseFromUpdateQuery] = await db.query(updateSqlQuery, bindingParams)
         return true
     }

@@ -14,7 +14,6 @@ import {useEffect} from 'react'
 const UploadDownloadFileAccordion = ({ parentObject, setParentObject, submissionType, accordionName, lastDisplayed }) => {
 
     async function handleExamUpload(examUploadResponse) {
-        console.log('hello from exam upload')
         const newFileSystemId = examUploadResponse.data.file_system_id
 
         // put to exam information
@@ -29,11 +28,6 @@ const UploadDownloadFileAccordion = ({ parentObject, setParentObject, submission
     }
 
 
-    useEffect(() => {
-
-
-        console.log(parentObject)
-    })
 
     // update exam...
     async function sendExamPutRequest(param, newParamValue) {

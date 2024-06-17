@@ -11,7 +11,6 @@ const DoubleClickModifyCell = ({ parameterInCell, rubricComponent, setRubricComp
     const [textPart, setTextPart] = useState(rating_range[parameterInCell])
 
     async function handlePutRequest(paramToUpdate, valueToUpdate) {
-        // to do - dynamically create put request and share function.... but need be
         const putApiURL = `${BASE_API_URL}module/${rubricComponent.module_id}/exam/${rubricComponent.exam_id}/rubric/${rubricComponent.rubric_component_id}/rating_range/${rating_range.rating_range_id}`
         const putBody = {
             [paramToUpdate]: valueToUpdate

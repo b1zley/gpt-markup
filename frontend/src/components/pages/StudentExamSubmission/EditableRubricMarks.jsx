@@ -41,7 +41,6 @@ const EditableRubricMarks = ({ lastDisplayed, examSubmissionInformation, setExam
                         </thead>
                         <tbody>
 
-                            {/* need rating ranges! */}
                             {examSubmissionInformation.rubric.map((rubric_component, i) =>
                                 <tr key={rubric_component.rubric_component_id}>
 
