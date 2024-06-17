@@ -8,6 +8,7 @@ async function handleGetStudentExamSubmissionByExamSubmissionId(req, res) {
         const { student_exam_submission_id } = req.params
         return res.status(200).json(await queryGetExamSubmissionExamSubmissionId(student_exam_submission_id))
     } catch (err) {
+        console.log(err)
         return res.status(500).send()
     }
 }
@@ -63,7 +64,7 @@ async function handlePutUpdateStudentExamSubmission(req, res) {
         const { module_id, exam_id, student_exam_submission_id } = req.params
         const { file_system_id } = req.body
         let updateArray = []
-        
+
         for (const param in req.body) {
             let updateObject = {}
             updateObject.paramToUpdate = param
@@ -82,26 +83,26 @@ async function handlePutUpdateStudentExamSubmission(req, res) {
 // query functions
 
 async function queryGetExamSubmissionExamSubmissionId(student_exam_submission_id) {
-    console.log(student_exam_submission_id)
-    console.log('hello from query get exam submission')
-    const sqlQuery = "SELECT ses.student_exam_submission_id, e.exam_id, s.student_id, ses.exam_submission, ses.marker_mark, ses.marker_critique, ses.file_system_id, ses.ai_critique_id, m.module_id, e.exam_name, e.exam_question, e.model_answer, e.prompt_specifications, e.chosen_ai_model_id, m.module_name, s.student_name, s.student_number, aic.ai_mark, aic.ai_critique_id, aic.ai_critique, aic.time_generated, aic.model_generated_by_id, tm.trained_model_id, tm.api_id, tm.prompt_engineering, tm.model_name FROM student_exam_submission ses LEFT JOIN exam e ON ses.exam_id = e.exam_id LEFT JOIN module m ON e.module_id = m.module_id LEFT JOIN student s ON ses.student_id = s.student_id LEFT JOIN ai_critique aic ON ses.ai_critique_id = aic.ai_critique_id LEFT JOIN trained_model tm ON aic.model_generated_by_id = tm.trained_model_id WHERE ses.student_exam_submission_id = ?"
+    const sqlQuery = "SELECT ses.student_exam_submission_id, e.exam_id, s.student_id, ses.exam_submission, ses.file_system_id, ses.ai_critique_id, m.module_id, e.exam_name, e.exam_question, e.model_answer, e.prompt_specifications, e.chosen_ai_model_id, m.module_name, s.student_name, s.student_number, aic.ai_mark, aic.ai_critique_id, aic.ai_critique, aic.time_generated, aic.model_generated_by_id, tm.trained_model_id, tm.api_id, tm.prompt_engineering, tm.model_name FROM student_exam_submission ses LEFT JOIN exam e ON ses.exam_id = e.exam_id LEFT JOIN module m ON e.module_id = m.module_id LEFT JOIN student s ON ses.student_id = s.student_id LEFT JOIN ai_critique aic ON ses.ai_critique_id = aic.ai_critique_id LEFT JOIN trained_model tm ON aic.model_generated_by_id = tm.trained_model_id WHERE ses.student_exam_submission_id = ?"
     const bindingParams = [student_exam_submission_id]
     const [responseFromQuery] = await db.query(sqlQuery, bindingParams)
     const examSubmission = responseFromQuery[0]
 
-    console.log(sqlQuery)
-    console.log(bindingParams)
-    console.log(examSubmission)
 
     // include rubric information here as well
-    const rubricComponentsAndMarksPerComponentQuery = "SELECT rc.name, rc.rubric_component_desc, rc.maximum, rc.rubric_component_id, rcsm.rubric_component_submission_mark_id, rcsm.student_exam_submission_id, rcsm.rubric_component_mark FROM student_exam_submission ses LEFT JOIN exam e ON ses.exam_id = e.exam_id LEFT JOIN rubric_component rc ON rc.exam_id = e.exam_id LEFT JOIN rubric_component_submission_mark rcsm ON ses.student_exam_submission_id = rcsm.student_exam_submission_id WHERE ses.student_exam_submission_id = ? GROUP BY rc.rubric_component_id"
+    const rubricComponentsAndMarksPerComponentQuery = "SELECT rc.name, rc.rubric_component_desc, rc.maximum, rc.rubric_component_id, rcsm.rubric_component_submission_mark_id, rcsm.student_exam_submission_id, rcsm.rubric_component_mark, rcsm.rubric_component_critique FROM student_exam_submission ses INNER JOIN exam e ON ses.exam_id = e.exam_id  INNER JOIN rubric_component rc ON rc.exam_id = e.exam_id  LEFT JOIN rubric_component_submission_mark rcsm  ON rc.rubric_component_id = rcsm.rubric_component_id AND rcsm.student_exam_submission_id = ses.student_exam_submission_id WHERE ses.student_exam_submission_id = ?"
     const rubricComponentBindingParams = [student_exam_submission_id]
-
     const [responseFromRubricQuery] = await db.query(rubricComponentsAndMarksPerComponentQuery, rubricComponentBindingParams)
 
     examSubmission.rubric = responseFromRubricQuery
 
-    // console.log(examSubmission)
+    for (let i = 0; i < examSubmission.rubric.length; i++) {
+        const ratingRangeSql = 'SELECT * FROM rating_range WHERE rubric_component_id = ?'
+        const ratingRangeBindingParams = [responseFromRubricQuery[i].rubric_component_id]
+        const [responseFromRatingRange] = await db.query(ratingRangeSql, ratingRangeBindingParams)
+        examSubmission.rubric[i].rating_ranges = responseFromRatingRange
+    }
+
     return examSubmission
 
 }

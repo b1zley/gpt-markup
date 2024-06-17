@@ -4,7 +4,7 @@ import DropdownButton from 'react-bootstrap/DropdownButton'
 import Button from 'react-bootstrap/Button'
 
 import { useEffect, useState } from 'react'
-import BASE_API_URL from "../../../../../BASE_API_URL"
+import BASE_API_URL from "../../../../BASE_API_URL"
 import axios from 'axios'
 
 const EditAiModelAccordion = ({ setExamInformation, examInformation }) => {

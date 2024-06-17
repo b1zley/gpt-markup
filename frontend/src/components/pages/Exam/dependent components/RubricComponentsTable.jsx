@@ -5,7 +5,7 @@ import Button from 'react-bootstrap/Button'
 
 
 import RatingRangeGroupDisplay from './RatingRangeGroupDisplay'
-import BASE_API_URL from '../../../../../BASE_API_URL'
+import BASE_API_URL from '../../../../BASE_API_URL'
 
 import axios from 'axios'
 

@@ -8,7 +8,7 @@ import InputGroup from 'react-bootstrap/InputGroup'
 import Form from 'react-bootstrap/Form'
 
 
-import BASE_API_URL from '../../../../../BASE_API_URL'
+import BASE_API_URL from '../../../../BASE_API_URL'
 
 const EditableExamAccordion = ({
     parentObject, setParentObject,

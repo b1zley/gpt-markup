@@ -2,13 +2,13 @@
 import { useEffect, useState } from 'react'
 import axios from 'axios'
 import { useParams, Link } from 'react-router-dom'
-import BASE_API_URL from '../../../../../BASE_API_URL';
+import BASE_API_URL from '../../../BASE_API_URL';
 import { Accordion, Container } from 'react-bootstrap';
-import LoadingSpinner from '../../../../shared/LoadingSpinner';
+import LoadingSpinner from '../../shared/LoadingSpinner';
 
 
 
-import EditableExamAccordion from '../dependent components/EditableExamAccordion';
+import EditableExamAccordion from '../Exam/dependent components/EditableExamAccordion';
 import EditableMarkingRanges from './dependencies/EditableMarkingRanges';
 
 const RubricComponentView = () => {

@@ -4,7 +4,7 @@ import ListGroup from 'react-bootstrap/ListGroup'
 
 import { Fragment, useEffect, useState } from 'react'
 import axios from 'axios'
-import BASE_API_URL from '../../../../../BASE_API_URL';
+import BASE_API_URL from '../../../../BASE_API_URL';
 import Button from 'react-bootstrap/Button';
 
 const AddStudentExamSubmission = ({ examInformation, studentExamSubmissions, setStudentExamSubmissions }) => {

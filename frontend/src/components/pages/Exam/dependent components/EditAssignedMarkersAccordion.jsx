@@ -6,9 +6,9 @@ import Button from 'react-bootstrap/Button'
 import Form from 'react-bootstrap/Form'
 
 import axios from 'axios'
-import LoadingSpinner from '../../../../shared/LoadingSpinner'
+import LoadingSpinner from '../../../shared/LoadingSpinner'
 import { Col, Row } from 'react-bootstrap'
-import BASE_API_URL from '../../../../../BASE_API_URL'
+import BASE_API_URL from '../../../../BASE_API_URL'
 const EditAssignedMarkersAccordion = ({ lastDisplayed, examInformation }) => {
 
     // fetch assigned markers from api

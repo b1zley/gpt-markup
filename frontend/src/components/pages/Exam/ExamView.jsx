@@ -1,21 +1,21 @@
 import { Link, useParams } from "react-router-dom";
 import { useState, useEffect } from 'react';
 import axios from "axios";
-import BASE_API_URL from "../../../../BASE_API_URL";
+import BASE_API_URL from "../../../BASE_API_URL";
 
 // components
 import Container from "react-bootstrap/Container";
 import Accordion from "react-bootstrap/Accordion";
 import Button from 'react-bootstrap/Button'
-import LoadingSpinner from "../../../shared/LoadingSpinner";
+import LoadingSpinner from "../../shared/LoadingSpinner";
 import EditableExamAccordion from "./dependent components/EditableExamAccordion";
-import UploadExamInfo from "../../../shared/UploadExamInfo";
-import DownloadButton from "../../../shared/DownloadButton";
+import UploadExamInfo from "../../shared/UploadExamInfo";
+import DownloadButton from "../../shared/DownloadButton";
 import EditAiModelAccordion from "./dependent components/EditAIModelAccordion";
 import EditAssignedMarkersAccordion from "./dependent components/EditAssignedMarkersAccordion";
 import StudentsInExamAccordion from "./dependent components/ExamSubmissionsAccordion";
 import RubricComponentsView from "./dependent components/RubricComponentsView";
-import UploadDownloadFileAccordion from "../../../shared/UploadDownloadFileAccordion";
+import UploadDownloadFileAccordion from "../../shared/UploadDownloadFileAccordion";
 
 const ExamView = () => {
     let { module_id, exam_id } = useParams();

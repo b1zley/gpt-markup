@@ -1,9 +1,9 @@
 import Table from 'react-bootstrap/Table'
 import Button from 'react-bootstrap/Button'
 import { LinkContainer } from 'react-router-bootstrap'
-import BootstrapTick from '../../../../icons/BootstrapTick'
+import BootstrapTick from '../../../icons/BootstrapTick'
 
-import BASE_API_URL from '../../../../../BASE_API_URL'
+import BASE_API_URL from '../../../../BASE_API_URL'
 
 import axios from 'axios'
 

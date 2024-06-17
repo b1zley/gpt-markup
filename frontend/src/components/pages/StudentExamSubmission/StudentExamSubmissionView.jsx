@@ -7,6 +7,7 @@ import { useEffect, useState } from 'react'
 import BASE_API_URL from '../../../BASE_API_URL'
 import axios from 'axios'
 import UploadDownloadFileAccordion from '../../shared/UploadDownloadFileAccordion'
+import EditableRubricMarks from './EditableRubricMarks'
 
 const StudentExamSubmissionView = () => {
 
@@ -55,6 +56,11 @@ const StudentExamSubmissionView = () => {
                     setParentObject={setExamSubmissionInformation}
                     submissionType={'EXAM_SUBMISSION'}
                     accordionName={'Submission Upload'}
+                    lastDisplayed={false}
+                />
+                <EditableRubricMarks
+                    examSubmissionInformation={examSubmissionInformation}
+                    setExamSubmissionInformation={setExamSubmissionInformation}
                     lastDisplayed={true}
                 />
                 

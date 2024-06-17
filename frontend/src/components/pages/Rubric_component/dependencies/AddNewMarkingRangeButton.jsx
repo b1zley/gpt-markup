@@ -1,6 +1,6 @@
 
 import Button from 'react-bootstrap/Button'
-import BASE_API_URL from '../../../../../../BASE_API_URL'
+import BASE_API_URL from '../../../../BASE_API_URL'
 
 import axios from 'axios'
 

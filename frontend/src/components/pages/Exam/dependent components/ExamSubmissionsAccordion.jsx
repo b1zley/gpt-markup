@@ -2,11 +2,11 @@ import Accordion from 'react-bootstrap/Accordion'
 import Table from 'react-bootstrap/Table'
 import Button from 'react-bootstrap/Button'
 
-import BootstrapTick from '../../../../icons/BootstrapTick'
+import BootstrapTick from '../../../icons/BootstrapTick'
 
 import { useState, useEffect } from 'react'
 import axios from 'axios'
-import BASE_API_URL from '../../../../../BASE_API_URL'
+import BASE_API_URL from '../../../../BASE_API_URL'
 
 import { useLocation } from 'react-router-dom'
 import { LinkContainer } from 'react-router-bootstrap'

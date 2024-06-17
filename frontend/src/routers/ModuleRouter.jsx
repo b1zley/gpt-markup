@@ -1,8 +1,8 @@
 import {Route, Routes} from 'react-router-dom'
 
 import ModuleView from '../components/pages/Module/ModuleView'
-import ExamView from '../components/pages/Module/Exam/ExamView'
-import RubricComponentView from '../components/pages/Module/Exam/Rubric_component/RubricComponentView'
+import ExamView from '../components/pages/Exam/ExamView'
+import RubricComponentView from '../components/pages/Rubric_component/RubricComponentView'
 import StudentExamSubmissionView from '../components/pages/StudentExamSubmission/StudentExamSubmissionView'
 
 const ViewModulesPlaceHolder = () =>{
