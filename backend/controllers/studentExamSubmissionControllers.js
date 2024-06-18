@@ -132,7 +132,7 @@ async function queryCreateNewExamSubmission(exam_id, student_id) {
 async function queryGetExamSubmissionByExamId(exam_id) {
     // need to also calculate total agreed mark...
 
-    const sqlQuery = "SELECT ses.student_exam_submission_id, ses.exam_id, ses.student_id, ses.exam_submission, COALESCE(SUM(rcsm.rubric_component_mark), NULL) AS marker_mark, ses.file_system_id, student.student_name, student.student_number FROM student_exam_submission ses LEFT JOIN rubric_component_submission_mark rcsm ON ses.student_exam_submission_id = rcsm.student_exam_submission_id INNER JOIN student ON student.student_id = ses.student_id WHERE exam_id = 39 GROUP BY ses.student_exam_submission_id, ses.student_id, ses.exam_id"
+    const sqlQuery = "SELECT ses.student_exam_submission_id, ses.exam_id, ses.student_id, ses.exam_submission, COALESCE(SUM(rcsm.rubric_component_mark), NULL) AS marker_mark, ses.file_system_id, student.student_name, student.student_number FROM student_exam_submission ses LEFT JOIN rubric_component_submission_mark rcsm ON ses.student_exam_submission_id = rcsm.student_exam_submission_id INNER JOIN student ON student.student_id = ses.student_id WHERE exam_id = ? GROUP BY ses.student_exam_submission_id, ses.student_id, ses.exam_id"
     const bindingParams = [exam_id]
 
     const [queryResponse] = await db.query(sqlQuery, bindingParams)
@@ -238,7 +238,7 @@ async function getNewAICritique(student_exam_submission_id) {
     // aggregate data of interest
 
     // JUST EXAM INFO HERE.
-    const examSqlQuery = "SELECT e.exam_id, e.exam_name, e.exam_question, e.prompt_specifications, m.module_id, m.module_name, fs.file_system_id, fs.zip_file_path, fs.unzipped_content_path, tm.trained_model_id, tm.api_id, tm.prompt_engineering, tm.model_name FROM student_exam_submission ses INNER JOIN exam e ON ses.exam_id = e.exam_id INNER JOIN module m on e.module_id = m.module_id INNER JOIN trained_model tm ON e.chosen_ai_model_id = tm.trained_model_id INNER JOIN file_system fs ON e.file_system_id = fs.file_system_id WHERE ses.student_exam_submission_id = 36"
+    const examSqlQuery = "SELECT e.exam_id, e.exam_name, e.exam_question, e.prompt_specifications, m.module_id, m.module_name, fs.file_system_id, fs.zip_file_path, fs.unzipped_content_path, tm.trained_model_id, tm.api_id, tm.prompt_engineering, tm.model_name FROM student_exam_submission ses INNER JOIN exam e ON ses.exam_id = e.exam_id INNER JOIN module m on e.module_id = m.module_id INNER JOIN trained_model tm ON e.chosen_ai_model_id = tm.trained_model_id INNER JOIN file_system fs ON e.file_system_id = fs.file_system_id WHERE ses.student_exam_submission_id = ?"
     const examBindingParams = [student_exam_submission_id]
 
     const [responseFromExamQuery] = await db.query(examSqlQuery, examBindingParams)
@@ -248,6 +248,7 @@ async function getNewAICritique(student_exam_submission_id) {
     const rubricSqlQuery = "SELECT rc.rubric_component_id, rc.name, rc.rubric_component_desc, rc.maximum FROM exam e INNER JOIN rubric_component rc ON e.exam_id = rc.exam_id WHERE e.exam_id = ?"
     const rubricBindingParams = [examInformation.exam_id]
     const [rubricComponentArray] = await db.query(rubricSqlQuery, rubricBindingParams)
+    console.log(rubricComponentArray)
 
     // rating ranges within rubric components
     for (const rubricComponent of rubricComponentArray) {
@@ -328,11 +329,13 @@ async function queryInsertOrUpdateAiMark(student_exam_submission_id, rubric_comp
 
     if (repsonseFromAiMarkSelect.length === 0) {
         // do insert
+        console.log('hello from insert')
         const insertSql = "INSERT INTO `rubric_component_submission_ai_mark` (`rubric_component_submission_ai_mark_id`, `ai_mark`, `ai_critique`, `student_exam_submission_id`, `trained_model_id`, `rubric_component_id`) VALUES (NULL, ?, ?, ?, ?, ?);"
         const insertBindingParams = [ai_mark, ai_critique, student_exam_submission_id, model_id_used, rubric_component_id]
         const [responseFromInsert] = await db.query(insertSql, insertBindingParams)
     } else {
         // do update
+        console.log('hello from update')
         const rubric_component_submission_ai_mark_id = repsonseFromAiMarkSelect[0].rubric_component_submission_ai_mark_id
         const updateSql = "UPDATE rubric_component_submission_ai_mark  SET  ai_critique = ?, ai_mark = ?, trained_model_id = ?, rubric_component_id = ? WHERE rubric_component_submission_ai_mark.rubric_component_submission_ai_mark_id = ?;"
         const updateBindingParams = [ai_critique, ai_mark, model_id_used, rubric_component_id, rubric_component_submission_ai_mark_id]

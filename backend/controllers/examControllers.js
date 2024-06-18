@@ -17,7 +17,7 @@ async function createNewExam(req, res) {
         return res.status(400).send()
     }
 
-    const createExamSqlQuery = "INSERT INTO `exam` (`exam_id`, `module_id`, `exam_name`, `exam_question`, `model_answer`, `file_system_id`, `prompt_specifications`, `chosen_ai_model_id`) VALUES (NULL, ?, ?, NULL, NULL, NULL, NULL, NULL);"
+    const createExamSqlQuery = "INSERT INTO `exam` (`exam_id`, `module_id`, `exam_name`, `exam_question`,  `file_system_id`, `prompt_specifications`, `chosen_ai_model_id`) VALUES (NULL, ?, ?, NULL,  NULL, NULL, NULL);"
     const bindingParamsCreateExamQuery = [module_id, exam_name]
     try {
         const [responseFromInsert] = await db.query(createExamSqlQuery, bindingParamsCreateExamQuery)

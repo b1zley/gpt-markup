@@ -18,6 +18,17 @@ const GenerateAICrtiqueButton = ({ examSubmissionInformation, setExamSubmissionI
 
     }
 
+    if(!examSubmissionInformation.file_system_id){
+        return(
+            <Button
+            className='mb-1'
+            disabled
+        >
+            Upload Submission to Generate Critique
+        </Button>
+        )
+    }
+
     return (
         <Button
             className='mb-1'
