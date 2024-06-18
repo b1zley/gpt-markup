@@ -1,6 +1,7 @@
 
 import Container from 'react-bootstrap/Container'
 
+
 import { useParams, Link } from 'react-router-dom'
 
 import { useEffect, useState } from 'react'
@@ -8,6 +9,7 @@ import BASE_API_URL from '../../../BASE_API_URL'
 import axios from 'axios'
 import UploadDownloadFileAccordion from '../../shared/UploadDownloadFileAccordion'
 import EditableRubricMarks from './EditableRubricMarks'
+import GenerateAICrtiqueButton from './GenerateAICritiqueButton'
 
 const StudentExamSubmissionView = () => {
 
@@ -47,10 +49,21 @@ const StudentExamSubmissionView = () => {
     return (
         <Container>
             <div className='border border-light rounded p-3 d-flex flex-column' style={{ minHeight: '350px', flex: 1 }}>
-                <h3>Module Name: <Link to={`/module/${module_id}`}>{examSubmissionInformation.module_name}</Link> </h3>
-                <h4>Exam: <Link to={`/module/${module_id}/exam/${exam_id}`}>{examSubmissionInformation.exam_name}</Link></h4>
-                <h5>Student Name: {examSubmissionInformation.student_name}</h5>
-                <h5>Student Number: {examSubmissionInformation.student_number}</h5>
+                <div className='d-flex justify-content-between'>
+                    <div>
+                        <h3>Module Name: <Link to={`/module/${module_id}`}>{examSubmissionInformation.module_name}</Link> </h3>
+                        <h4>Exam: <Link to={`/module/${module_id}/exam/${exam_id}`}>{examSubmissionInformation.exam_name}</Link></h4>
+                        <h5>Student Name: {examSubmissionInformation.student_name}</h5>
+                        <h5>Student Number: {examSubmissionInformation.student_number}</h5>
+                    </div>
+                    <div className='mt-auto'>
+                        <GenerateAICrtiqueButton
+                        examSubmissionInformation={examSubmissionInformation}
+                        setExamSubmissionInformation={setExamSubmissionInformation}
+                        />
+                    </div>
+                </div>
+
 
                 <UploadDownloadFileAccordion
                     parentObject={examSubmissionInformation}
