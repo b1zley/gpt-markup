@@ -37,7 +37,7 @@ const StudentExamSubmissionView = () => {
         return (
             <Container>
                 <div className='border border-light rounded p-3 d-flex flex-column' style={{ minHeight: '350px', flex: 1 }}>
-                Pending...
+                    Pending...
                 </div>
             </Container>
 
@@ -58,8 +58,8 @@ const StudentExamSubmissionView = () => {
                     </div>
                     <div className='mt-auto'>
                         <GenerateAICrtiqueButton
-                        examSubmissionInformation={examSubmissionInformation}
-                        setExamSubmissionInformation={setExamSubmissionInformation}
+                            examSubmissionInformation={examSubmissionInformation}
+                            setExamSubmissionInformation={setExamSubmissionInformation}
                         />
                     </div>
                 </div>
@@ -79,7 +79,7 @@ const StudentExamSubmissionView = () => {
                     lastDisplayed={true}
                     activeDisplay={true}
                 />
-                
+
 
             </div>
         </Container>
