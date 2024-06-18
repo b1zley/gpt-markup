@@ -24,4 +24,13 @@ router.put('/:student_exam_submission_id/rubric_component/:rubric_component_id',
 
 router.put('/:student_exam_submission_id', studentExamSubmissionControllers.handlePutUpdateStudentExamSubmission)
 
+
+
+/**
+ * rubric component ai interactions
+ */
+router.post('/:student_exam_submission_id/ai', studentExamSubmissionControllers.handlePostGetNewAICritique)
+
+
+
 module.exports = router

@@ -53,7 +53,7 @@ async function handlePutUpdateRubricComponentMark(req, res) {
         const { rubric_component_mark } = req.body
         let updateArray = []
 
-        for (const param in req.body){
+        for (const param in req.body) {
             let updateObject = {}
             updateObject.paramToUpdate = param
             updateObject.valueToUpdate = req.body[param]
@@ -92,7 +92,7 @@ async function handlePutUpdateStudentExamSubmission(req, res) {
 // query functions
 
 async function queryGetExamSubmissionExamSubmissionId(student_exam_submission_id) {
-    const sqlQuery = "SELECT ses.student_exam_submission_id, e.exam_id, s.student_id, ses.exam_submission, ses.file_system_id, m.module_id, e.exam_name, e.exam_question, e.model_answer, e.prompt_specifications, e.chosen_ai_model_id, m.module_name, s.student_name, s.student_number FROM student_exam_submission ses LEFT JOIN exam e ON ses.exam_id = e.exam_id LEFT JOIN module m ON e.module_id = m.module_id LEFT JOIN student s ON ses.student_id = s.student_id WHERE ses.student_exam_submission_id = ?"
+    const sqlQuery = "SELECT ses.student_exam_submission_id, e.exam_id, s.student_id, ses.exam_submission, ses.file_system_id, m.module_id, e.exam_name, e.exam_question, e.prompt_specifications, e.chosen_ai_model_id, m.module_name, s.student_name, s.student_number FROM student_exam_submission ses LEFT JOIN exam e ON ses.exam_id = e.exam_id LEFT JOIN module m ON e.module_id = m.module_id LEFT JOIN student s ON ses.student_id = s.student_id WHERE ses.student_exam_submission_id = ?"
     const bindingParams = [student_exam_submission_id]
     const [responseFromQuery] = await db.query(sqlQuery, bindingParams)
     const examSubmission = responseFromQuery[0]
@@ -213,11 +213,141 @@ async function queryGetColumnsStudentExamSubmission() {
 
 }
 
+// handle new ai critique generation
+async function handlePostGetNewAICritique(req, res) {
+    try {
+        const { student_exam_submission_id } = req.params
+
+        // get new ai critique from ai
+        // return entire new student exam submission object?
+        await getNewAICritique(student_exam_submission_id)
+        return res.status(201).json(await queryGetExamSubmissionExamSubmissionId(student_exam_submission_id))
+
+    } catch (err) {
+        console.log(err)
+        return res.status(500).send()
+    }
+
+
+}
+// query handlers
+
+async function getNewAICritique(student_exam_submission_id) {
+    console.log(student_exam_submission_id)
+    console.log('hello from get new ai critique...')
+    // aggregate data of interest
+
+    // JUST EXAM INFO HERE.
+    const examSqlQuery = "SELECT e.exam_id, e.exam_name, e.exam_question, e.prompt_specifications, m.module_id, m.module_name, fs.file_system_id, fs.zip_file_path, fs.unzipped_content_path, tm.trained_model_id, tm.api_id, tm.prompt_engineering, tm.model_name FROM student_exam_submission ses INNER JOIN exam e ON ses.exam_id = e.exam_id INNER JOIN module m on e.module_id = m.module_id INNER JOIN trained_model tm ON e.chosen_ai_model_id = tm.trained_model_id INNER JOIN file_system fs ON e.file_system_id = fs.file_system_id WHERE ses.student_exam_submission_id = 36"
+    const examBindingParams = [student_exam_submission_id]
+
+    const [responseFromExamQuery] = await db.query(examSqlQuery, examBindingParams)
+    const examInformation = responseFromExamQuery[0]
+
+    // rubric components with exam
+    const rubricSqlQuery = "SELECT rc.rubric_component_id, rc.name, rc.rubric_component_desc, rc.maximum FROM exam e INNER JOIN rubric_component rc ON e.exam_id = rc.exam_id WHERE e.exam_id = ?"
+    const rubricBindingParams = [examInformation.exam_id]
+    const [rubricComponentArray] = await db.query(rubricSqlQuery, rubricBindingParams)
+
+    // rating ranges within rubric components
+    for (const rubricComponent of rubricComponentArray) {
+        const ratingRangeBindingParams = [rubricComponent.rubric_component_id]
+        const ratingRangeSql = "SELECT rr.* FROM rubric_component rc INNER JOIN rating_range rr ON rr.rubric_component_id = rc.rubric_component_id WHERE rc.rubric_component_id = ?"
+        const [ratingRangeArray] = await db.query(ratingRangeSql, ratingRangeBindingParams)
+        rubricComponent.rating_ranges = ratingRangeArray
+    }
+
+    examInformation.rubric = rubricComponentArray
+    // console.log(examInformation.rubric[0].rating_ranges)
+
+    // parse model answer as well
+    /**
+     * SIMULATE FOR NOW!!!!
+     */
+    examInformation.model_answer = `Parsed file text FROM ${examInformation.unzipped_content_path} ...`
+
+    // submission data
+    const submissionDataSql = "SELECT fs.* FROM student_exam_submission ses INNER JOIN file_system fs ON ses.file_system_id = fs.file_system_id WHERE ses.student_exam_submission_id = ?"
+    const submissionBindingParams = [student_exam_submission_id]
+
+    const [responseFromSubmissionQuery] = await db.query(submissionDataSql, submissionBindingParams)
+    const submissionDataPath = responseFromSubmissionQuery[0]
+
+    // get path to submission data
+    // and fake parsing file
+    /**
+     * simulate for now!!!
+     */
+    const parsedSubmissionText = `Parsed file text from ${submissionDataPath.unzipped_content_path}`
+    // send all this shit to the api
+
+    const informationToSendToLLM = {
+        examInformation,
+        submissionText: parsedSubmissionText
+    }
+
+    // simulate response
+    // should respond with mark and critique for each rubric component id
+
+    let responseArray = []
+    informationToSendToLLM.examInformation.rubric.forEach((rubricComponent, i) => {
+        let currentDate = new Date();
+        let dateTimeString = currentDate.toString()
+
+        let randomNumber = Math.random();
+        randomNumber = randomNumber * 30;
+        randomNumber = randomNumber.toFixed(2);
+
+        const aiObject = {
+            rubric_component_id: rubricComponent.rubric_component_id,
+            model_id_used: examInformation.trained_model_id,
+            ai_critique: `some faked critique - ${rubricComponent.rubric_component_id} - ${dateTimeString} `,
+            ai_mark: randomNumber
+        }
+        responseArray.push(aiObject)
+    })
+
+
+    // insert response into appropriate db tables
+    // rubric component submission ai mark
+    for (const responseElement of responseArray) {
+        const { rubric_component_id, model_id_used, ai_critique, ai_mark } = responseElement
+        await queryInsertOrUpdateAiMark(student_exam_submission_id, rubric_component_id, model_id_used, ai_critique, ai_mark)
+    }
+
+    return responseArray
+
+}
+
+
+async function queryInsertOrUpdateAiMark(student_exam_submission_id, rubric_component_id, model_id_used, ai_critique, ai_mark) {
+
+    const sqlSelectCurrentAiMark = "SELECT rcsam.rubric_component_submission_ai_mark_id FROM rubric_component_submission_ai_mark rcsam WHERE rcsam.rubric_component_id = ? AND rcsam.student_exam_submission_id = ?"
+    const currentAiMarkBindingParams = [rubric_component_id, student_exam_submission_id]
+    const [repsonseFromAiMarkSelect] = await db.query(sqlSelectCurrentAiMark, currentAiMarkBindingParams)
+
+    if (repsonseFromAiMarkSelect.length === 0) {
+        // do insert
+        const insertSql = "INSERT INTO `rubric_component_submission_ai_mark` (`rubric_component_submission_ai_mark_id`, `ai_mark`, `ai_critique`, `student_exam_submission_id`, `trained_model_id`, `rubric_component_id`) VALUES (NULL, ?, ?, ?, ?, ?);"
+        const insertBindingParams = [ai_mark, ai_critique, student_exam_submission_id, model_id_used, rubric_component_id]
+        const [responseFromInsert] = await db.query(insertSql, insertBindingParams)
+    } else {
+        // do update
+        const rubric_component_submission_ai_mark_id = repsonseFromAiMarkSelect[0].rubric_component_submission_ai_mark_id
+        const updateSql = "UPDATE rubric_component_submission_ai_mark  SET  ai_critique = ?, ai_mark = ?, trained_model_id = ?, rubric_component_id = ? WHERE rubric_component_submission_ai_mark.rubric_component_submission_ai_mark_id = ?;"
+        const updateBindingParams = [ai_critique, ai_mark, model_id_used, rubric_component_id, rubric_component_submission_ai_mark_id]
+        const [responseFromUpdate] = await db.query(updateSql, updateBindingParams)
+    }
+
+}
+
+
 module.exports = {
     handlePostCreateNewExamSubmissionEntry,
     handleGetExamSubmissionEntryByExamId,
     handleDeleteExamSubmissionEntryByStudentExamSubmissionId,
     handleGetStudentExamSubmissionByExamSubmissionId,
     handlePutUpdateRubricComponentMark,
-    handlePutUpdateStudentExamSubmission
+    handlePutUpdateStudentExamSubmission,
+    handlePostGetNewAICritique
 }
