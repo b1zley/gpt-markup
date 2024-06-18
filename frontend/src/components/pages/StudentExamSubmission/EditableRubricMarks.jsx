@@ -3,12 +3,13 @@ import Table from 'react-bootstrap/Table'
 
 import RatingRangeGroupDisplay from '../Exam/dependent components/RatingRangeGroupDisplay'
 import DoubleClickModifyMarkCell from './DoubleClickModifyMarkCell'
+import ViewRatingsModal from './ViewRatingsModal'
 
-const EditableRubricMarks = ({ lastDisplayed, examSubmissionInformation, setExamSubmissionInformation }) => {
+const EditableRubricMarks = ({ lastDisplayed, examSubmissionInformation, setExamSubmissionInformation, activeDisplay }) => {
 
     return (
 
-        <Accordion className="my-0 ">
+        <Accordion className="my-0 " defaultActiveKey={activeDisplay ? "0" : "1"} >
             <Accordion.Item eventKey="0" className={lastDisplayed ? null : "border-bottom-0"}>
                 <Accordion.Header>Rubric Marks</Accordion.Header>
                 <Accordion.Body>
@@ -19,9 +20,9 @@ const EditableRubricMarks = ({ lastDisplayed, examSubmissionInformation, setExam
                                 <th>
                                     Criteria
                                 </th>
-                                <th>
+                                {/* <th>
                                     Ratings
-                                </th>
+                                </th> */}
                                 <th>
                                     Max Points
                                 </th>
@@ -44,23 +45,23 @@ const EditableRubricMarks = ({ lastDisplayed, examSubmissionInformation, setExam
                             {examSubmissionInformation.rubric.map((rubric_component, i) =>
                                 <tr key={rubric_component.rubric_component_id}>
 
-                                    <td>
+                                    <td style={{ width: '30%' }}>
                                         <h6>{rubric_component.name}</h6>
                                         <p>{rubric_component.rubric_component_desc}</p>
-                                    </td>
-                                    <td>
-                                        <RatingRangeGroupDisplay
+                                        <ViewRatingsModal
+
                                             rating_ranges={rubric_component.rating_ranges}
                                         />
                                     </td>
-                                    <td>
+
+                                    <td style={{ width: '5%' }}>
                                         {rubric_component.maximum}
                                     </td>
-                                    <td>
-                                        ai critique eg ai critique egai critique egai critique egai critique egai critique eg
+                                    <td style={{ width: '30%' }}>
+                                        {rubric_component.ai_critique}
                                     </td>
                                     <td>
-                                        x
+                                        {rubric_component.ai_mark}
                                     </td>
                                     <DoubleClickModifyMarkCell
                                         parameterInCell={'rubric_component_critique'}

@@ -92,14 +92,16 @@ async function handlePutUpdateStudentExamSubmission(req, res) {
 // query functions
 
 async function queryGetExamSubmissionExamSubmissionId(student_exam_submission_id) {
-    const sqlQuery = "SELECT ses.student_exam_submission_id, e.exam_id, s.student_id, ses.exam_submission, ses.file_system_id, ses.ai_critique_id, m.module_id, e.exam_name, e.exam_question, e.model_answer, e.prompt_specifications, e.chosen_ai_model_id, m.module_name, s.student_name, s.student_number, aic.ai_mark, aic.ai_critique_id, aic.ai_critique, aic.time_generated, aic.model_generated_by_id, tm.trained_model_id, tm.api_id, tm.prompt_engineering, tm.model_name FROM student_exam_submission ses LEFT JOIN exam e ON ses.exam_id = e.exam_id LEFT JOIN module m ON e.module_id = m.module_id LEFT JOIN student s ON ses.student_id = s.student_id LEFT JOIN ai_critique aic ON ses.ai_critique_id = aic.ai_critique_id LEFT JOIN trained_model tm ON aic.model_generated_by_id = tm.trained_model_id WHERE ses.student_exam_submission_id = ?"
+    const sqlQuery = "SELECT ses.student_exam_submission_id, e.exam_id, s.student_id, ses.exam_submission, ses.file_system_id, m.module_id, e.exam_name, e.exam_question, e.model_answer, e.prompt_specifications, e.chosen_ai_model_id, m.module_name, s.student_name, s.student_number FROM student_exam_submission ses LEFT JOIN exam e ON ses.exam_id = e.exam_id LEFT JOIN module m ON e.module_id = m.module_id LEFT JOIN student s ON ses.student_id = s.student_id WHERE ses.student_exam_submission_id = ?"
     const bindingParams = [student_exam_submission_id]
     const [responseFromQuery] = await db.query(sqlQuery, bindingParams)
     const examSubmission = responseFromQuery[0]
 
 
     // include rubric information here as well
-    const rubricComponentsAndMarksPerComponentQuery = "SELECT rc.name, rc.rubric_component_desc, rc.maximum, rc.rubric_component_id, rcsm.rubric_component_submission_mark_id, rcsm.student_exam_submission_id, rcsm.rubric_component_mark, rcsm.rubric_component_critique FROM student_exam_submission ses INNER JOIN exam e ON ses.exam_id = e.exam_id  INNER JOIN rubric_component rc ON rc.exam_id = e.exam_id  LEFT JOIN rubric_component_submission_mark rcsm  ON rc.rubric_component_id = rcsm.rubric_component_id AND rcsm.student_exam_submission_id = ses.student_exam_submission_id WHERE ses.student_exam_submission_id = ?"
+    // actual marks
+    // and ai marks
+    const rubricComponentsAndMarksPerComponentQuery = "SELECT rc.name, rc.rubric_component_desc, rc.maximum, rc.rubric_component_id, rcsm.rubric_component_submission_mark_id, rcsm.student_exam_submission_id, rcsm.rubric_component_mark, rcsm.rubric_component_critique, rcsam.ai_mark, rcsam.ai_critique FROM student_exam_submission ses INNER JOIN exam e ON ses.exam_id = e.exam_id  INNER JOIN rubric_component rc ON rc.exam_id = e.exam_id  LEFT JOIN rubric_component_submission_mark rcsm  ON rc.rubric_component_id = rcsm.rubric_component_id AND rcsm.student_exam_submission_id = ses.student_exam_submission_id LEFT JOIN rubric_component_submission_ai_mark rcsam ON rc.rubric_component_id = rcsam.rubric_component_id AND rcsam.student_exam_submission_id = ses.student_exam_submission_id WHERE ses.student_exam_submission_id = ?"
     const rubricComponentBindingParams = [student_exam_submission_id]
     const [responseFromRubricQuery] = await db.query(rubricComponentsAndMarksPerComponentQuery, rubricComponentBindingParams)
 
@@ -120,7 +122,7 @@ async function queryGetExamSubmissionExamSubmissionId(student_exam_submission_id
 // async function queryGetRubricInformationByExamSubmissionId
 
 async function queryCreateNewExamSubmission(exam_id, student_id) {
-    const sqlQuery = "INSERT INTO `student_exam_submission` (`student_exam_submission_id`, `exam_id`, `student_id`, `exam_submission`, `marker_mark`, `marker_critique`, `file_system_id`, `ai_critique_id`) VALUES (NULL, ?, ?, NULL, NULL, NULL, NULL, NULL);"
+    const sqlQuery = "INSERT INTO `student_exam_submission` (`student_exam_submission_id`, `exam_id`, `student_id`, `exam_submission`, `file_system_id`) VALUES (NULL, ?, ?, NULL,  NULL);"
     const bindingParams = [exam_id, student_id]
     const [responseFromInsert] = await db.query(sqlQuery, bindingParams)
     const student_exam_submission_id = responseFromInsert.insertId
@@ -130,7 +132,7 @@ async function queryCreateNewExamSubmission(exam_id, student_id) {
 async function queryGetExamSubmissionByExamId(exam_id) {
     // need to also calculate total agreed mark...
 
-    const sqlQuery = "SELECT ses.student_exam_submission_id, ses.exam_id, ses.student_id, ses.exam_submission, COALESCE(SUM(rcsm.rubric_component_mark), NULL) AS marker_mark, ses.file_system_id, ses.ai_critique_id, student.student_name, student.student_number FROM student_exam_submission ses LEFT JOIN rubric_component_submission_mark rcsm ON ses.student_exam_submission_id = rcsm.student_exam_submission_id INNER JOIN student ON student.student_id = ses.student_id WHERE exam_id = ? GROUP BY ses.student_exam_submission_id, ses.student_id, ses.exam_id"
+    const sqlQuery = "SELECT ses.student_exam_submission_id, ses.exam_id, ses.student_id, ses.exam_submission, COALESCE(SUM(rcsm.rubric_component_mark), NULL) AS marker_mark, ses.file_system_id, student.student_name, student.student_number FROM student_exam_submission ses LEFT JOIN rubric_component_submission_mark rcsm ON ses.student_exam_submission_id = rcsm.student_exam_submission_id INNER JOIN student ON student.student_id = ses.student_id WHERE exam_id = 39 GROUP BY ses.student_exam_submission_id, ses.student_id, ses.exam_id"
     const bindingParams = [exam_id]
 
     const [queryResponse] = await db.query(sqlQuery, bindingParams)

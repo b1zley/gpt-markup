@@ -11,7 +11,7 @@ import axios from 'axios'
 import {useEffect} from 'react'
 
 
-const UploadDownloadFileAccordion = ({ parentObject, setParentObject, submissionType, accordionName, lastDisplayed }) => {
+const UploadDownloadFileAccordion = ({ parentObject, setParentObject, submissionType, accordionName, lastDisplayed, activeDisplay }) => {
 
     async function handleExamUpload(examUploadResponse) {
         const newFileSystemId = examUploadResponse.data.file_system_id
@@ -60,7 +60,7 @@ const UploadDownloadFileAccordion = ({ parentObject, setParentObject, submission
 
 
     return (
-        <Accordion className="my-0 ">
+        <Accordion className="my-0 " defaultActiveKey={activeDisplay ? "0" : ""}>
             <Accordion.Item eventKey="0" className={lastDisplayed ? null : "border-bottom-0"}>
                 <Accordion.Header>
                     {accordionName}

@@ -15,6 +15,7 @@ const StudentExamSubmissionView = () => {
 
     const [examSubmissionInformation, setExamSubmissionInformation] = useState(null)
 
+    console.log(examSubmissionInformation)
     useEffect(() => {
 
         async function handleSubmissionFetch() {
@@ -57,11 +58,13 @@ const StudentExamSubmissionView = () => {
                     submissionType={'EXAM_SUBMISSION'}
                     accordionName={'Submission Upload'}
                     lastDisplayed={false}
+                    activeDisplay={true}
                 />
                 <EditableRubricMarks
                     examSubmissionInformation={examSubmissionInformation}
                     setExamSubmissionInformation={setExamSubmissionInformation}
                     lastDisplayed={true}
+                    activeDisplay={true}
                 />
                 
 
