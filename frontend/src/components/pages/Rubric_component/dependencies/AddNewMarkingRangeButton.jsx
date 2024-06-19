@@ -2,14 +2,15 @@
 import Button from 'react-bootstrap/Button'
 import BASE_API_URL from '../../../../BASE_API_URL'
 
-import axios from 'axios'
+import axiosToBackend from '../../../../axiosToBackend'
+
 
 const AddNewMarkingRangeButton = ({rubricComponent, setRubricComponent}) => {
     
 
     async function handleAddNewMarkingRangeClick(event){
         const addNewRangeUrl = `${BASE_API_URL}module/${rubricComponent.module_id}/exam/${rubricComponent.exam_id}/rubric/${rubricComponent.rubric_component_id}/rating_range`
-        const responseFromPost = await axios.post(addNewRangeUrl)
+        const responseFromPost = await axiosToBackend.post(addNewRangeUrl)
         if(responseFromPost.status === 201){
             // do stuff
             const newRatingRangeObject = {

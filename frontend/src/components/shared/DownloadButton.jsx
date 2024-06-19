@@ -1,5 +1,7 @@
 import React from 'react';
-import axios from 'axios';
+import axiosToBackend from '../../axiosToBackend'
+
+
 import Button from 'react-bootstrap/Button';
 
 const DownloadButton = ({ loadCondition, downloadUrl, fileName, height, className }) => {
@@ -12,7 +14,7 @@ const DownloadButton = ({ loadCondition, downloadUrl, fileName, height, classNam
                 responseType: 'blob'
             };
 
-            const getDownloadResponse = await axios.get(downloadUrl, axiosDownloadOptions);
+            const getDownloadResponse = await axiosToBackend.get(downloadUrl, axiosDownloadOptions);
             const url = window.URL.createObjectURL(new Blob([getDownloadResponse.data]));
             const link = document.createElement('a');
             link.href = url;

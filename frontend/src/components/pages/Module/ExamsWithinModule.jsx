@@ -2,7 +2,7 @@ import { Col, ListGroup, Row, Button } from "react-bootstrap"
 import { Link } from "react-router-dom"
 
 import BASE_API_URL from "../../../BASE_API_URL"
-import axios from 'axios'
+import axiosToBackend from '../../../axiosToBackend'
 
 const ExamsWithinModule = ({ module_id, examsWithinModule, setExamsWithinModule }) => {
 
@@ -18,7 +18,7 @@ const ExamsWithinModule = ({ module_id, examsWithinModule, setExamsWithinModule 
         
         console.log(apiDeleteUrl)
         try {
-            const responseFromDelete = await axios.delete(apiDeleteUrl)
+            const responseFromDelete = await axiosToBackend.delete(apiDeleteUrl)
             if(responseFromDelete.status != 204){
                 throw new Error()
             }

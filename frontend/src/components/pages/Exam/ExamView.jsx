@@ -1,6 +1,7 @@
 import { Link, useParams } from "react-router-dom";
 import { useState, useEffect } from 'react';
-import axios from "axios";
+import axiosToBackend from '../../../axiosToBackend'
+
 import BASE_API_URL from "../../../BASE_API_URL";
 
 // components
@@ -48,7 +49,7 @@ const ExamView = () => {
         const putBody = {
             [param]: newParamValue
         }
-        const responseFromPutRequest = await (axios.put(apiPutUrl, putBody))
+        const responseFromPutRequest = await (axiosToBackend.put(apiPutUrl, putBody))
         if (responseFromPutRequest.status === 200) {
             return true
         } else return false
@@ -60,7 +61,7 @@ const ExamView = () => {
             try {
                 // fetch exam information from api
                 const apiFetchUrl = `${BASE_API_URL}module/${module_id}/exam/${exam_id}`;
-                const responseFromGet = await axios.get(apiFetchUrl);
+                const responseFromGet = await axiosToBackend.get(apiFetchUrl);
                 setExamInformation(responseFromGet.data);
 
 

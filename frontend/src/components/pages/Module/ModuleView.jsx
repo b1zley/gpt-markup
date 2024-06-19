@@ -3,15 +3,14 @@ import { useEffect, useState } from 'react'
 import { Card, Container } from 'react-bootstrap'
 import { useParams, Link } from 'react-router-dom'
 
-import axios from 'axios'
+import axiosToBackend from '../../../axiosToBackend'
+
 
 import BASE_API_URL from '../../../BASE_API_URL'
 
 // components
-import Spinner from 'react-bootstrap/Spinner'
 import ExamsWithinModule from './ExamsWithinModule'
 import LoadingSpinner from '../../shared/LoadingSpinner'
-import CreateExam from '../../shared/CreateExam'
 import CreateExamWithinModule from './CreateExamWithinModule'
 import Placeholder from 'react-bootstrap/Placeholder'
 
@@ -30,10 +29,10 @@ const ModuleView = () => {
     useEffect(() => {
         async function handleRender() {
             // get viewed module details
-            const viewedModuleResponse = await axios.get(`${BASE_API_URL}module/${module_id}`)
+            const viewedModuleResponse = await axiosToBackend.get(`${BASE_API_URL}module/${module_id}`)
             setViewedModule(viewedModuleResponse.data[0])
             // get exams from viewed module
-            const viewedModuleExamsResponse = await axios.get(`${BASE_API_URL}module/${module_id}/exam`)
+            const viewedModuleExamsResponse = await axiosToBackend.get(`${BASE_API_URL}module/${module_id}/exam`)
             setExamsWithinModule(viewedModuleExamsResponse.data)
             setPromiseStatus('complete')
 

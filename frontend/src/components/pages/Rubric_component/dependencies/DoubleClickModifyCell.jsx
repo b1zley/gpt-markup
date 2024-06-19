@@ -1,6 +1,7 @@
 import { useState } from "react"
 import BASE_API_URL from "../../../../BASE_API_URL"
-import axios from 'axios'
+import axiosToBackend from '../../../../axiosToBackend'
+
 import Form from 'react-bootstrap/Form'
 
 const DoubleClickModifyCell = ({ parameterInCell, rubricComponent, setRubricComponent, index }) => {
@@ -15,7 +16,7 @@ const DoubleClickModifyCell = ({ parameterInCell, rubricComponent, setRubricComp
         const putBody = {
             [paramToUpdate]: valueToUpdate
         }
-        const responseFromPutRequest = await axios.put(putApiURL, putBody)
+        const responseFromPutRequest = await axiosToBackend.put(putApiURL, putBody)
         if (responseFromPutRequest.status === 200) {
             return true
         } else {

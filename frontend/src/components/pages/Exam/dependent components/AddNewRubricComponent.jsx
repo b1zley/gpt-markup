@@ -5,7 +5,7 @@ import Form from 'react-bootstrap/Form'
 import { useEffect, useState } from 'react'
 import BASE_API_URL from '../../../../BASE_API_URL'
 
-import axios from 'axios'
+import axiosToBackend from '../../../../axiosToBackend'
 
 const AddNewRubricComponent = ({ examInformation, setExamInformation }) => {
 
@@ -21,7 +21,7 @@ const AddNewRubricComponent = ({ examInformation, setExamInformation }) => {
         const postBody = {
             rubric_component_name: newRubricComponentName
         }
-        const responseFromPostNewComponent = await axios.post(postNewRubricComponentURL, postBody)
+        const responseFromPostNewComponent = await axiosToBackend.post(postNewRubricComponentURL, postBody)
         console.log(responseFromPostNewComponent)
         if (responseFromPostNewComponent.status === 201) {
             const newRubricComponentId = responseFromPostNewComponent.data.rubric_component_id

@@ -2,12 +2,13 @@
 import { useState } from 'react'
 import Form from 'react-bootstrap/Form'
 import BASE_API_URL from '../../../BASE_API_URL'
-import axios from 'axios'
+import axiosToBackend from '../../../axiosToBackend'
+
 
 const DoubleClickModifyMarkCell = ({ parameterInCell, examSubmissionInformation, setExamSubmissionInformation, index }) => {
 
     const [editPart, setEditPart] = useState(false)
-    const [textPart, setTextPart] = useState(examSubmissionInformation.rubric[index][parameterInCell])
+    const [textPart, setTextPart] = useState(examSubmissionInformation.rubric[index][parameterInCell] ? examSubmissionInformation.rubric[index][parameterInCell] : '')
 
     async function handleDoubleClickPart() {
         setEditPart(true)
@@ -45,7 +46,7 @@ const DoubleClickModifyMarkCell = ({ parameterInCell, examSubmissionInformation,
         console.log(putBody)
         console.log(putApiURL)
 
-        const responseFromPut = await axios.put(putApiURL, putBody)
+        const responseFromPut = await axiosToBackend.put(putApiURL, putBody)
         console.log(responseFromPut)
         return responseFromPut.status === 200
     }

@@ -5,7 +5,9 @@ import ListGroup from 'react-bootstrap/ListGroup'
 import Button from 'react-bootstrap/Button'
 import Form from 'react-bootstrap/Form'
 
-import axios from 'axios'
+import axiosToBackend from '../../../../axiosToBackend'
+
+
 import LoadingSpinner from '../../../shared/LoadingSpinner'
 import { Col, Row } from 'react-bootstrap'
 import BASE_API_URL from '../../../../BASE_API_URL'
@@ -60,7 +62,7 @@ const EditAssignedMarkersAccordion = ({ lastDisplayed, examInformation }) => {
         async function handleFetch() {
             // get engaged super users
             const apiGetEngagedSuperUsersURL = `${BASE_API_URL}super_user/exam_search?module_id=${examInformation.module_id}&exam_id=${examInformation.exam_id}`
-            const engagedSuperUsersResponse = await axios.get(apiGetEngagedSuperUsersURL)
+            const engagedSuperUsersResponse = await axiosToBackend.get(apiGetEngagedSuperUsersURL)
             let newEngagedSuperUsers = engagedSuperUsersResponse.data
             // sort engagedSuperUsers according to super_user_type_id
             newEngagedSuperUsers.sort((a, b) => sortSuperUsers(a, b))
@@ -71,7 +73,7 @@ const EditAssignedMarkersAccordion = ({ lastDisplayed, examInformation }) => {
             // super user type id corresponding to marker
             const marker_type_id = 2
             const getAllMarkersApiUrl = `${BASE_API_URL}super_user/super_user_type_id/${marker_type_id}`
-            const markersApiResponse = await axios.get(getAllMarkersApiUrl)
+            const markersApiResponse = await axiosToBackend.get(getAllMarkersApiUrl)
             let markersFromApi = markersApiResponse.data
             setAllMarkers(markersFromApi)
 
@@ -84,7 +86,7 @@ const EditAssignedMarkersAccordion = ({ lastDisplayed, examInformation }) => {
 
     async function handleRemoveAccessFromMarker(superUserId, indexToRemove) {
         const apiRemoveEngagedSuperUserURL = `${BASE_API_URL}module/${examInformation.module_id}/exam/${examInformation.exam_id}/super_user/${superUserId}`
-        const deleteRequestResponse = await axios.delete(apiRemoveEngagedSuperUserURL)
+        const deleteRequestResponse = await axiosToBackend.delete(apiRemoveEngagedSuperUserURL)
         if (deleteRequestResponse.status === 204) {
             let newSuperUserArray = engagedSuperUsers.slice(0, indexToRemove).concat(engagedSuperUsers.slice(indexToRemove + 1))
             setEngagedSuperUsers(newSuperUserArray)
@@ -104,7 +106,7 @@ const EditAssignedMarkersAccordion = ({ lastDisplayed, examInformation }) => {
             super_user_id: JSON.parse(selectedNewMarker).super_user_id
         }
         const apiUrl = `${BASE_API_URL}module/${examInformation.module_id}/exam/${examInformation.exam_id}/super_user/`
-        const responseFromPost = await axios.post(apiUrl, requestBody)
+        const responseFromPost = await axiosToBackend.post(apiUrl, requestBody)
         if (responseFromPost.status === 201) {
             // handle in render
             setEngagedSuperUsers(newSuperUserArray)

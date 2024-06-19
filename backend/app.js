@@ -8,6 +8,9 @@ const cors = require('cors')
 
 const app = express()
 const upload = multer({ dest: 'uploads/' }); // destination directory...
+
+const { verifyJwt } = require('./controllers/authenticationControllers')
+
 app.use(express.json())
 app.use(cors())
 
@@ -18,22 +21,26 @@ app.get('/test', async (req, res) => {
     return res.status(200).json(studentRows)
 })
 
-
+// protected routes
 const fileSystemRoutes = require('./routes/fileSystemRoutes')
-app.use('/file_system', fileSystemRoutes)
-
+app.use('/file_system', verifyJwt, fileSystemRoutes)
 
 const moduleRoutes = require('./routes/moduleRoutes')
-app.use('/module', moduleRoutes)
+app.use('/module', verifyJwt , moduleRoutes)
 
 const aiModelRoutes = require('./routes/aiModelRoutes')
-app.use('/ai_model', aiModelRoutes)
+app.use('/ai_model',verifyJwt,  aiModelRoutes)
 
 const superUserRoutes = require('./routes/superUserRoutes')
-app.use('/super_user', superUserRoutes)
+app.use('/super_user', verifyJwt,  superUserRoutes)
 
 const studentRoutes = require('./routes/studentRoutes')
-app.use('/student', studentRoutes)
+app.use('/student', verifyJwt, studentRoutes)
+
+
+// unprotected login route
+const authenticationRoutes = require('./routes/authenticationRoutes')
+app.use('/super_authentication', authenticationRoutes)
 
 
 

@@ -6,7 +6,8 @@ import DownloadButton from "./DownloadButton"
 
 import BASE_API_URL from "../../BASE_API_URL"
 
-import axios from 'axios'
+import axiosToBackend from '../../axiosToBackend'
+
 
 import {useEffect} from 'react'
 
@@ -49,7 +50,7 @@ const UploadDownloadFileAccordion = ({ parentObject, setParentObject, submission
         const putBody = {
             [param]: newParamValue
         }
-        const responseFromPutRequest = await (axios.put(apiPutUrl, putBody))
+        const responseFromPutRequest = await (axiosToBackend.put(apiPutUrl, putBody))
         if (responseFromPutRequest.status === 200) {
             return true
         } else return false

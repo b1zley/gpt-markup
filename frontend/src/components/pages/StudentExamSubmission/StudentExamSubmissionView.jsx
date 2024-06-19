@@ -6,7 +6,9 @@ import { useParams, Link } from 'react-router-dom'
 
 import { useEffect, useState } from 'react'
 import BASE_API_URL from '../../../BASE_API_URL'
-import axios from 'axios'
+import axiosToBackend from '../../../axiosToBackend'
+
+
 import UploadDownloadFileAccordion from '../../shared/UploadDownloadFileAccordion'
 import EditableRubricMarks from './EditableRubricMarks'
 import GenerateAICrtiqueButton from './GenerateAICritiqueButton'
@@ -23,7 +25,7 @@ const StudentExamSubmissionView = () => {
         async function handleSubmissionFetch() {
             const apiSubmissionUrl = `${BASE_API_URL}module/${module_id}/exam/${exam_id}/student_exam_submission/${student_exam_submission_id}`
 
-            const responseFromFetch = await axios.get(apiSubmissionUrl)
+            const responseFromFetch = await axiosToBackend.get(apiSubmissionUrl)
             setExamSubmissionInformation(responseFromFetch.data)
 
         }

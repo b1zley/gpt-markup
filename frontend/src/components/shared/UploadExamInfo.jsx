@@ -1,6 +1,7 @@
 import { Container } from "react-bootstrap"
 import { useState, Fragment } from 'react'
-import axios from 'axios'
+import axiosToBackend from '../../axiosToBackend'
+
 import Button from 'react-bootstrap/Button'
 import Form from 'react-bootstrap/Form'
 import BASE_API_URL from "../../BASE_API_URL"
@@ -56,7 +57,7 @@ function UploadExamInfo({ submissionType, handleExamUpload }) {
             formData.append('uploadType', submissionType)
 
             const postOptions = { headers: { 'Content-Type': 'multipart/form-data' } }
-            const responseFromPost = await axios.post(`${BASE_API_URL}file_system/upload`, formData, postOptions)
+            const responseFromPost = await axiosToBackend.post(`${BASE_API_URL}file_system/upload`, formData, postOptions)
             handleExamUpload(responseFromPost)
 
 

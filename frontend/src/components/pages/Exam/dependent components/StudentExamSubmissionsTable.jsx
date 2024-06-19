@@ -5,14 +5,14 @@ import BootstrapTick from '../../../icons/BootstrapTick'
 
 import BASE_API_URL from '../../../../BASE_API_URL'
 
-import axios from 'axios'
+import axiosToBackend from '../../../../axiosToBackend'
 
 const StudentExamSubmissionsTable = ({examInformation, studentExamSubmissions, setStudentExamSubmissions}) => {
 
     async function handleStudentRemoveClick(i) {
         const submissionToDelete = studentExamSubmissions[i]
         const apiDeleteExamSubmissionUrl = `${BASE_API_URL}module/${examInformation.module_id}/exam/${submissionToDelete.exam_id}/student_exam_submission/${submissionToDelete.student_exam_submission_id}`
-        const deleteExamSubmissionResponse = await axios.delete(apiDeleteExamSubmissionUrl)
+        const deleteExamSubmissionResponse = await axiosToBackend.delete(apiDeleteExamSubmissionUrl)
         if (deleteExamSubmissionResponse.status === 204) {
             let newExamSubmissionsArray = studentExamSubmissions.filter((_, index) => index !== i)
             setStudentExamSubmissions(newExamSubmissionsArray)

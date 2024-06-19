@@ -5,7 +5,8 @@ import Button from 'react-bootstrap/Button'
 
 import { useEffect, useState } from 'react'
 import BASE_API_URL from "../../../../BASE_API_URL"
-import axios from 'axios'
+import axiosToBackend from '../../../../axiosToBackend'
+
 
 const EditAiModelAccordion = ({ setExamInformation, examInformation }) => {
 
@@ -16,7 +17,7 @@ const EditAiModelAccordion = ({ setExamInformation, examInformation }) => {
         async function handleFetch() {
             // fetch ai model information from api
             const apiAiModelsURL = `${BASE_API_URL}ai_model`
-            const responseFromModelsGet = await axios.get(apiAiModelsURL)
+            const responseFromModelsGet = await axiosToBackend.get(apiAiModelsURL)
             const aiModelsArray = responseFromModelsGet.data
             setAiModelsToChoose(aiModelsArray)
         }
@@ -36,7 +37,7 @@ const EditAiModelAccordion = ({ setExamInformation, examInformation }) => {
         const putBody = {
             chosen_ai_model_id: selectedAiModel.trained_model_id
         }
-        const responseFromPutRequest = await axios.put(putUrl, putBody)
+        const responseFromPutRequest = await axiosToBackend.put(putUrl, putBody)
         // update render based on response
 
         if (responseFromPutRequest.status === 200) {

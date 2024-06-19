@@ -4,7 +4,8 @@ import Form from 'react-bootstrap/Form'
 import { useState } from 'react'
 import BASE_API_URL from '../../../../BASE_API_URL'
 
-import axios from 'axios'
+import axiosToBackend from '../../../../axiosToBackend'
+
 import DoubleClickModifyCell from './DoubleClickModifyCell'
 
 const MarkingRangeTableRow = ({ rubricComponent, setRubricComponent, index }) => {
@@ -12,7 +13,7 @@ const MarkingRangeTableRow = ({ rubricComponent, setRubricComponent, index }) =>
         const ratingRangeIdToDelete = rubricComponent.rating_ranges[index].rating_range_id
 
         const apiDeleteUrl = `${BASE_API_URL}module/${rubricComponent.module_id}/exam/${rubricComponent.exam_id}/rubric/${rubricComponent.rubric_component_id}/rating_range/${ratingRangeIdToDelete}`
-        const responseFromDelete = await axios.delete(apiDeleteUrl)
+        const responseFromDelete = await axiosToBackend.delete(apiDeleteUrl)
 
         if (responseFromDelete.status === 204) {
             // do stuff

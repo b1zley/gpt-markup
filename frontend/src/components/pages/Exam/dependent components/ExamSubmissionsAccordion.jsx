@@ -5,7 +5,8 @@ import Button from 'react-bootstrap/Button'
 import BootstrapTick from '../../../icons/BootstrapTick'
 
 import { useState, useEffect } from 'react'
-import axios from 'axios'
+import axiosToBackend from '../../../../axiosToBackend'
+
 import BASE_API_URL from '../../../../BASE_API_URL'
 
 import { useLocation } from 'react-router-dom'
@@ -28,7 +29,7 @@ const StudentsInExamAccordion = ({ lastDisplayed, examInformation }) => {
         async function handleStudentExamSubmissionsFetch() {
             // fetch student exam submission from api
             const apiFetchExamSubmissionsUrl = `${BASE_API_URL}module/${examInformation.module_id}/exam/${examInformation.exam_id}/student_exam_submission`
-            const responseFromFetchExams = await axios.get(apiFetchExamSubmissionsUrl)
+            const responseFromFetchExams = await axiosToBackend.get(apiFetchExamSubmissionsUrl)
             const newExamSubmissions = responseFromFetchExams.data
             // handle setting state from response data
             setStudentExamSubmissions(newExamSubmissions)

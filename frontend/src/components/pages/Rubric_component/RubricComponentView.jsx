@@ -1,6 +1,7 @@
 
 import { useEffect, useState } from 'react'
-import axios from 'axios'
+import axiosToBackend from '../../../axiosToBackend'
+
 import { useParams, Link } from 'react-router-dom'
 import BASE_API_URL from '../../../BASE_API_URL';
 import { Accordion, Container } from 'react-bootstrap';
@@ -18,7 +19,7 @@ const RubricComponentView = () => {
     useEffect(() => {
         // fetch information on the rubric
         async function handleFetch() {
-            const rubricComponentResponse = await axios.get(`${BASE_API_URL}module/${module_id}/exam/${exam_id}/rubric/${rubric_component_id}`)
+            const rubricComponentResponse = await axiosToBackend.get(`${BASE_API_URL}module/${module_id}/exam/${exam_id}/rubric/${rubric_component_id}`)
             setRubricComponent(rubricComponentResponse.data)
         }
         handleFetch()

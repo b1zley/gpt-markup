@@ -1,6 +1,5 @@
 import { useState } from 'react'
-import axios from 'axios'
-
+import axiosToBackend from '../../../../axiosToBackend'
 
 import Accordion from 'react-bootstrap/Accordion'
 import Button from 'react-bootstrap/Button'
@@ -51,7 +50,7 @@ const EditableExamAccordion = ({
         const putBody = {
             [param]: newParamValue
         }
-        const responseFromPutRequest = await (axios.put(apiPutUrl, putBody))
+        const responseFromPutRequest = await (axiosToBackend.put(apiPutUrl, putBody))
         if (responseFromPutRequest.status === 200) {
             return true
         } else return false

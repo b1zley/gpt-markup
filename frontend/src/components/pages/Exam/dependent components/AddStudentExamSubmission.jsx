@@ -3,7 +3,8 @@ import Form from 'react-bootstrap/Form';
 import ListGroup from 'react-bootstrap/ListGroup'
 
 import { Fragment, useEffect, useState } from 'react'
-import axios from 'axios'
+import axiosToBackend from '../../../../axiosToBackend'
+
 import BASE_API_URL from '../../../../BASE_API_URL';
 import Button from 'react-bootstrap/Button';
 
@@ -27,7 +28,7 @@ const AddStudentExamSubmission = ({ examInformation, studentExamSubmissions, set
 
         // handle get request for search
         const apiSearchStudentsURL = `${BASE_API_URL}student/search?student_number_key=${event.target.value}`
-        const responseFromSearchGet = await axios.get(apiSearchStudentsURL)
+        const responseFromSearchGet = await axiosToBackend.get(apiSearchStudentsURL)
         const newStudentsMatchingSearch = responseFromSearchGet.data
         setStudentsMatchingSearch(newStudentsMatchingSearch)
 
@@ -58,7 +59,7 @@ const AddStudentExamSubmission = ({ examInformation, studentExamSubmissions, set
         const postBody = {
             student_id: student.student_id
         }
-        const responseFromPostCreateExamSubmission = await axios.post(postAddStudentToExamSubmissionsApiURL, postBody)
+        const responseFromPostCreateExamSubmission = await axiosToBackend.post(postAddStudentToExamSubmissionsApiURL, postBody)
 
         if (responseFromPostCreateExamSubmission.status === 201) {
             const new_student_exam_submission_id = responseFromPostCreateExamSubmission.data.student_exam_submission_id

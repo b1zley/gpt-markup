@@ -2,7 +2,8 @@ import { useState } from 'react'
 import { Form, Button } from 'react-bootstrap'
 
 import BASE_API_URL from '../../../BASE_API_URL'
-import axios from 'axios'
+import axiosToBackend from '../../../axiosToBackend'
+
 
 const CreateExamWithinModule = ({ module_id, examsWithinModule, setExamsWithinModule }) => {
 
@@ -20,7 +21,7 @@ const CreateExamWithinModule = ({ module_id, examsWithinModule, setExamsWithinMo
 
 
         // send api request
-        const responseFromCreateExamRequest = await axios.post(apiUrl, requestBody)
+        const responseFromCreateExamRequest = await axiosToBackend.post(apiUrl, requestBody)
         console.log(responseFromCreateExamRequest)
         const returnedExamId = responseFromCreateExamRequest.data.exam_id
         // do stuff with response

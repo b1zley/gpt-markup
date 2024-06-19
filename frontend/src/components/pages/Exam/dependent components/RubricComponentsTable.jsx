@@ -7,7 +7,7 @@ import Button from 'react-bootstrap/Button'
 import RatingRangeGroupDisplay from './RatingRangeGroupDisplay'
 import BASE_API_URL from '../../../../BASE_API_URL'
 
-import axios from 'axios'
+import axiosToBackend from '../../../../axiosToBackend'
 
 
 const RubricComponentsTable = ({ examInformation, setExamInformation }) => {
@@ -19,7 +19,7 @@ const RubricComponentsTable = ({ examInformation, setExamInformation }) => {
         // delete request to api
         const { rubric_component_id } = rubricComponent
         const apiDeleteRequestURL = `${BASE_API_URL}module/${examInformation.module_id}/exam/${examInformation.exam_id}/rubric/${rubric_component_id}`
-        const responseFromDeleteRequest = await axios.delete(apiDeleteRequestURL)
+        const responseFromDeleteRequest = await axiosToBackend.delete(apiDeleteRequestURL)
 
         if (responseFromDeleteRequest.status === 204) {
             let updatedExamInformation = { ...examInformation }
