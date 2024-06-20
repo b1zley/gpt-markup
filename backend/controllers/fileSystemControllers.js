@@ -1,6 +1,7 @@
 const path = require('path');                // Import Path module for file path manipulations
 const fs = require('fs');                    // Import File System module for file operations
 const unzipper = require('unzipper');        // Import Unzipper module for extracting zip files
+const yauzl = require('yauzl');
 
 const { db, axios, backendRoot, storageDirectory } = require('../routesCommonDependencies'); // Common dependencies
 
@@ -22,12 +23,35 @@ async function uploadFile(req, res) {
     }
     const tempFilePath = path.join(__dirname, '../uploads', `/STAGING/${req.file.filename}`);
 
+    // check tempZip is acceptable file size
+    // if tempZipFileSize < SOME_NUMBER 
+    // do rest
+    // else return error
+    const MAX_UNCOMPRESSED_SIZE = 50 * 1024 * 1024; // 50 MB
+
     try {
+
+        // Check if the uncompressed size of the zip file is within the acceptable limit
+        const tempZipFileSize = await new Promise((resolve, reject) => {
+            checkZipFileSize(tempFilePath, MAX_UNCOMPRESSED_SIZE, (err, size) => {
+                if (err) return reject(err);
+                resolve(size);
+            });
+        });
+        console.log(`Uncompressed size of the uploaded zip: ${tempZipFileSize} bytes`);
+
+
+
+
         const file_system_id = await handleUpload(uploadType, tempFilePath)
         return res.status(201).json(file_system_id)
     } catch (err) {
         console.log('heelo from error')
         console.log(err)
+
+        if (err.message === 'Uncompressed size exceeds the maximum allowed limit') {
+            return res.status(400).json({ message: 'File size too large' });
+        }
         return res.status(500)
     }
 }
@@ -138,6 +162,39 @@ async function downloadFileZipById(req, res) {
         return res.status(500).send()
     }
 }
+
+function checkZipFileSize(zipFilePath, maxUncompressedSize, callback) {
+    let totalUncompressedSize = 0;
+
+    yauzl.open(zipFilePath, { lazyEntries: true }, (err, zipfile) => {
+        if (err) return callback(err);
+
+        zipfile.readEntry();
+        zipfile.on('entry', (entry) => {
+            totalUncompressedSize += entry.uncompressedSize;
+
+            // Check if the total uncompressed size exceeds the limit
+            if (totalUncompressedSize > maxUncompressedSize) {
+                zipfile.close();
+                return callback(new Error('Uncompressed size exceeds the maximum allowed limit'));
+            }
+
+            zipfile.readEntry();
+        });
+
+        zipfile.on('end', () => {
+            callback(null, totalUncompressedSize);
+        });
+
+        zipfile.on('error', (err) => {
+            callback(err);
+        });
+    });
+}
+
+
+
+
 
 
 module.exports = {
