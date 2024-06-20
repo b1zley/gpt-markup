@@ -42,7 +42,7 @@ async function getModulesBySuperUserId(req, res) {
         const super_user_id = req.params.super_user_id
         let sqlSearchAndJoin = "SELECT * FROM module INNER JOIN module_super_user ON module.module_id = module_super_user.module_id WHERE super_user_id = ? "
         let bindingParams = [super_user_id]
-        if(module_id != '*'){
+        if (module_id != '*') {
             sqlSearchAndJoin += 'AND module_id = ?'
             bindingParams.push(module_id)
         }
@@ -53,9 +53,56 @@ async function getModulesBySuperUserId(req, res) {
     }
 }
 
+
+async function handleGetModulesWithExams(req, res) {
+
+    try {
+        let modulesToReturn = await queryGetModules()
+        return res.status(200).json(modulesToReturn)
+    } catch (err) {
+        console.log(err)
+        return res.status(500).send()
+    }
+}
+
+const examControllers = require('./examControllers')
+
+async function queryGetModules() {
+    const moduleSqlQuery = "SELECT * FROM module"
+    const [moduleRows] = await db.query(moduleSqlQuery)
+
+    for (const moduleRow of moduleRows) {
+        // get exams within module
+        const module_id = moduleRow.module_id
+        moduleRow.exams = await examControllers.handleQueryExamsByModuleId(module_id)
+    }
+    return moduleRows
+}
+
+
+async function handleDeleteModuleById(req, res) {
+    const { module_id } = req.params
+    try{
+        await queryDeleteModuleById(module_id)
+        return res.status(204).send()
+    } catch (err){
+        console.log(err)
+        return res.status(500).send()
+    }
+}
+
+async function queryDeleteModuleById(module_id){
+    const sqlQuery = "DELETE FROM module WHERE `module`.`module_id` = ?"
+    const bindingParams = [module_id]
+    const [responseFromDelete] = await db.query(sqlQuery, bindingParams)
+    return true
+}
+
 module.exports = {
     getAllModuleIds,
     getModuleDataByModuleId,
     createNewModule,
-    getModulesBySuperUserId
+    getModulesBySuperUserId,
+    handleGetModulesWithExams,
+    handleDeleteModuleById
 }

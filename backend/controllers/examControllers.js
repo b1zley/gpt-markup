@@ -223,5 +223,6 @@ module.exports = {
     getExamsByModule,
     deleteExamController,
     requestHandlerDeleteSuperUserInExam,
-    requestHandlerPostSuperUserInExam
+    requestHandlerPostSuperUserInExam,
+    handleQueryExamsByModuleId
 }

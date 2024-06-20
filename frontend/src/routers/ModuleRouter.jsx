@@ -4,19 +4,14 @@ import ModuleView from '../components/pages/Module/ModuleView'
 import ExamView from '../components/pages/Exam/ExamView'
 import RubricComponentView from '../components/pages/Rubric_component/RubricComponentView'
 import StudentExamSubmissionView from '../components/pages/StudentExamSubmission/StudentExamSubmissionView'
+import ModulesView from '../components/pages/Modules/ModulesView'
 
-const ViewModulesPlaceHolder = () =>{
-
-
-
-    return ('hello from modules placeholder')
-}
 
 
 const ModuleRouter = () =>{
     return (
         <Routes>
-            <Route path='/' element={<ViewModulesPlaceHolder />}  />
+            <Route path='/' element={<ModulesView />}  />
             <Route path='/:module_id' element={<ModuleView loggedInSuperuser={{"super_user_id":1}}/>} />
             <Route path='/:module_id/exam/:exam_id' element={<ExamView />}/>
             <Route path='/:module_id/exam/:exam_id/rubric_component/:rubric_component_id' element={<RubricComponentView />} />

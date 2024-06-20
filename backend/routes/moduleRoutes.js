@@ -9,12 +9,20 @@ router.use('/:module_id/exam', examRoutes)
 
 
 // module routes
-router.get('/', moduleControllers.getAllModuleIds)
+router.get('/id', moduleControllers.getAllModuleIds)
 router.get('/:module_id', moduleControllers.getModuleDataByModuleId)
 router.post('/', moduleControllers.createNewModule)
 router.get('/:module_id/super_user_id/:super_user_id', moduleControllers.getModulesBySuperUserId)
 
+// router.get('/', )
+
 // get request
-//https://somedomain.com/module
+/**
+ * get modules and their exams
+ */
+
+router.get('/', moduleControllers.handleGetModulesWithExams)
+
+router.delete('/:module_id', moduleControllers.handleDeleteModuleById)
 
 module.exports = router

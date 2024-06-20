@@ -59,9 +59,7 @@ const CreateExamWithinModule = ({ module_id, examsWithinModule, setExamsWithinMo
             </h4>
             <Form onSubmit={handleExamCreation}>
                 <Form.Group controlId="formDropdown" className='my-1'>
-                    <Form.Label>
-                        Exam Name
-                    </Form.Label>
+                    
                     <Form.Control type="text" placeholder="Enter exam name" onChange={handleExamNameChange} />
                 </Form.Group>
                 <Button type="submit" className='my-1'>
