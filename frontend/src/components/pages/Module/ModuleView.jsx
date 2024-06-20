@@ -13,6 +13,7 @@ import ExamsWithinModule from './ExamsWithinModule'
 import LoadingSpinner from '../../shared/LoadingSpinner'
 import CreateExamWithinModule from './CreateExamWithinModule'
 import Placeholder from 'react-bootstrap/Placeholder'
+import EditLecturersInModule from './EditLecturersInModule'
 
 /**
  * view a single module
@@ -72,6 +73,9 @@ const ModuleView = () => {
                     <ExamsWithinModule module_id={module_id} examsWithinModule={examsWithinModule} setExamsWithinModule={setExamsWithinModule} />
                     : 'none found...'}
                 <CreateExamWithinModule module_id={module_id} examsWithinModule={examsWithinModule} setExamsWithinModule={setExamsWithinModule} />
+                <EditLecturersInModule
+                    module_id={viewedModule.module_id}
+                />
             </div>
         </Container >
     )
