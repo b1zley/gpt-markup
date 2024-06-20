@@ -3,6 +3,8 @@
 import { createContext, useState, useContext, useEffect } from 'react'
 import { jwtDecode } from 'jwt-decode'
 
+import Cookies from 'js-cookie'
+
 const AuthContext = createContext()
 
 
@@ -13,7 +15,7 @@ export const AuthProvider = ({ children }) => {
 
 
     useEffect(()=>{
-        const token = localStorage.getItem('jwt')
+        const token = Cookies.get('jwt')
         if(token){
             const decodedToken = jwtDecode(token)
             setUser(decodedToken)
@@ -27,13 +29,13 @@ export const AuthProvider = ({ children }) => {
         // setUser(userData)
         const decodedToken = jwtDecode(token)
         setUser(decodedToken)
-        localStorage.setItem('jwt', token)
+        Cookies.set('jwt', token, {expires: 7})
     }
 
 
     const logout = () => {
         setUser(null)
-        localStorage.removeItem('jwt')
+        Cookies.remove('jwt');
     }
 
 
