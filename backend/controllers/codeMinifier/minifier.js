@@ -424,7 +424,6 @@ const identifyIgnoreSpots = (stringToIdentify) => {
         ignoreObjectsArray.push(ignoreObject)
 
     }
-
     return ignoreObjectsArray
 }
 
@@ -434,6 +433,7 @@ const identifyIgnoreSpots = (stringToIdentify) => {
 
 const minifyWithIgnores = (stringToMinify, ignoreObjectsArray) => {
     let minifiedString = ''
+    let minifiedArray = []
     for (let i = 0; i < stringToMinify.length; i++){
         // check if i is === to ignoreStart
         let ignoreStartFound = false
@@ -460,6 +460,7 @@ const minifyWithIgnores = (stringToMinify, ignoreObjectsArray) => {
                     break
                 } else{
                     minifiedString += stringToMinify[j]
+                    minifiedArray.push(stringToMinify[j])
                 }
             }
         }
@@ -467,10 +468,14 @@ const minifyWithIgnores = (stringToMinify, ignoreObjectsArray) => {
         // otherwise carry out normal minification
         // handle new lines single character
         if(stringToMinify[i] === '\n'){
+            
             minifiedString += ' '
+            minifiedArray.push(' ')
+            // console.log('hello from line break')
+            // console.log(minifiedString)
             continue
         }
-        // handle new lines escape character
+        // // handle new lines escape character
         if(stringToMinify[i] === '\\' && stringToMinify[i+1] === 'n'){
             minifiedString += ' '
             i++
@@ -488,7 +493,24 @@ const minifyWithIgnores = (stringToMinify, ignoreObjectsArray) => {
             continue
         }
 
+        // handle carriage returns
+        if(stringToMinify[i] === '\r'){
+            minifiedString += ' '
+            continue
+        }
+
+        if(stringToMinify[i] === '\\' && stringToMinify[i+1] === 'r'){
+            minifiedString +=' '
+            i++
+            continue
+        }
+
         minifiedString += stringToMinify[i]
+        // minifiedArray.push(stringToMinify[i])
+        // console.log(minifiedArray)
+
+        // const newMinifiedString = minifiedArray.join('')
+        // console.log(minifiedString)
     }
     return minifiedString
 }
@@ -565,7 +587,7 @@ const fullMinifyCode = (codeToMinify) => {
 
     let ignoreSpots = identifyIgnoreSpots(codeToMinify)
     let codeToIgnoreSpaces = minifyWithIgnores(codeToMinify, ignoreSpots)
-
+    // console.log(codeToIgnoreSpaces)
     let newIgnores = identifyIgnoreSpots(codeToIgnoreSpaces)
     let minifiedCodeToReturn = removeTrailingSpacesWithIgnores(codeToIgnoreSpaces, newIgnores)
 

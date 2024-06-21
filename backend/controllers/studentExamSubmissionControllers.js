@@ -275,7 +275,7 @@ async function getNewAICritique(student_exam_submission_id) {
     // parse submission data
     const submissionAnswerPath = path.join(storageDirectory, submissionDataPath.unzip)
     const parsedSubmissionAnswer = await concatenateJavaFiles(submissionAnswerPath)
-
+    console.log(parsedSubmissionAnswer)
 
     // get path to submission data
     // and fake parsing file
@@ -287,7 +287,7 @@ async function getNewAICritique(student_exam_submission_id) {
 
     const informationToSendToLLM = {
         examInformation,
-        submissionText: parsedSubmissionText
+        submissionText: parsedSubmissionAnswer
     }
 
     // simulate response

@@ -20,7 +20,6 @@ async function concatenateJavaFiles(directoryPath) {
 
             if (file.isDirectory()) {
                 // handle as directory
-                console.log('hello this is a directory')
                 concatenatedString += await concatenateJavaFiles(filePath);
             } else if (file.isFile() && path.extname(file.name) === '.java') {
                 // Read contents of .java file
