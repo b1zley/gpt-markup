@@ -111,6 +111,7 @@ const EditAssignedMarkersAccordion = ({ lastDisplayed, examInformation }) => {
             // handle in render
             setEngagedSuperUsers(newSuperUserArray)
             handleEngagedMarkersChange(newSuperUserArray, allMarkers)
+            setSelectedNewMarker(undefined)
         } else{
             window.alert('Failed to add marker')
         }
