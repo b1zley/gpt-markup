@@ -34,7 +34,7 @@ async function uploadFile(req, res) {
         });
         console.log(`Uncompressed size of the uploaded zip: ${tempZipFileSize} bytes`);
 
-        await logZipContents(tempFilePath); // Log the contents of the zip file
+        // await logZipContents(tempFilePath); // Log the contents of the zip file
 
         const file_system_id = await handleUpload(uploadType, tempFilePath);
         return res.status(201).json(file_system_id);
@@ -103,12 +103,14 @@ async function processFile(filePath, parentExtractPath, insertId) {
 
         console.log(`Extracting ${filePath} to ${extractPath}`);
 
-        await fs.createReadStream(filePath)
-            .pipe(unzipper.Extract({ path: extractPath }))
-            .promise();
+        const directory = await unzipper.Open.file(filePath)
+        await directory.extract({path:extractPath})
+        // await fs.createReadStream(filePath)
+        //     .pipe(unzipper.Extract({ path: extractPath }))
+        //     .promise();
 
         console.log(`Extracted files to: ${extractPath}`);
-        await logDirectoryStructure(extractPath); // Log the structure of the extracted files
+        // await logDirectoryStructure(extractPath); // Log the structure of the extracted files
 
         return extractPath;
     } catch (err) {
