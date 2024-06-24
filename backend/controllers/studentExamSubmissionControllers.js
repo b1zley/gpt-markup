@@ -4,7 +4,9 @@ const path = require('path')
 
 const { concatenateJavaFiles } = require('./codeMinifier/parseFilesConcatenate')
 
+const { countTokens } = require('./tokenCounter/tokenCounter')
 
+const {handleAiApiCall} = require('./aiApiCallHandler')
 
 // request handlers
 
@@ -234,7 +236,7 @@ async function handlePostGetNewAICritique(req, res) {
 }
 // query handlers
 
-async function getNewAICritique(student_exam_submission_id) {
+async function getExamInformationForAiParse(student_exam_submission_id){
     // aggregate data of interest
 
     // JUST EXAM INFO HERE.
@@ -259,6 +261,13 @@ async function getNewAICritique(student_exam_submission_id) {
 
     examInformation.rubric = rubricComponentArray
 
+    return examInformation
+}
+
+async function getNewAICritique(student_exam_submission_id) {
+    
+    let examInformation = await getExamInformationForAiParse(student_exam_submission_id)
+
     // submission data
     const submissionDataSql = "SELECT fs.* FROM student_exam_submission ses INNER JOIN file_system fs ON ses.file_system_id = fs.file_system_id WHERE ses.student_exam_submission_id = ?"
     const submissionBindingParams = [student_exam_submission_id]
@@ -266,29 +275,33 @@ async function getNewAICritique(student_exam_submission_id) {
     const [responseFromSubmissionQuery] = await db.query(submissionDataSql, submissionBindingParams)
     const submissionDataPath = responseFromSubmissionQuery[0]
 
-
+    
+    
     // parse model answer as well
     const modelAnswerPath = path.join(storageDirectory, examInformation.unzip)
-    const parsedModelAnswer =  await concatenateJavaFiles(modelAnswerPath)
+    const parsedModelAnswer = await concatenateJavaFiles(modelAnswerPath)
     examInformation.model_answer = parsedModelAnswer
+    console.log(countTokens(examInformation.model_answer))
 
     // parse submission data
     const submissionAnswerPath = path.join(storageDirectory, submissionDataPath.unzip)
     const parsedSubmissionAnswer = await concatenateJavaFiles(submissionAnswerPath)
-    console.log(parsedSubmissionAnswer)
+    console.log(countTokens(parsedSubmissionAnswer))
 
     // get path to submission data
     // and fake parsing file
     /**
      * simulate for now!!!
      */
-    const parsedSubmissionText = `Parsed file text from ${submissionDataPath.unzip}`
     // send all this shit to the api
 
     const informationToSendToLLM = {
         examInformation,
         submissionText: parsedSubmissionAnswer
     }
+
+    const responseFromApiCall = await handleAiApiCall(informationToSendToLLM)
+
 
     // simulate response
     // should respond with mark and critique for each rubric component id
