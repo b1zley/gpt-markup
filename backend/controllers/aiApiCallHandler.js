@@ -19,7 +19,7 @@ async function handleAiApiCall(informationForLLM) {
 
     const { examInformation, submissionText } = informationForLLM
 
-    console.log(Object.keys(examInformation))
+    // console.log(Object.keys(examInformation))
 
     const examString = examInformationParse(examInformation)
 
@@ -30,8 +30,15 @@ async function handleAiApiCall(informationForLLM) {
     const messages = [{ role: "system", content: systemMessage },
         {role: "user", content: submissionText}
     ]
+
+    console.log(messages)
     
-    console.log(messages[1])
+    const response = await openAiApiCall(messages)
+    // console.log(response)
+
+}
+
+async function openAiApiCall(messages){
 
 }
 

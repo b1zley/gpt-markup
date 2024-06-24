@@ -281,12 +281,12 @@ async function getNewAICritique(student_exam_submission_id) {
     const modelAnswerPath = path.join(storageDirectory, examInformation.unzip)
     const parsedModelAnswer = await concatenateJavaFiles(modelAnswerPath)
     examInformation.model_answer = parsedModelAnswer
-    console.log(countTokens(examInformation.model_answer))
+    // console.log(countTokens(examInformation.model_answer))
 
     // parse submission data
     const submissionAnswerPath = path.join(storageDirectory, submissionDataPath.unzip)
     const parsedSubmissionAnswer = await concatenateJavaFiles(submissionAnswerPath)
-    console.log(countTokens(parsedSubmissionAnswer))
+    // console.log(countTokens(parsedSubmissionAnswer))
 
     // get path to submission data
     // and fake parsing file
