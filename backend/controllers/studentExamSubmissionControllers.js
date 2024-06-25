@@ -8,6 +8,8 @@ const { countTokens } = require('./tokenCounter/tokenCounter')
 
 const {handleAiApiCall} = require('./aiApiCallHandler')
 
+const {writeMessageResponseToCSV} = require('../parseRecording')
+
 // request handlers
 
 async function handleGetStudentExamSubmissionByExamSubmissionId(req, res) {
@@ -303,23 +305,19 @@ async function getNewAICritique(student_exam_submission_id) {
     const responseFromApiCall = await handleAiApiCall(informationToSendToLLM)
 
 
+    writeMessageResponseToCSV(student_exam_submission_id, responseFromApiCall)
     // simulate response
     // should respond with mark and critique for each rubric component id
 
     let responseArray = []
     informationToSendToLLM.examInformation.rubric.forEach((rubricComponent, i) => {
-        let currentDate = new Date();
-        let dateTimeString = currentDate.toString()
-
-        let randomNumber = Math.random();
-        randomNumber = randomNumber * 30;
-        randomNumber = randomNumber.toFixed(2);
+        
 
         const aiObject = {
             rubric_component_id: rubricComponent.rubric_component_id,
             model_id_used: examInformation.trained_model_id,
-            ai_critique: `some faked critique - ${rubricComponent.rubric_component_id} - ${dateTimeString} `,
-            ai_mark: randomNumber
+            ai_critique: responseFromApiCall[i].aiFeedbackToParse,
+            ai_mark: responseFromApiCall[i].aiMarkToParse
         }
         responseArray.push(aiObject)
     })

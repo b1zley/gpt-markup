@@ -1,45 +1,46 @@
 const { countTokens } = require('./tokenCounter/tokenCounter')
 
+const OpenAI = require('openai')
+const openai = new OpenAI();
 
 const exampleSystemMessageString = `You are a marker for a university level programming exam. The course you are marking for is a Master’s conversion course, teaching students from a variety of backgrounds the skills they need to succeed as a modern software developer. 
 The exam you are marking will be delivered to you as an entire java project file, which has been concatenated into a single string, and partially minified to remove whitespace from code blocks.
-Please provide feedback and a mark out of 30 for each rubric component in the following JSON format:
+Please provide feedback and a mark for each rubric component in the following JSON format:
 [
-  {"feedback": "example feedback for Part 1", "mark": 25},
-  {"feedback": "example feedback for Part 2", "mark": 28}
+  {"aiFeedbackToParse": "example feedback for Part 1", "aiMarkToParse": 25},
+  {"aiFeedbackToParse": "example feedback for Part 2", "aiMarkToParse": 28}
 ]
+In your marking, you should not penalize overexplanation from the student in comments, as the purpose of the exam is to demonstrate knowledge and ability.
 The module you are marking for is a programming module, and you should judge student’s exam submissions based on the following information:
 `
 
 
 async function handleAiApiCall(informationForLLM) {
 
-    // console.log(informationForLLM)
-    // console.log(Object.keys(informationForLLM))
-
     const { examInformation, submissionText } = informationForLLM
 
-    // console.log(Object.keys(examInformation))
-
     const examString = examInformationParse(examInformation)
-
     const systemMessage = exampleSystemMessageString + examString
-    // console.log(systemMessage)
-    // console.log(countTokens(systemMessage))
 
     const messages = [{ role: "system", content: systemMessage },
         {role: "user", content: submissionText}
     ]
-
-    console.log(messages)
-    
     const response = await openAiApiCall(messages)
-    // console.log(response)
-
+    console.log(submissionText)
+    return response
+    
 }
 
 async function openAiApiCall(messages){
-
+    // console.log(messages)
+    const completion = await openai.chat.completions.create({
+        messages,
+        model: "gpt-3.5-turbo-0125",
+      });
+    
+      const response = completion.choices[0]
+    //   console.log(JSON.parse(response.message.content))
+      return JSON.parse(response.message.content)
 }
 
 function examInformationParse(examInformation) {

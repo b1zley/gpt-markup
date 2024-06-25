@@ -29,6 +29,8 @@ async function concatenateJavaFiles(directoryPath) {
                 concatenatedString += '-----------------\n'
                 concatenatedString += `${file.name}:\n`
                 // concatenatedString += removeTrailingSpacesMinify(minifyCode(data));
+                // concatenatedString += data
+                // minification!
                 concatenatedString += fullMinifyCode(data)
                 concatenatedString += '\n-----------------'
             }

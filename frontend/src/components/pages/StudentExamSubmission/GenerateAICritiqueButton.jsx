@@ -17,6 +17,12 @@ const GenerateAICrtiqueButton = ({ examSubmissionInformation, setExamSubmissionI
             window.alert('failed to generate ai critique')
         }
 
+        // setTimeout(() => {
+
+        //     handleGenerateButtonClick()
+
+        // }, 3000)
+
     }
 
     if(!examSubmissionInformation.file_system_id){
