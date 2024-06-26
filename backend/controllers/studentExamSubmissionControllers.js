@@ -303,7 +303,8 @@ async function getNewAICritique(student_exam_submission_id) {
     }
 
     const responseFromApiCall = await handleAiApiCall(informationToSendToLLM)
-
+    
+    const parameterizedAiMessage = JSON.parse(responseFromApiCall.choices[0].message.content)
 
     writeMessageResponseToCSV(student_exam_submission_id, responseFromApiCall)
     // simulate response
@@ -316,8 +317,8 @@ async function getNewAICritique(student_exam_submission_id) {
         const aiObject = {
             rubric_component_id: rubricComponent.rubric_component_id,
             model_id_used: examInformation.trained_model_id,
-            ai_critique: responseFromApiCall[i].aiFeedbackToParse,
-            ai_mark: responseFromApiCall[i].aiMarkToParse
+            ai_critique: parameterizedAiMessage[i].aiFeedbackToParse,
+            ai_mark: parameterizedAiMessage[i].aiMarkToParse
         }
         responseArray.push(aiObject)
     })

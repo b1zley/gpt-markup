@@ -14,6 +14,13 @@ In your marking, you should not penalize overexplanation from the student in com
 The module you are marking for is a programming module, and you should judge student’s exam submissions based on the following information:
 `
 
+const TEMPERATURE = 0
+const TOP_P = 0.00000000000001
+const SEED = 1337
+const MODEL = "gpt-3.5-turbo-0125"
+
+
+const testParameters = {TEMPERATURE, TOP_P, SEED, MODEL}
 
 async function handleAiApiCall(informationForLLM) {
 
@@ -27,6 +34,9 @@ async function handleAiApiCall(informationForLLM) {
     ]
     const response = await openAiApiCall(messages)
     console.log(submissionText)
+
+    // going to attach my parameters to response for ease of recording
+    response.testParameters = testParameters
     return response
     
 }
@@ -35,12 +45,16 @@ async function openAiApiCall(messages){
     // console.log(messages)
     const completion = await openai.chat.completions.create({
         messages,
-        model: "gpt-3.5-turbo-0125",
+        model: MODEL,
+        seed: SEED,
+        top_p: TOP_P,
+        temperature: TEMPERATURE
       });
     
       const response = completion.choices[0]
     //   console.log(JSON.parse(response.message.content))
-      return JSON.parse(response.message.content)
+    return completion
+    //   return JSON.parse(response.message.content)
 }
 
 function examInformationParse(examInformation) {
