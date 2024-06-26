@@ -1,5 +1,14 @@
 const { response } = require('express');
 const { db, axios, backendRoot, storageDirectory } = require('../routesCommonDependencies'); // Common dependencies
+const path = require('path')
+
+const { concatenateJavaFiles } = require('./codeMinifier/parseFilesConcatenate')
+
+const { countTokens } = require('./tokenCounter/tokenCounter')
+
+const {handleAiApiCall} = require('./aiApiCallHandler')
+
+const {writeMessageResponseToCSV} = require('../parseRecording')
 
 // request handlers
 
@@ -143,7 +152,6 @@ async function queryGetExamSubmissionByExamId(exam_id) {
 
 
 async function queryDeleteExamSubmissionByStudentExamSubmissionId(student_exam_submission_id) {
-    console.log(student_exam_submission_id)
     const sqlQuery = 'DELETE FROM student_exam_submission WHERE `student_exam_submission`.`student_exam_submission_id` = ?'
     const bindingParams = [student_exam_submission_id]
     const [responseFromDeleteQuery] = await db.query(sqlQuery, bindingParams)
@@ -156,11 +164,9 @@ async function queryUpdateRubricComponentMark(rubric_component_id, student_exam_
     const sqlQueryFindCurrent = 'SELECT * FROM rubric_component rc INNER JOIN rubric_component_submission_mark rcsm ON rc.rubric_component_id = rcsm.rubric_component_id WHERE rc.rubric_component_id = ? AND rcsm.student_exam_submission_id = ?'
     const bindingParams = [rubric_component_id, student_exam_submission_id]
     const [responseFromFindCurrent] = await db.query(sqlQueryFindCurrent, bindingParams)
-    console.log(responseFromFindCurrent)
 
     if (responseFromFindCurrent.length === 0) {
         // create new
-        console.log('hello from new')
         const insertSqlQuery = `INSERT INTO rubric_component_submission_mark (rubric_component_submission_mark_id, student_exam_submission_id, rubric_component_id, ${updateArray[0].paramToUpdate}) VALUES (NULL, ?, ?, ?);`
         const insertBindingParams = [student_exam_submission_id, rubric_component_id, updateArray[0].valueToUpdate]
         const [responseFromUpdateQuery] = await db.query(insertSqlQuery, insertBindingParams)
@@ -232,13 +238,11 @@ async function handlePostGetNewAICritique(req, res) {
 }
 // query handlers
 
-async function getNewAICritique(student_exam_submission_id) {
-    console.log(student_exam_submission_id)
-    console.log('hello from get new ai critique...')
+async function getExamInformationForAiParse(student_exam_submission_id){
     // aggregate data of interest
 
     // JUST EXAM INFO HERE.
-    const examSqlQuery = "SELECT e.exam_id, e.exam_name, e.exam_question, e.prompt_specifications, m.module_id, m.module_name, fs.file_system_id, fs.zip_file_path, fs.unzipped_content_path, tm.trained_model_id, tm.api_id, tm.prompt_engineering, tm.model_name FROM student_exam_submission ses INNER JOIN exam e ON ses.exam_id = e.exam_id INNER JOIN module m on e.module_id = m.module_id INNER JOIN trained_model tm ON e.chosen_ai_model_id = tm.trained_model_id INNER JOIN file_system fs ON e.file_system_id = fs.file_system_id WHERE ses.student_exam_submission_id = ?"
+    const examSqlQuery = "SELECT e.exam_id, e.exam_name, e.exam_question, e.prompt_specifications, m.module_id, m.module_name, fs.file_system_id, fs.zip, fs.unzip, tm.trained_model_id, tm.api_id, tm.prompt_engineering, tm.model_name FROM student_exam_submission ses INNER JOIN exam e ON ses.exam_id = e.exam_id INNER JOIN module m on e.module_id = m.module_id INNER JOIN trained_model tm ON e.chosen_ai_model_id = tm.trained_model_id INNER JOIN file_system fs ON e.file_system_id = fs.file_system_id WHERE ses.student_exam_submission_id = ?"
     const examBindingParams = [student_exam_submission_id]
 
     const [responseFromExamQuery] = await db.query(examSqlQuery, examBindingParams)
@@ -248,7 +252,6 @@ async function getNewAICritique(student_exam_submission_id) {
     const rubricSqlQuery = "SELECT rc.rubric_component_id, rc.name, rc.rubric_component_desc, rc.maximum FROM exam e INNER JOIN rubric_component rc ON e.exam_id = rc.exam_id WHERE e.exam_id = ?"
     const rubricBindingParams = [examInformation.exam_id]
     const [rubricComponentArray] = await db.query(rubricSqlQuery, rubricBindingParams)
-    console.log(rubricComponentArray)
 
     // rating ranges within rubric components
     for (const rubricComponent of rubricComponentArray) {
@@ -259,13 +262,13 @@ async function getNewAICritique(student_exam_submission_id) {
     }
 
     examInformation.rubric = rubricComponentArray
-    // console.log(examInformation.rubric[0].rating_ranges)
 
-    // parse model answer as well
-    /**
-     * SIMULATE FOR NOW!!!!
-     */
-    examInformation.model_answer = `Parsed file text FROM ${examInformation.unzipped_content_path} ...`
+    return examInformation
+}
+
+async function getNewAICritique(student_exam_submission_id) {
+    
+    let examInformation = await getExamInformationForAiParse(student_exam_submission_id)
 
     // submission data
     const submissionDataSql = "SELECT fs.* FROM student_exam_submission ses INNER JOIN file_system fs ON ses.file_system_id = fs.file_system_id WHERE ses.student_exam_submission_id = ?"
@@ -274,36 +277,48 @@ async function getNewAICritique(student_exam_submission_id) {
     const [responseFromSubmissionQuery] = await db.query(submissionDataSql, submissionBindingParams)
     const submissionDataPath = responseFromSubmissionQuery[0]
 
+    
+    
+    // parse model answer as well
+    const modelAnswerPath = path.join(storageDirectory, examInformation.unzip)
+    const parsedModelAnswer = await concatenateJavaFiles(modelAnswerPath)
+    examInformation.model_answer = parsedModelAnswer
+    // console.log(countTokens(examInformation.model_answer))
+
+    // parse submission data
+    const submissionAnswerPath = path.join(storageDirectory, submissionDataPath.unzip)
+    const parsedSubmissionAnswer = await concatenateJavaFiles(submissionAnswerPath)
+    // console.log(countTokens(parsedSubmissionAnswer))
+
     // get path to submission data
     // and fake parsing file
     /**
      * simulate for now!!!
      */
-    const parsedSubmissionText = `Parsed file text from ${submissionDataPath.unzipped_content_path}`
     // send all this shit to the api
 
     const informationToSendToLLM = {
         examInformation,
-        submissionText: parsedSubmissionText
+        submissionText: parsedSubmissionAnswer
     }
 
+    const responseFromApiCall = await handleAiApiCall(informationToSendToLLM)
+    
+    const parameterizedAiMessage = JSON.parse(responseFromApiCall.choices[0].message.content)
+
+    writeMessageResponseToCSV(student_exam_submission_id, responseFromApiCall)
     // simulate response
     // should respond with mark and critique for each rubric component id
 
     let responseArray = []
     informationToSendToLLM.examInformation.rubric.forEach((rubricComponent, i) => {
-        let currentDate = new Date();
-        let dateTimeString = currentDate.toString()
-
-        let randomNumber = Math.random();
-        randomNumber = randomNumber * 30;
-        randomNumber = randomNumber.toFixed(2);
+        
 
         const aiObject = {
             rubric_component_id: rubricComponent.rubric_component_id,
             model_id_used: examInformation.trained_model_id,
-            ai_critique: `some faked critique - ${rubricComponent.rubric_component_id} - ${dateTimeString} `,
-            ai_mark: randomNumber
+            ai_critique: parameterizedAiMessage[i].aiFeedbackToParse,
+            ai_mark: parameterizedAiMessage[i].aiMarkToParse
         }
         responseArray.push(aiObject)
     })
@@ -329,13 +344,11 @@ async function queryInsertOrUpdateAiMark(student_exam_submission_id, rubric_comp
 
     if (repsonseFromAiMarkSelect.length === 0) {
         // do insert
-        console.log('hello from insert')
         const insertSql = "INSERT INTO `rubric_component_submission_ai_mark` (`rubric_component_submission_ai_mark_id`, `ai_mark`, `ai_critique`, `student_exam_submission_id`, `trained_model_id`, `rubric_component_id`) VALUES (NULL, ?, ?, ?, ?, ?);"
         const insertBindingParams = [ai_mark, ai_critique, student_exam_submission_id, model_id_used, rubric_component_id]
         const [responseFromInsert] = await db.query(insertSql, insertBindingParams)
     } else {
         // do update
-        console.log('hello from update')
         const rubric_component_submission_ai_mark_id = repsonseFromAiMarkSelect[0].rubric_component_submission_ai_mark_id
         const updateSql = "UPDATE rubric_component_submission_ai_mark  SET  ai_critique = ?, ai_mark = ?, trained_model_id = ?, rubric_component_id = ? WHERE rubric_component_submission_ai_mark.rubric_component_submission_ai_mark_id = ?;"
         const updateBindingParams = [ai_critique, ai_mark, model_id_used, rubric_component_id, rubric_component_submission_ai_mark_id]

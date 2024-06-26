@@ -92,7 +92,7 @@ async function queryIsEmailPresent(email) {
 
 async function createJwt(user) {
     const payload = user
-    const options = { expiresIn: '1h' }
+    const options = { expiresIn: '7 days' }
     const token = jwt.sign(payload, secretKey, options)
     return token
 }

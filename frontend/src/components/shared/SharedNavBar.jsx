@@ -36,16 +36,18 @@ function SharedNavBar({ logoImageSrc = logoImage, brandName = 'MarkUp-GPT' }) {
             <LinkContainer to='/about'>
               <Nav.Link className='mx-2 '>About</Nav.Link>
             </LinkContainer>
-            <LinkContainer to='/create_exam'>
-              <Nav.Link className='mx-2 '>Create Exam</Nav.Link>
+            <LinkContainer to='/module'>
+              <Nav.Link className='mx-2 '>Modules</Nav.Link>
             </LinkContainer>
           </Nav>
 
           <Nav className='ms-auto'>
             <NavDropdown className='mx-2 ' style={{'padding':'0'}} title="Account" id="basic-nav-dropdown">
-              <NavDropdown.Item href="#action/3.1" style={{ 'width': '100%' }}>
-                Action
-              </NavDropdown.Item>
+              <LinkContainer to='/login'>
+                <NavDropdown.Item  style={{ 'width': '100%' }}>
+                  Login
+                </NavDropdown.Item>
+              </LinkContainer>
             </NavDropdown>
           </Nav>
 

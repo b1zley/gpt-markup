@@ -2,7 +2,7 @@ import axios from 'axios';
 import Cookies from 'js-cookie'
 const axiosToBackend = axios.create({
     // baseURL: 'https://api.example.com', 
-    timeout: 5000, // Timeout after 5 seconds
+    // timeout: 5000, // Timeout after 5 seconds
 });
 
 axiosToBackend.interceptors.request.use(
