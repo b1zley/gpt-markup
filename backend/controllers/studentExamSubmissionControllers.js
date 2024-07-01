@@ -2,7 +2,7 @@ const { response } = require('express');
 const { db, axios, backendRoot, storageDirectory } = require('../routesCommonDependencies'); // Common dependencies
 const path = require('path')
 
-const { concatenateJavaFiles } = require('./codeMinifier/parseFilesConcatenate')
+const { concatenateJavaFiles, listDirectoryStructure } = require('./codeMinifier/parseFilesConcatenate')
 
 const { countTokens } = require('./tokenCounter/tokenCounter')
 
@@ -287,7 +287,14 @@ async function getNewAICritique(student_exam_submission_id) {
 
     // parse submission data
     const submissionAnswerPath = path.join(storageDirectory, submissionDataPath.unzip)
-    const parsedSubmissionAnswer = await concatenateJavaFiles(submissionAnswerPath)
+    
+    let parsedSubmissionAnswer = 'File Structure:\n'
+    parsedSubmissionAnswer += await listDirectoryStructure(submissionAnswerPath)
+    parsedSubmissionAnswer += '\n'
+    parsedSubmissionAnswer += await concatenateJavaFiles(submissionAnswerPath)
+    
+    console.log(parsedSubmissionAnswer)
+    
     // console.log(countTokens(parsedSubmissionAnswer))
 
     // get path to submission data
@@ -302,11 +309,12 @@ async function getNewAICritique(student_exam_submission_id) {
         submissionText: parsedSubmissionAnswer
     }
 
-    const responseFromApiCall = await handleAiApiCall(informationToSendToLLM)
+    const responseFromApiCall = await handleAiApiCall(informationToSendToLLM, student_exam_submission_id)
     
-    const parameterizedAiMessage = JSON.parse(responseFromApiCall.choices[0].message.content)
+    // const parameterizedAiMessage = JSON.parse(responseFromApiCall.choices[0].message.content)
+    const parameterizedAiMessage = responseFromApiCall.content
 
-    writeMessageResponseToCSV(student_exam_submission_id, responseFromApiCall)
+    // writeMessageResponseToCSV(student_exam_submission_id, responseFromApiCall)
     // simulate response
     // should respond with mark and critique for each rubric component id
 
@@ -320,6 +328,8 @@ async function getNewAICritique(student_exam_submission_id) {
             ai_critique: parameterizedAiMessage[i].aiFeedbackToParse,
             ai_mark: parameterizedAiMessage[i].aiMarkToParse
         }
+        console.log(`this is aiobject ${i}`)
+        console.log(aiObject)
         responseArray.push(aiObject)
     })
 
