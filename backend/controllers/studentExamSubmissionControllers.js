@@ -6,9 +6,9 @@ const { concatenateJavaFiles, listDirectoryStructure } = require('./codeMinifier
 
 const { countTokens } = require('./tokenCounter/tokenCounter')
 
-const {handleAiApiCall} = require('./aiApiCallHandler')
+const { handleAiApiCall } = require('./aiApiCallHandler')
 
-const {writeMessageResponseToCSV} = require('../parseRecording')
+const { writeMessageResponseToCSV } = require('../parseRecording')
 
 // request handlers
 
@@ -238,7 +238,7 @@ async function handlePostGetNewAICritique(req, res) {
 }
 // query handlers
 
-async function getExamInformationForAiParse(student_exam_submission_id){
+async function getExamInformationForAiParse(student_exam_submission_id) {
     // aggregate data of interest
 
     // JUST EXAM INFO HERE.
@@ -267,34 +267,25 @@ async function getExamInformationForAiParse(student_exam_submission_id){
 }
 
 async function getNewAICritique(student_exam_submission_id) {
-    
+
     let examInformation = await getExamInformationForAiParse(student_exam_submission_id)
 
-    // submission data
-    const submissionDataSql = "SELECT fs.* FROM student_exam_submission ses INNER JOIN file_system fs ON ses.file_system_id = fs.file_system_id WHERE ses.student_exam_submission_id = ?"
-    const submissionBindingParams = [student_exam_submission_id]
+    const { exam_id } = examInformation
+    console.log('exam_id', exam_id)
 
-    const [responseFromSubmissionQuery] = await db.query(submissionDataSql, submissionBindingParams)
-    const submissionDataPath = responseFromSubmissionQuery[0]
 
-    
-    
+    const markedSubmissions = await queryGetStudentExamSubmissionsMarkedForTraining(exam_id)
+    // console.log(markedSubmissions)
+
     // parse model answer as well
     const modelAnswerPath = path.join(storageDirectory, examInformation.unzip)
     const parsedModelAnswer = await concatenateJavaFiles(modelAnswerPath)
     examInformation.model_answer = parsedModelAnswer
-    // console.log(countTokens(examInformation.model_answer))
 
-    // parse submission data
-    const submissionAnswerPath = path.join(storageDirectory, submissionDataPath.unzip)
-    
-    let parsedSubmissionAnswer = 'File Structure:\n'
-    parsedSubmissionAnswer += await listDirectoryStructure(submissionAnswerPath)
-    parsedSubmissionAnswer += '\n'
-    parsedSubmissionAnswer += await concatenateJavaFiles(submissionAnswerPath)
-    
-    console.log(parsedSubmissionAnswer)
-    
+    parsedSubmissionAnswer = await getParsedSubmissionAnswerBySESId(student_exam_submission_id)
+
+    // console.log(parsedSubmissionAnswer)
+
     // console.log(countTokens(parsedSubmissionAnswer))
 
     // get path to submission data
@@ -306,11 +297,12 @@ async function getNewAICritique(student_exam_submission_id) {
 
     const informationToSendToLLM = {
         examInformation,
-        submissionText: parsedSubmissionAnswer
+        submissionText: parsedSubmissionAnswer,
+        markedSubmissions
     }
 
     const responseFromApiCall = await handleAiApiCall(informationToSendToLLM, student_exam_submission_id)
-    
+
     // const parameterizedAiMessage = JSON.parse(responseFromApiCall.choices[0].message.content)
     const parameterizedAiMessage = responseFromApiCall.content
 
@@ -320,7 +312,7 @@ async function getNewAICritique(student_exam_submission_id) {
 
     let responseArray = []
     informationToSendToLLM.examInformation.rubric.forEach((rubricComponent, i) => {
-        
+
 
         const aiObject = {
             rubric_component_id: rubricComponent.rubric_component_id,
@@ -328,8 +320,8 @@ async function getNewAICritique(student_exam_submission_id) {
             ai_critique: parameterizedAiMessage[i].aiFeedbackToParse,
             ai_mark: parameterizedAiMessage[i].aiMarkToParse
         }
-        console.log(`this is aiobject ${i}`)
-        console.log(aiObject)
+        // console.log(`this is aiobject ${i}`)
+        // console.log(aiObject)
         responseArray.push(aiObject)
     })
 
@@ -365,6 +357,71 @@ async function queryInsertOrUpdateAiMark(student_exam_submission_id, rubric_comp
         const [responseFromUpdate] = await db.query(updateSql, updateBindingParams)
     }
 
+}
+
+
+async function getParsedSubmissionAnswerBySESId(student_exam_submission_id) {
+    // submission data
+    const submissionDataSql = "SELECT fs.* FROM student_exam_submission ses INNER JOIN file_system fs ON ses.file_system_id = fs.file_system_id WHERE ses.student_exam_submission_id = ?"
+    const submissionBindingParams = [student_exam_submission_id]
+
+    const [responseFromSubmissionQuery] = await db.query(submissionDataSql, submissionBindingParams)
+    const submissionDataPath = responseFromSubmissionQuery[0]
+
+    // parse submission data
+    const submissionAnswerPath = path.join(storageDirectory, submissionDataPath.unzip)
+
+    let parsedSubmissionAnswer = 'File Structure:\n'
+    parsedSubmissionAnswer += await listDirectoryStructure(submissionAnswerPath)
+    parsedSubmissionAnswer += '\n'
+    parsedSubmissionAnswer += await concatenateJavaFiles(submissionAnswerPath)
+
+
+    return parsedSubmissionAnswer
+}
+
+
+async function queryGetStudentExamSubmissionsMarkedForTraining(exam_id) {
+
+
+    const sqlQuery = "SELECT ses.student_exam_submission_id FROM student_exam_submission ses WHERE ses.exam_id = ? AND ses.marked_for_training = 1"
+    const bindingParams = [exam_id]
+
+    const [responseFromQuery] = await db.query(sqlQuery, bindingParams)
+    const markedStudentExamSubmissionIds = responseFromQuery.map(row => row.student_exam_submission_id)
+    // console.log(markedStudentExamSubmissionIds)
+
+    // must create an 'example object'
+
+    let markedExamSubmissions = []
+    for (const ses_id of markedStudentExamSubmissionIds) {
+
+        const submissionText = await getParsedSubmissionAnswerBySESId(ses_id)
+        const rubricMarkArray = await getRubricMarkArraySESId(ses_id)
+        
+
+        const exampleObject = {
+            submissionText,
+            rubricMarkArray
+        }
+        markedExamSubmissions.push(exampleObject)
+    }
+    return markedExamSubmissions
+}
+
+async function getRubricMarkArraySESId(student_exam_submission_id){
+    const sqlQuery = "SELECT * FROM rubric_component_submission_mark rcsm WHERE rcsm.student_exam_submission_id = ? ORDER BY rcsm.rubric_component_id"
+    const bindingParams = [student_exam_submission_id]
+
+    const [response] = await db.query(sqlQuery, bindingParams)
+    const markArray = response.map((row) => {
+        return {
+            mark: row.rubric_component_mark,
+            critique: row.rubric_component_critique,
+            rubric_component_id: row.rubric_component_id
+        }
+    })
+    return markArray
 }
 
 

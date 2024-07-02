@@ -59,7 +59,7 @@ async function handleAiApiCall(informationForLLM, student_exam_submission_id) {
     { role: "user", content: submissionText }
     ]
     const response = await openAiApiCall(messages)
-    console.log(submissionText)
+    // console.log(submissionText)
 
     // going to attach my parameters to response for ease of recording
     response.testParameters = { ...response.testParameters, ...testParameters }
@@ -81,9 +81,9 @@ async function openAiApiCall(messages) {
         top_p: TOP_P,
         temperature: TEMPERATURE
     });
-    console.log('this is a completion')
-    console.log(completion.system_fingerprint)
-    console.log(completion.choices[0].message.content)
+    // console.log('this is a completion')
+    // console.log(completion.system_fingerprint)
+    // console.log(completion.choices[0].message.content)
     return {
         content: JSON.parse(completion.choices[0].message.content), testParameters: {
             system_fingerprint: completion.system_fingerprint
@@ -125,12 +125,26 @@ function rubricParse(rubric) {
 
 async function handleApiCallClaude(informationForLLM, student_exam_submission_id) {
     // eliminate api call for testing!
-    
+
+    // console.log(informationForLLM.markedSubmissions)
+
+    const { markedSubmissions } = informationForLLM
+
+    const markedSubmissionMessageArray = createMarkedSubmissionMessageArray(markedSubmissions)
+
+    // console.log(markedSubmissionMessageArray)
+
+
+
+
+
+
     const { examInformation, submissionText } = informationForLLM
 
     const examString = examInformationParse(examInformation)
     const systemMessage = exampleSystemMessageString + examString
 
+    // console.log(submissionText)
 
     let claudeTemp = 0.0
     let claude_top_p = undefined
@@ -143,13 +157,15 @@ async function handleApiCallClaude(informationForLLM, student_exam_submission_id
         model: claude_model,
         max_tokens: 1000,
         system: systemMessage,
-        messages: [{ role: "user", content: submissionText }],
+        messages: [...markedSubmissionMessageArray, { role: "user", content: submissionText }],
         temperature: claudeTemp
     }
+    
     console.log('fetching from claude...')
+    // console.log(claudeObject.messages[5])
+    // return
     const aiResponse = await anthropic.messages.create(claudeObject)
 
-    console.log(aiResponse)
     const parameterizedAiMessage = JSON.parse(aiResponse.content[0].text)
     // console.log(parameterizedAiMessage)
 
@@ -169,6 +185,42 @@ async function handleApiCallClaude(informationForLLM, student_exam_submission_id
 
     return responseObject
 }
+
+
+
+
+function createMarkedSubmissionMessageArray(markedSubmissions) {
+    // console.log(markedSubmissions)
+
+    let markedSubmissionMessageArray = []
+
+    // {"user": submissionText, "assistant": "{aiMarkToParse: 1, aiCritiqueToParse: 'wasdwasd'}"}
+
+    for (const markedSubmission of markedSubmissions) {
+        const { submissionText, rubricMarkArray } = markedSubmission
+        const aiReadyRubricMarkArray = rubricMarkArray.map((rubricMark) => {
+            // {"aiFeedbackToParse": "example feedback for Part 2", "aiMarkToParse": 28.0}
+            return {
+                "aiFeedbackToParse": rubricMark.critique,
+                "aiMarkToParse": rubricMark.mark
+            }
+        })
+        let messageArrayPart = [{
+            role: "user",
+            content: submissionText,
+        },
+        {
+            role: "assistant",
+            content: JSON.stringify(aiReadyRubricMarkArray)
+        }]
+        markedSubmissionMessageArray = markedSubmissionMessageArray.concat(messageArrayPart)
+    }
+
+    // console.log(markedSubmissionMessageArray)
+    return markedSubmissionMessageArray
+}
+
+
 
 
 module.exports = { handleAiApiCall }
