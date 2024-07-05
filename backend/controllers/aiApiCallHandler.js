@@ -5,6 +5,7 @@ const openai = new OpenAI();
 
 const Anthropic = require("@anthropic-ai/sdk");
 const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
+const MODE = process.env.MODE
 
 const { writeClaudeMessageResponseToCSV, writeMessageResponseToCSV } = require('../parseRecording')
 
@@ -43,6 +44,14 @@ const MODEL = "gpt-3.5-turbo-0125"
 const testParameters = { TEMPERATURE, TOP_P, SEED, MODEL }
 
 async function handleAiApiCall(informationForLLM, student_exam_submission_id) {
+
+    if (MODE === 'dev') {
+        console.log('this is dev mode')
+
+        return await generateAICritiqueMethodStub(informationForLLM, student_exam_submission_id)
+
+    }
+
 
     if (AI_MODE === "claude") {
         return await handleApiCallClaude(informationForLLM, student_exam_submission_id)
@@ -223,6 +232,28 @@ async function handleApiCallClaude(informationForLLM, student_exam_submission_id
     return responseObject
 }
 
+
+async function generateAICritiqueMethodStub(informationForLLM, student_exam_submission_id) {
+
+
+    const { markedSubmissions, examInformation, submissionText } = informationForLLM
+
+    let responsesContentArray = []
+    for (let rubricComponentCounter = 0; rubricComponentCounter < examInformation.rubric.length; rubricComponentCounter++) {
+
+        const aiMarkToParse = 3
+        const aiFeedbackToParse = `This is example feedback for Rubric Component ${rubricComponentCounter + 1}`
+
+        const responseObject = { aiMarkToParse, aiFeedbackToParse }
+        responsesContentArray.push(responseObject)
+    }
+
+    console.log(responsesContentArray)
+
+    const totalResponseObject = { content: responsesContentArray }
+    return totalResponseObject
+
+}
 
 
 
