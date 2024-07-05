@@ -250,7 +250,20 @@ async function generateAICritiqueMethodStub(informationForLLM, student_exam_subm
 
     console.log(responsesContentArray)
 
-    const totalResponseObject = { content: responsesContentArray }
+    const dummyTestParameters = {
+        TEMPERATURE: 'testTemp',
+        TOP_P: 'testTOP_P',
+        system_fingerprint: 'testFingerprint',
+        MODEL: 'testModel',
+        SEED: 'testSeed'
+    }
+
+    const totalResponseObject = {
+        content: responsesContentArray,
+        testParameters: dummyTestParameters
+    }
+
+    writeMessageResponseToCSV(student_exam_submission_id, totalResponseObject)
     return totalResponseObject
 
 }
