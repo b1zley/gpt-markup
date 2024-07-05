@@ -62,7 +62,7 @@ const UploadDownloadFileAccordion = ({ parentObject, setParentObject, submission
 
 
     return (
-        <Accordion className="my-0 " defaultActiveKey={activeDisplay ? "0" : ""}>
+        <Accordion className="my-0 " defaultActiveKey={activeDisplay ? "0" : ""} >
             <Accordion.Item eventKey="0" className={lastDisplayed ? null : "border-bottom-0"}>
                 <Accordion.Header>
                     {accordionName}

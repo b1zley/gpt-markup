@@ -21,7 +21,7 @@ const RubricComponentsView = ({ lastDisplayed, examInformation, setExamInformati
 
 
     return (
-        <Accordion className="my-0 ">
+        <Accordion className="my-0 " defaultActiveKey="0">
             <Accordion.Item eventKey="0" className={lastDisplayed ? null : "border-bottom-0"}>
                 <Accordion.Header>Rubric</Accordion.Header>
                 <Accordion.Body>

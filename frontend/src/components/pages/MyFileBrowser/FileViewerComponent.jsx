@@ -6,7 +6,7 @@ import BASE_API_URL from '../../../BASE_API_URL';
 // code block highlighting
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { dark } from 'react-syntax-highlighter/dist/esm/styles/prism';
-
+import { coy } from 'react-syntax-highlighter/dist/esm/styles/prism';
 
 const FileViewerComponent = ({ fileToViewUrl }) => {
     const [fileUrl, setFileUrl] = useState('');
@@ -49,18 +49,20 @@ const FileViewerComponent = ({ fileToViewUrl }) => {
         )
     }
 
-    function userFriendlyFileNamer(fileToViewUrl){
+    function userFriendlyFileNamer(fileToViewUrl) {
         let splitUrl = fileToViewUrl.split('x--x')
-        return splitUrl[splitUrl.length-1]
+        return splitUrl[splitUrl.length - 1]
     }
 
     return (
-        <div className='overflow-auto' style={{height:"500px"}}>
+        <div className='d-flex flex-column' style={{ height: '500px' }}>
             {error && <div>{error}</div>}
 
-            <h5>File Name: {userFriendlyFileNamer(fileToViewUrl)}</h5>
-            <div >
-                <SyntaxHighlighter language="java" >
+            <h6>File Name: {userFriendlyFileNamer(fileToViewUrl)}</h6>
+            <div className={'overflow-auto '} >
+                
+                <SyntaxHighlighter wrapLongLines={true} className='' language="java" >
+
                     {fileContent}
                 </SyntaxHighlighter>
             </div>

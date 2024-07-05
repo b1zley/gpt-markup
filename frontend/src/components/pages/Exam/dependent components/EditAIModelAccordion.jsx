@@ -51,8 +51,8 @@ const EditAiModelAccordion = ({ setExamInformation, examInformation }) => {
 
 
     return (
-        <Accordion className="my-0">
-            <Accordion.Item eventKey="0" className="border-bottom-0">
+        <Accordion className="my-0" defaultActiveKey="0">
+            <Accordion.Item eventKey="0" className="">
                 <Accordion.Header>
                     AI Model
                 </Accordion.Header>

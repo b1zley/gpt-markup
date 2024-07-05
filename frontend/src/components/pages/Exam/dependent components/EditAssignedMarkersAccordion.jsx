@@ -121,7 +121,7 @@ const EditAssignedMarkersAccordion = ({ lastDisplayed, examInformation }) => {
     // handle loading...
     if (!dataFetched) {
         return (
-            <Accordion className="my-0 ">
+            <Accordion className="my-0 " defaultActiveKey="0" >
                 <Accordion.Item eventKey="0" className={lastDisplayed ? null : "border-bottom-0"}>
                     <Accordion.Header>Engaged SuperUsers</Accordion.Header>
                     <Accordion.Body>
@@ -133,7 +133,7 @@ const EditAssignedMarkersAccordion = ({ lastDisplayed, examInformation }) => {
     }
 
     return (
-        <Accordion className="my-0 ">
+        <Accordion className="my-0 " defaultActiveKey="0">
             <Accordion.Item eventKey="0" className={lastDisplayed ? null : "border-bottom-0"}>
                 <Accordion.Header>Engaged SuperUsers</Accordion.Header>
                 <Accordion.Body>

@@ -13,7 +13,8 @@ const EditableExamAccordion = ({
     parentObject, setParentObject,
     param, lastDisplayed,
     userFriendlyParam, putUrl,
-    inputType
+    inputType,
+    textBoxHeight
 }) => {
 
     const [editMode, setEditMode] = useState(false)
@@ -21,9 +22,9 @@ const EditableExamAccordion = ({
 
     const handleEditModeClicked = (event) => { setEditMode(!editMode) }
     const handleCommitClicked = async (event) => {
-        if(inputType && inputType === 'decimal'){
+        if (inputType && inputType === 'decimal') {
             const regex = /^[0-9.]+$/;
-            if(!regex.test(editText)){
+            if (!regex.test(editText)) {
                 window.alert('Decimal values only!')
                 return
             }
@@ -59,55 +60,55 @@ const EditableExamAccordion = ({
 
     if (editMode) {
         return (
-            <Accordion className="my-0 ">
+            <Accordion className="my-0 " defaultActiveKey="0">
                 <Accordion.Item eventKey="0" className={lastDisplayed ? null : "border-bottom-0"}>
                     <Accordion.Header>{userFriendlyParam}</Accordion.Header>
                     <Accordion.Body>
 
-                        <div className="d-flex">
-                            <InputGroup className="me-1">
-                                <Form.Control
-                                    placeholder={userFriendlyParam}
-                                    aria-label={userFriendlyParam}
-                                    as="textarea"
-                                    onChange={handleEditTextChange}
-                                    value={editText}
-                                >
-                                    
-                                </Form.Control>
-                            </InputGroup>
+                        <div className="d-flex overflow-auto" style={{height: textBoxHeight ? textBoxHeight : '150px'}}>
+                        <InputGroup className="me-1" style={{width:'100%'}}>
+                            <Form.Control
+                                placeholder={userFriendlyParam}
+                                aria-label={userFriendlyParam}
+                                as="textarea"
+                                onChange={handleEditTextChange}
+                                value={editText}
+                            >
 
-                            <div className='ms-auto d-flex flex-column align-items-between'>
-                                <Button variant={'success'} onClick={handleCommitClicked} className='my-1' style={{ height: '38px' }}>Commit</Button>
-                                <Button variant={'warning'} onClick={handleRevertClicked} className='my-1 text-white' style={{ height: '38px' }}>Revert</Button>
-                            </div>
+                            </Form.Control>
+                        </InputGroup>
+
+                        <div className='ms-auto d-flex flex-column align-items-between'>
+                            <Button variant={'success'} onClick={handleCommitClicked} className='my-1' style={{ height: '38px' }}>Commit</Button>
+                            <Button variant={'warning'} onClick={handleRevertClicked} className='my-1 text-white' style={{ height: '38px' }}>Revert</Button>
                         </div>
+                    </div>
 
-                    </Accordion.Body>
-                </Accordion.Item>
-            </Accordion>
+                </Accordion.Body>
+            </Accordion.Item>
+            </Accordion >
         )
     } else {
-        return (
-            <Accordion className="my-0 ">
-                <Accordion.Item eventKey="0" className={lastDisplayed ? null : "border-bottom-0"}>
-                    <Accordion.Header>{userFriendlyParam}</Accordion.Header>
-                    <Accordion.Body>
+    return (
+        <Accordion className="my-0 " defaultActiveKey="0">
+            <Accordion.Item eventKey="0" className={lastDisplayed ? null : "border-bottom-0"}>
+                <Accordion.Header>{userFriendlyParam}</Accordion.Header>
+                <Accordion.Body>
 
-                        <div className="d-flex">
-                            <pre>
-                                {parentObject[param] ? parentObject[param] : 'None added...'}
-                            </pre>
-                            <Button onClick={handleEditModeClicked} className="ms-auto" style={{ height: '38px' }}>Edit</Button>
+                    <div className="d-flex overflow-auto" style={{height: textBoxHeight ? textBoxHeight : '150px'}}>
+                        <pre style={{width:'100%'}}>
+                            {parentObject[param] ? parentObject[param] : 'None added...'}
+                        </pre>
+                        <Button onClick={handleEditModeClicked} className="ms-auto" style={{ height: '38px' }}>Edit</Button>
 
-                        </div>
+                    </div>
 
 
-                    </Accordion.Body>
-                </Accordion.Item>
-            </Accordion>
-        )
-    }
+                </Accordion.Body>
+            </Accordion.Item>
+        </Accordion>
+    )
+}
 
 
 

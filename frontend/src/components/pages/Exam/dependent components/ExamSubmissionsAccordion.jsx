@@ -43,7 +43,7 @@ const StudentsInExamAccordion = ({ lastDisplayed, examInformation }) => {
 
 
     return (
-        <Accordion className="my-0">
+        <Accordion className="my-0" defaultActiveKey="0">
             <Accordion.Item eventKey="0" className={lastDisplayed ? '' : "border-bottom-0"}>
                 <Accordion.Header>
                     Student Submissions

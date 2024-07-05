@@ -17,12 +17,16 @@ import EditAssignedMarkersAccordion from "./dependent components/EditAssignedMar
 import StudentsInExamAccordion from "./dependent components/ExamSubmissionsAccordion";
 import RubricComponentsView from "./dependent components/RubricComponentsView";
 import UploadDownloadFileAccordion from "../../shared/UploadDownloadFileAccordion";
+import ActiveAccordionControl from "./dependent components/ActiveAccordionControl";
 
 const ExamView = () => {
     let { module_id, exam_id } = useParams();
 
     const [examInformation, setExamInformation] = useState(null);
     const [fetchStatus, setFetchStatus] = useState('pending');
+
+
+    const [activeAccordion, setActiveAccodrion] = useState([1, 0, 0, 0, 0, 0, 0])
 
 
 
@@ -86,6 +90,17 @@ const ExamView = () => {
         );
     }
 
+
+    const nameArray = [
+        'Exam Question',
+        'Rubric',
+        'Prompt Specifications',
+        'Model Answer',
+        'AI Model',
+        'Engaged SuperUsers',
+        'Student Submissions'
+    ]
+
     return (
         <Container>
             <div className='border border-light rounded p-3 d-flex flex-column' style={{ minHeight: '350px', flex: 1 }}>
@@ -93,52 +108,97 @@ const ExamView = () => {
                 <h3>Module Name: <Link to={`/module/${module_id}`}>{examInformation.module_name}</Link> </h3>
                 <h4>Exam: {examInformation.exam_name}</h4>
 
-                <EditableExamAccordion
-                    parentObject={examInformation}
-                    setParentObject={setExamInformation}
-                    param={'exam_question'}
-                    userFriendlyParam={'Exam Question'}
-                    lastDisplayed={false}
-                    putUrl={`${BASE_API_URL}module/${module_id}/exam/${exam_id}`}
-                />
 
-                <RubricComponentsView
-                    examInformation={examInformation}
-                    setExamInformation={setExamInformation}
-                    lastDisplayed={false}
+                <ActiveAccordionControl
+                    activeAccordion={activeAccordion}
+                    setActiveAccordion={setActiveAccodrion}
+                    nameArray={nameArray}
                 />
 
 
-                <EditableExamAccordion
-                    parentObject={examInformation}
-                    setParentObject={setExamInformation}
-                    param={'prompt_specifications'}
-                    userFriendlyParam={'Prompt Specifications'}
-                    lastDisplayed={false}
-                    putUrl={`${BASE_API_URL}module/${module_id}/exam/${exam_id}`}
-                />
+                {activeAccordion[0] === 1 ?
+                    <EditableExamAccordion
+                        parentObject={examInformation}
+                        setParentObject={setExamInformation}
+                        param={'exam_question'}
+                        userFriendlyParam={'Exam Question'}
+                        lastDisplayed={true}
+                        putUrl={`${BASE_API_URL}module/${module_id}/exam/${exam_id}`}
+                        textBoxHeight={'550px'}
+                    />
+                    :
+                    null
+                }
 
-                <UploadDownloadFileAccordion
-                    parentObject={examInformation}
-                    setParentObject={setExamInformation}
-                    submissionType={'EXAM_MODEL_ANSWER'}
-                    accordionName={'Model Answer'}
-                    lastDisplayed={false}
-                />
 
-                <EditAiModelAccordion
-                    setExamInformation={setExamInformation}
-                    examInformation={examInformation}
-                />
-                <EditAssignedMarkersAccordion
-                    lastDisplayed={false}
-                    examInformation={examInformation}
-                />
+                {activeAccordion[1] === 1 ?
+                    <RubricComponentsView
+                        examInformation={examInformation}
+                        setExamInformation={setExamInformation}
+                        lastDisplayed={true}
+                    />
+                    : null
+                }
 
-                <StudentsInExamAccordion
-                    lastDisplayed={true}
-                    examInformation={examInformation}
-                />
+                {
+                    activeAccordion[2] === 1 ?
+                        <EditableExamAccordion
+                            parentObject={examInformation}
+                            setParentObject={setExamInformation}
+                            param={'prompt_specifications'}
+                            userFriendlyParam={'Prompt Specifications'}
+                            lastDisplayed={true}
+                            putUrl={`${BASE_API_URL}module/${module_id}/exam/${exam_id}`}
+                        />
+                        :
+                        null
+                }
+
+                {
+                    activeAccordion[3] === 1 ?
+                        <UploadDownloadFileAccordion
+                            activeDisplay={true}
+                            parentObject={examInformation}
+                            setParentObject={setExamInformation}
+                            submissionType={'EXAM_MODEL_ANSWER'}
+                            accordionName={'Model Answer'}
+                            lastDisplayed={true}
+                        />
+                        :
+                        null
+
+                }
+
+
+                {
+                    activeAccordion[4] === 1 ?
+                        <EditAiModelAccordion
+                            setExamInformation={setExamInformation}
+                            examInformation={examInformation}
+                        />
+                        : null
+                }
+
+
+                {
+                    activeAccordion[5] === 1 ?
+                        <EditAssignedMarkersAccordion
+                            lastDisplayed={true}
+                            examInformation={examInformation}
+                        />
+                        : null
+                }
+
+                {
+                    activeAccordion[6] === 1 ?
+                        <StudentsInExamAccordion
+                            active={activeAccordion[6] === 1}
+                            lastDisplayed={true}
+                            examInformation={examInformation}
+                        />
+                        : null
+                }
+
 
 
             </div>
