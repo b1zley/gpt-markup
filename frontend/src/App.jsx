@@ -18,7 +18,8 @@ import ProtectedRoute from './routers/ProtectedRoute'
 // contexts
 import { AuthProvider, useAuth } from './contexts/AuthContext';
 
-
+// fileviewer test
+import MyFileBrowser from './components/pages/MyFileBrowser/MyFileBrowser';
 
 
 
@@ -43,6 +44,11 @@ const App = () => {
               element={<CreateExam loggedInSuperUser={{ "super_user_id": 1 }} />} />
             <Route path='/module/*'
               element={<ProtectedRoute element={<ModuleRouter />} />} />
+
+            <Route 
+              path='/fileviewer'
+              element={<MyFileBrowser basePath={'EXAM_SUBMISSIONx--xextractedx--x182'}/>}
+              />
           </Routes>
         </div>
         <SharedFooter />

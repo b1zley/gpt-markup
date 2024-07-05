@@ -13,7 +13,7 @@ const AI_MODE = "claude"
 
 const exampleSystemMessageString = `You are a marker for a university level programming exam. The course you are marking for is a Master’s conversion course, teaching students from a variety of backgrounds the skills they need to succeed as a modern software developer. 
 The exam you are marking will be delivered to you as an entire java project file, which has been concatenated into a single string, and partially minified to remove whitespace from code blocks.
-Please provide feedback and a mark for each rubric component in the following JSON format, only return valid, parseable JSON with escaped newlines:
+Please provide feedback and a mark for each rubric component in the following JSON format, only return valid, parseable JSON with escaped newlines, if there is only one rubric component, there should only be one element within the array.:
 [
   {"aiFeedbackToParse": "example feedback for Part 1", "aiMarkToParse": 25.5},
   {"aiFeedbackToParse": "example feedback for Part 2", "aiMarkToParse": 28.0}
@@ -52,7 +52,7 @@ async function handleAiApiCall(informationForLLM, student_exam_submission_id) {
 
 
 
-    const examString = examInformationParse(examInformation)
+    const examString = examInformationParseOneRubricComponent(examInformation)
     const systemMessage = exampleSystemMessageString + examString
 
     const messages = [{ role: "system", content: systemMessage },
@@ -100,6 +100,15 @@ function examInformationParse(examInformation) {
     return examString
 }
 
+function examInformationParseOneRubricComponent(examInformation, rubricIndex) {
+    let examString = ''
+    examString += `Exam Name: ${examInformation.exam_name}`
+    examString += `Exam Question: ${examInformation.exam_question}`
+    examString += `Rubric: ${rubricParseSingleComponent(examInformation.rubric, rubricIndex)}`
+    examString += `Model Answer: ${examInformation.model_answer}`
+    return examString
+}
+
 
 function rubricParse(rubric) {
     let rCString = ''
@@ -119,7 +128,26 @@ function rubricParse(rubric) {
         }
     }
     return rCString
+}
 
+
+function rubricParseSingleComponent(rubric, i) {
+    let rCString = ''
+
+    const rubricComponent = rubric[i]
+    // in loop
+    rCString += `Rubric Component ${i + 1}.`
+    rCString += `Name: ${rubricComponent.name}.`
+    rCString += `MaxMarks: ${rubricComponent.maximum}.`
+    rCString += `Desc: ${rubricComponent.rubric_component_desc}`
+    rCString += `RatingRanges:`
+    for (let rangeCounter = 0; rangeCounter < rubricComponent.rating_ranges.length; rangeCounter++) {
+        rCString += `Range ${rangeCounter + 1}.`
+        rCString += `MinInclusive: ${rubricComponent.rating_ranges[rangeCounter].rating_min_incl}.`
+        rCString += `MaxInclusive: ${rubricComponent.rating_ranges[rangeCounter].rating_max_incl}.`
+        rCString += `Desc: ${rubricComponent.rating_ranges[rangeCounter].rating_desc}.`
+    }
+    return rCString
 }
 
 
@@ -130,19 +158,15 @@ async function handleApiCallClaude(informationForLLM, student_exam_submission_id
 
     const { markedSubmissions } = informationForLLM
 
-    const markedSubmissionMessageArray = createMarkedSubmissionMessageArray(markedSubmissions)
+
 
     // console.log(markedSubmissionMessageArray)
 
-
-
-
-
-
     const { examInformation, submissionText } = informationForLLM
 
-    const examString = examInformationParse(examInformation)
-    const systemMessage = exampleSystemMessageString + examString
+    console.log(examInformation.rubric.length)
+
+
 
     // console.log(submissionText)
 
@@ -151,33 +175,46 @@ async function handleApiCallClaude(informationForLLM, student_exam_submission_id
     let claude_seed = undefined
     let claude_model = "claude-3-5-sonnet-20240620"
 
+    let responsesContentArray = []
 
+    let claude_fingerprint = ''
+    for (let rubricComponentCounter = 0; rubricComponentCounter < examInformation.rubric.length; rubricComponentCounter++) {
 
-    let claudeObject = {
-        model: claude_model,
-        max_tokens: 1000,
-        system: systemMessage,
-        messages: [...markedSubmissionMessageArray, { role: "user", content: submissionText }],
-        temperature: claudeTemp
+        const examString = examInformationParseOneRubricComponent(examInformation, rubricComponentCounter)
+        const systemMessage = exampleSystemMessageString + examString
+
+        const markedSubmissionMessageArray = createMarkedSubmissionMessageArrayOneRubricComponent(markedSubmissions, rubricComponentCounter)
+
+        let claudeObject = {
+            model: claude_model,
+            max_tokens: 1000,
+            system: systemMessage,
+            messages: [...markedSubmissionMessageArray, { role: "user", content: submissionText }],
+            temperature: claudeTemp
+        }
+
+        console.log(`fetching from claude... ${rubricComponentCounter}`)
+        // console.log(claudeObject.messages[2])
+        // continue
+        // return
+        // throw new Error('STOP')
+        const aiResponse = await anthropic.messages.create(claudeObject)
+
+        const parameterizedAiMessage = JSON.parse(aiResponse.content[0].text)
+        responsesContentArray.push(...parameterizedAiMessage)
+        claude_fingerprint = aiResponse.system_fingerprint
     }
-    
-    console.log('fetching from claude...')
-    // console.log(claudeObject.messages[5])
-    // return
-    const aiResponse = await anthropic.messages.create(claudeObject)
 
-    const parameterizedAiMessage = JSON.parse(aiResponse.content[0].text)
-    // console.log(parameterizedAiMessage)
 
     const claudeTestParameters = {
         TEMPERATURE: claudeTemp,
         TOP_P: claude_top_p,
-        system_fingerprint: aiResponse.system_fingerprint,
+        system_fingerprint: claude_fingerprint,
         MODEL: claude_model,
         SEED: claude_seed
     }
     let responseObject = {
-        content: parameterizedAiMessage,
+        content: responsesContentArray,
         testParameters: claudeTestParameters
     }
 
@@ -199,6 +236,43 @@ function createMarkedSubmissionMessageArray(markedSubmissions) {
     for (const markedSubmission of markedSubmissions) {
         const { submissionText, rubricMarkArray } = markedSubmission
         const aiReadyRubricMarkArray = rubricMarkArray.map((rubricMark) => {
+            // {"aiFeedbackToParse": "example feedback for Part 2", "aiMarkToParse": 28.0}
+            return {
+                "aiFeedbackToParse": rubricMark.critique,
+                "aiMarkToParse": rubricMark.mark
+            }
+        })
+        let messageArrayPart = [{
+            role: "user",
+            content: submissionText,
+        },
+        {
+            role: "assistant",
+            content: JSON.stringify(aiReadyRubricMarkArray)
+        }]
+        markedSubmissionMessageArray = markedSubmissionMessageArray.concat(messageArrayPart)
+    }
+
+    // console.log(markedSubmissionMessageArray)
+    return markedSubmissionMessageArray
+}
+
+/**
+ * one rubric component
+ * @param {} markedSubmissions 
+ * @param {*} i 
+ * @returns 
+ */
+function createMarkedSubmissionMessageArrayOneRubricComponent(markedSubmissions, i) {
+    // console.log(markedSubmissions)
+
+    let markedSubmissionMessageArray = []
+
+    // {"user": submissionText, "assistant": "{aiMarkToParse: 1, aiCritiqueToParse: 'wasdwasd'}"}
+
+    for (const markedSubmission of markedSubmissions) {
+        const { submissionText, rubricMarkArray } = markedSubmission
+        const aiReadyRubricMarkArray = rubricMarkArray.filter((rubricComponent, index) => index === i).map((rubricMark) => {
             // {"aiFeedbackToParse": "example feedback for Part 2", "aiMarkToParse": 28.0}
             return {
                 "aiFeedbackToParse": rubricMark.critique,

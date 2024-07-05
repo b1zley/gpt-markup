@@ -95,9 +95,9 @@ const EditableExamAccordion = ({
                     <Accordion.Body>
 
                         <div className="d-flex">
-                            <div>
+                            <pre>
                                 {parentObject[param] ? parentObject[param] : 'None added...'}
-                            </div>
+                            </pre>
                             <Button onClick={handleEditModeClicked} className="ms-auto" style={{ height: '38px' }}>Edit</Button>
 
                         </div>

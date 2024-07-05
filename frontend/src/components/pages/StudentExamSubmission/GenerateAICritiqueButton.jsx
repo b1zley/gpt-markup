@@ -14,7 +14,7 @@ const GenerateAICrtiqueButton = ({ examSubmissionInformation, setExamSubmissionI
     async function handleGenerateButtonClick() {
 
 
-        for (let i = 0; i < 3; i++) {
+        for (let i = 0; i < 1; i++) {
             const postUrl = `${BASE_API_URL}module/${module_id}/exam/${exam_id}/student_exam_submission/${student_exam_submission_id}/ai`
             try {
                 const responseFromPost = await axiosToBackend.post(postUrl)

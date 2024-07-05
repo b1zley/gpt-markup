@@ -11,6 +11,7 @@ import axiosToBackend from '../../axiosToBackend'
 
 import {useEffect} from 'react'
 
+import MyFileBrowser from "../pages/MyFileBrowser/MyFileBrowser"
 
 const UploadDownloadFileAccordion = ({ parentObject, setParentObject, submissionType, accordionName, lastDisplayed, activeDisplay }) => {
 
@@ -66,19 +67,24 @@ const UploadDownloadFileAccordion = ({ parentObject, setParentObject, submission
                 <Accordion.Header>
                     {accordionName}
                 </Accordion.Header>
-                <Accordion.Body className="d-flex">
-                    <UploadExamInfo
-                        className='ms-0'
-                        submissionType={submissionType}
-                        handleExamUpload={handleExamUpload}
-                    />
-                    <DownloadButton
-                        className='ms-auto'
-                        loadCondition={parentObject.file_system_id}
-                        downloadUrl={`${BASE_API_URL}file_system/download_zip/${submissionType}/${parentObject.file_system_id}`}
-                        fileName={parentObject.student_number ? `${submissionType}-${parentObject.exam_name}-${parentObject.student_number}.zip` : `${submissionType}-${parentObject.exam_name}.zip`}
-                        height='120px'
-                    />
+                <Accordion.Body >
+                    <div className="d-flex">
+                        <UploadExamInfo
+                            className='ms-0'
+                            submissionType={submissionType}
+                            handleExamUpload={handleExamUpload}
+                        />
+                        <DownloadButton
+                            className='ms-auto'
+                            loadCondition={parentObject.file_system_id}
+                            downloadUrl={`${BASE_API_URL}file_system/download_zip/${submissionType}/${parentObject.file_system_id}`}
+                            fileName={parentObject.student_number ? `${submissionType}-${parentObject.exam_name}-${parentObject.student_number}.zip` : `${submissionType}-${parentObject.exam_name}.zip`}
+                            height='120px'
+                        />
+                    </div>
+
+
+                    {parentObject.file_system_id ? <MyFileBrowser basePath={`${submissionType}x--xextractedx--x${parentObject.file_system_id}`} /> : 'None uploaded'}
                 </Accordion.Body>
             </Accordion.Item>
         </Accordion>)
