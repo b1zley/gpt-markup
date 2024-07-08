@@ -17,7 +17,7 @@ const ViewRatingsModal = ({ rating_ranges }) => {
                 Rubric Mark Guidelines
             </Button>
 
-            <Modal show={show} onHide={handleClose}>
+            <Modal show={show} onHide={handleClose} size="lg">
                 <Modal.Header closeButton>
                     <Modal.Title>Rubric Mark Guidelines</Modal.Title>
                 </Modal.Header>

@@ -26,7 +26,7 @@ const ExamView = () => {
     const [fetchStatus, setFetchStatus] = useState('pending');
 
 
-    const [activeAccordion, setActiveAccodrion] = useState([1, 0, 0, 0, 0, 0, 0])
+    const [activeAccordion, setActiveAccodrion] = useState([1, 0, 0, 0, 0, 0])
 
 
 
@@ -96,7 +96,6 @@ const ExamView = () => {
         'Rubric',
         'Prompt Specifications',
         'Model Answer',
-        'AI Model',
         'Engaged SuperUsers',
         'Student Submissions'
     ]
@@ -171,18 +170,18 @@ const ExamView = () => {
                 }
 
 
-                {
+                {/* {
                     activeAccordion[4] === 1 ?
                         <EditAiModelAccordion
                             setExamInformation={setExamInformation}
                             examInformation={examInformation}
                         />
                         : null
-                }
+                } */}
 
 
                 {
-                    activeAccordion[5] === 1 ?
+                    activeAccordion[4] === 1 ?
                         <EditAssignedMarkersAccordion
                             lastDisplayed={true}
                             examInformation={examInformation}
@@ -191,7 +190,7 @@ const ExamView = () => {
                 }
 
                 {
-                    activeAccordion[6] === 1 ?
+                    activeAccordion[5] === 1 ?
                         <StudentsInExamAccordion
                             active={activeAccordion[6] === 1}
                             lastDisplayed={true}

@@ -1,5 +1,5 @@
 import { useEffect } from "react"
-import { Accordion, Button } from "react-bootstrap"
+import { Accordion, Button, Row, Col, Container } from "react-bootstrap"
 
 
 
@@ -20,16 +20,42 @@ const ActiveAccordionControl = ({ activeAccordion, setActiveAccordion, nameArray
 
     }
 
+
+
+    const buttonStyle = {
+        borderRadius: '0',
+        width: `${100 / nameArray.length}%`,
+        borderLeft: '0px'
+
+    };
+
+    const buttonStyleFirst = {
+        ...buttonStyle,
+        borderLeft: null
+    }
+
+
+
+
+
     return (
         <div className="my-2">
-            <div className="d-flex" style={{ width: '150px' }}>
-                {activeAccordion.map((accordion, i) => {
-                    return (
-                        <Button key={i} variant={accordion === 1 ? 'primary' : 'outline-primary'} onClick={() => handleActiveAccordionSet(i)}> {nameArray[i]}</Button>
-                    )
-                } )}
-            </div>
-        </div>
+            <Container>
+                <Row>
+                    {activeAccordion.map((accordion, i) => {
+
+
+
+                        return (
+                            <Button key={i} style={i === 0 ? buttonStyleFirst : buttonStyle} variant={accordion === 1 ? 'primary' : 'outline-primary'} onClick={() => handleActiveAccordionSet(i)}>
+                                {nameArray[i]}
+                            </Button>
+                        )
+                    })}
+                </Row>
+            </Container>
+
+        </div >
     )
 
 

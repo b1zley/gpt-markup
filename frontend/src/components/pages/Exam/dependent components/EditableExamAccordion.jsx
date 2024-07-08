@@ -32,6 +32,8 @@ const EditableExamAccordion = ({
             }
         }
 
+        console.log(param)
+        console.log(editText)
 
         if (await sendExamPutRequest(param, editText)) {
             setParentObject({ ...parentObject, [param]: editText })
@@ -81,7 +83,7 @@ const EditableExamAccordion = ({
                             </InputGroup>
 
                             <div className='ms-auto d-flex flex-column align-items-between'>
-                                <Button variant={'success'} onClick={handleCommitClicked} className='my-1' style={{ height: '38px' }}>Commit</Button>
+                                <Button variant={'success'} onClick={(e) => {handleCommitClicked(e, editText)}} className='my-1' style={{ height: '38px' }}>Commit</Button>
                                 <Button variant={'warning'} onClick={handleRevertClicked} className='my-1 text-white' style={{ height: '38px' }}>Revert</Button>
                             </div>
                         </div>
