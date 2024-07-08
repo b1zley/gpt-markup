@@ -24,16 +24,47 @@ const StudentExamSubmissionsTable = ({ examInformation, studentExamSubmissions, 
 
 
     async function handleStudentMarkForTrainingClick(i) {
-        // console.log(examInformation)
-        console.log(studentExamSubmissions)
-
-        const submissionForTraining = studentExamSubmissions[i]
-        // console.log(submissionForTraining)
+        try {
+            // handle request to backend
+            const submissionForTraining = studentExamSubmissions[i]
+            const { module_id, exam_id } = examInformation
+            const { student_exam_submission_id } = submissionForTraining
+            const apiUrl = `${BASE_API_URL}module/${module_id}/exam/${exam_id}/student_exam_submission/${student_exam_submission_id}/marked_for_training`
+            const response = await axiosToBackend.put(apiUrl)
+            // handle update render
+            let newStudentSubmission = { ...studentExamSubmissions[i] }
+            newStudentSubmission.marked_for_training = 1
+            let newStudentExamSubmissions = studentExamSubmissions.splice(0, studentExamSubmissions.length)
+            newStudentExamSubmissions[i] = newStudentSubmission
+            setStudentExamSubmissions(newStudentExamSubmissions)
+        } catch (err) {
+            console.log(err)
+            window.alert('Failed to mark for training')
+        }
     }
 
 
-    async function handleStudentUnmarkForTrainingClick(i){
-        
+    async function handleStudentUnmarkForTrainingClick(i) {
+
+        try {
+            // handle request to backend
+            const submissionForTraining = studentExamSubmissions[i]
+            const { module_id, exam_id } = examInformation
+            const { student_exam_submission_id } = submissionForTraining
+            const apiUrl = `${BASE_API_URL}module/${module_id}/exam/${exam_id}/student_exam_submission/${student_exam_submission_id}/marked_for_training`
+            const response = await axiosToBackend.delete(apiUrl)
+
+            // handle update render
+            let newStudentSubmission = { ...studentExamSubmissions[i] }
+            newStudentSubmission.marked_for_training = null
+            let newStudentExamSubmissions = studentExamSubmissions.splice(0, studentExamSubmissions.length)
+            newStudentExamSubmissions[i] = newStudentSubmission
+            setStudentExamSubmissions(newStudentExamSubmissions)
+
+        } catch (err) {
+            window.alert('Failed to unmark for training')
+        }
+
     }
 
     return (
@@ -84,14 +115,14 @@ const StudentExamSubmissionsTable = ({ examInformation, studentExamSubmissions, 
                                 </Button>
 
 
-                                {studentExamSubmission.marked_for_training ? 
-                                <Button className='my-1 ms-1' variant='success' onClick={() => { handleStudentUnmarkForTrainingClick(i) }}>
-                                    Unmark for training
-                                </Button> :
-                                <Button className='my-1 ms-1' variant='success' onClick={() => { handleStudentMarkForTrainingClick(i) }}>
-                                    Mark for training
-                                </Button>
-                                
+                                {studentExamSubmission.marked_for_training ?
+                                    <Button className='my-1 ms-1' variant='success' onClick={() => { handleStudentUnmarkForTrainingClick(i) }}>
+                                        Unmark for training
+                                    </Button> :
+                                    <Button className='my-1 ms-1' variant='success' onClick={() => { handleStudentMarkForTrainingClick(i) }}>
+                                        Mark for training
+                                    </Button>
+
                                 }
 
                             </div>
