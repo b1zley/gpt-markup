@@ -7,7 +7,7 @@ import BASE_API_URL from '../../../../BASE_API_URL'
 
 import axiosToBackend from '../../../../axiosToBackend'
 
-const StudentExamSubmissionsTable = ({examInformation, studentExamSubmissions, setStudentExamSubmissions}) => {
+const StudentExamSubmissionsTable = ({ examInformation, studentExamSubmissions, setStudentExamSubmissions }) => {
 
     async function handleStudentRemoveClick(i) {
         const submissionToDelete = studentExamSubmissions[i]
@@ -23,68 +23,85 @@ const StudentExamSubmissionsTable = ({examInformation, studentExamSubmissions, s
     }
 
 
-    async function handleStudentMarkForTrainingClick(i){
+    async function handleStudentMarkForTrainingClick(i) {
+        // console.log(examInformation)
+        console.log(studentExamSubmissions)
+
+        const submissionForTraining = studentExamSubmissions[i]
+        // console.log(submissionForTraining)
+    }
+
+
+    async function handleStudentUnmarkForTrainingClick(i){
         
     }
 
-    return(
+    return (
         <Table responsive bordered hover className=''>
-                        <thead>
-                            <tr>
-                                <th>Student Number</th>
-                                <th>Student Name</th>
-                                <th>Submitted</th>
-                                <th>Agreed Mark</th>
-                                <th>Controls</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {studentExamSubmissions.length === 0 ?
-                            <tr>
-                                <td colSpan={12} className='text-center'>
-                                    No students added yet...
-                                </td>
-                            </tr>
-                            : null}
+            <thead>
+                <tr>
+                    <th>Student Number</th>
+                    <th>Student Name</th>
+                    <th>Submitted</th>
+                    <th>Agreed Mark</th>
+                    <th>Controls</th>
+                </tr>
+            </thead>
+            <tbody>
+                {studentExamSubmissions.length === 0 ?
+                    <tr>
+                        <td colSpan={12} className='text-center'>
+                            No students added yet...
+                        </td>
+                    </tr>
+                    : null}
 
 
-                            {studentExamSubmissions.map((studentExamSubmission, i) =>
+                {studentExamSubmissions.map((studentExamSubmission, i) =>
 
-                                <tr key={studentExamSubmission.student_exam_submission_id}>
-                                    <td>
-                                        {studentExamSubmission.student_number}
-                                    </td>
-                                    <td>
-                                        {studentExamSubmission.student_name}
-                                    </td>
-                                    <td className=''>
-                                        {studentExamSubmission.file_system_id ? <BootstrapTick size={20} /> : null}
-                                    </td>
-                                    <td>
-                                        {studentExamSubmission.marker_mark ? studentExamSubmission.marker_mark : '-'}
-                                    </td>
-                                    <td >
-                                        <div className='d-flex justify-content-center'>
-                                            <LinkContainer to={`${location.pathname}/student_exam_submission/${studentExamSubmission.student_exam_submission_id}`}>
-                                                <Button className='my-1 me-1'>
-                                                    View
-                                                </Button>
-                                            </LinkContainer>
-                                            <Button className='my-1' variant='warning' onClick={() => { handleStudentRemoveClick(i) }}>
-                                                Remove
-                                            </Button>
+                    <tr key={studentExamSubmission.student_exam_submission_id}>
+                        <td>
+                            {studentExamSubmission.student_number}
+                        </td>
+                        <td>
+                            {studentExamSubmission.student_name}
+                        </td>
+                        <td className=''>
+                            {studentExamSubmission.file_system_id ? <BootstrapTick size={20} /> : null}
+                        </td>
+                        <td>
+                            {studentExamSubmission.marker_mark ? studentExamSubmission.marker_mark : '-'}
+                        </td>
+                        <td >
+                            <div className='d-flex justify-content-center'>
+                                <LinkContainer to={`${location.pathname}/student_exam_submission/${studentExamSubmission.student_exam_submission_id}`}>
+                                    <Button className='my-1 me-1'>
+                                        View
+                                    </Button>
+                                </LinkContainer>
+                                <Button className='my-1' variant='warning' onClick={() => { handleStudentRemoveClick(i) }}>
+                                    Remove
+                                </Button>
 
-                                            <Button className='my-1 ms-1' variant='success' onClick={() => { handleStudentMarkForTrainingClick(i) }}>
-                                                Mark for training
-                                            </Button>
-                                        </div>
 
-                                    </td>
-                                </tr>
-                            )}
+                                {studentExamSubmission.marked_for_training ? 
+                                <Button className='my-1 ms-1' variant='success' onClick={() => { handleStudentUnmarkForTrainingClick(i) }}>
+                                    Unmark for training
+                                </Button> :
+                                <Button className='my-1 ms-1' variant='success' onClick={() => { handleStudentMarkForTrainingClick(i) }}>
+                                    Mark for training
+                                </Button>
+                                
+                                }
 
-                        </tbody>
-                    </Table>
+                            </div>
+
+                        </td>
+                    </tr>
+                )}
+
+            </tbody>
+        </Table>
     )
 
 

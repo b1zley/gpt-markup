@@ -141,7 +141,7 @@ async function queryCreateNewExamSubmission(exam_id, student_id) {
 async function queryGetExamSubmissionByExamId(exam_id) {
     // need to also calculate total agreed mark...
 
-    const sqlQuery = "SELECT ses.student_exam_submission_id, ses.exam_id, ses.student_id, ses.exam_submission, COALESCE(SUM(rcsm.rubric_component_mark), NULL) AS marker_mark, ses.file_system_id, student.student_name, student.student_number FROM student_exam_submission ses LEFT JOIN rubric_component_submission_mark rcsm ON ses.student_exam_submission_id = rcsm.student_exam_submission_id INNER JOIN student ON student.student_id = ses.student_id WHERE exam_id = ? GROUP BY ses.student_exam_submission_id, ses.student_id, ses.exam_id"
+    const sqlQuery = "SELECT ses.student_exam_submission_id, ses.marked_for_training, ses.exam_id, ses.student_id, ses.exam_submission, COALESCE(SUM(rcsm.rubric_component_mark), NULL) AS marker_mark, ses.file_system_id, student.student_name, student.student_number FROM student_exam_submission ses LEFT JOIN rubric_component_submission_mark rcsm ON ses.student_exam_submission_id = rcsm.student_exam_submission_id INNER JOIN student ON student.student_id = ses.student_id WHERE exam_id = ? GROUP BY ses.student_exam_submission_id, ses.student_id, ses.exam_id"
     const bindingParams = [exam_id]
 
     const [queryResponse] = await db.query(sqlQuery, bindingParams)
@@ -236,6 +236,28 @@ async function handlePostGetNewAICritique(req, res) {
 
 
 }
+
+async function handleMarkSESForTraining(req, res) {
+    try {
+        const { student_exam_submission_id } = req.params
+        const updateStatus = await queryMarkSESForTraining(student_exam_submission_id)
+        return res.status(200).send()
+    } catch (err) {
+        return res.status(500).send()
+    }
+}
+
+
+async function handleUnmarkSESForTraining(req, res) {
+    try {
+        const { student_exam_submission_id } = req.params
+        const responseFromUpdate = await queryUnmarkSESForTraining(student_exam_submission_id)
+        return res.status(200).send()
+    } catch (err) {
+        return res.status(500).send()
+    }
+}
+
 // query handlers
 
 async function getExamInformationForAiParse(student_exam_submission_id) {
@@ -398,7 +420,7 @@ async function queryGetStudentExamSubmissionsMarkedForTraining(exam_id) {
 
         const submissionText = await getParsedSubmissionAnswerBySESId(ses_id)
         const rubricMarkArray = await getRubricMarkArraySESId(ses_id)
-        
+
 
         const exampleObject = {
             submissionText,
@@ -409,7 +431,7 @@ async function queryGetStudentExamSubmissionsMarkedForTraining(exam_id) {
     return markedExamSubmissions
 }
 
-async function getRubricMarkArraySESId(student_exam_submission_id){
+async function getRubricMarkArraySESId(student_exam_submission_id) {
     const sqlQuery = "SELECT * FROM rubric_component_submission_mark rcsm WHERE rcsm.student_exam_submission_id = ? ORDER BY rcsm.rubric_component_id"
     const bindingParams = [student_exam_submission_id]
 
@@ -425,6 +447,24 @@ async function getRubricMarkArraySESId(student_exam_submission_id){
 }
 
 
+async function queryMarkSESForTraining(student_exam_submission_id) {
+    const sqlQuery = "UPDATE `student_exam_submission` SET `marked_for_training` = '1' WHERE `student_exam_submission`.`student_exam_submission_id` = ?;"
+    const bindingParams = [student_exam_submission_id]
+
+    const [responseFromQuery] = await db.query(sqlQuery, bindingParams)
+
+    return responseFromQuery.changedRows > 0
+
+}
+
+async function queryUnmarkSESForTraining(student_exam_submission_id) {
+    const sqlQuery = "UPDATE `student_exam_submission` SET `marked_for_training` = NULL WHERE `student_exam_submission`.`student_exam_submission_id` = ?;"
+    const bindingParams = [student_exam_submission_id]
+    const [responseFromUpdate] = await db.query(sqlQuery, bindingParams)
+    return responseFromUpdate.changedRows > 0
+}
+
+
 module.exports = {
     handlePostCreateNewExamSubmissionEntry,
     handleGetExamSubmissionEntryByExamId,
@@ -432,5 +472,7 @@ module.exports = {
     handleGetStudentExamSubmissionByExamSubmissionId,
     handlePutUpdateRubricComponentMark,
     handlePutUpdateStudentExamSubmission,
-    handlePostGetNewAICritique
+    handlePostGetNewAICritique,
+    handleMarkSESForTraining,
+    handleUnmarkSESForTraining
 }

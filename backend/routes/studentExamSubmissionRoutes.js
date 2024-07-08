@@ -32,5 +32,16 @@ router.put('/:student_exam_submission_id', studentExamSubmissionControllers.hand
 router.post('/:student_exam_submission_id/ai', studentExamSubmissionControllers.handlePostGetNewAICritique)
 
 
+/**
+ * mark a student exam submission for training
+ */
+router.put('/:student_exam_submission_id/marked_for_training', studentExamSubmissionControllers.handleMarkSESForTraining)
+
+
+/**
+ * unmark a student exam submission for training
+ */
+router.delete('/:student_exam_submission_id/marked_for_training', studentExamSubmissionControllers.handleUnmarkSESForTraining)
+
 
 module.exports = router
