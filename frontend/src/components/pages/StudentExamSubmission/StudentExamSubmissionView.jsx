@@ -12,6 +12,7 @@ import axiosToBackend from '../../../axiosToBackend'
 import UploadDownloadFileAccordion from '../../shared/UploadDownloadFileAccordion'
 import EditableRubricMarks from './EditableRubricMarks'
 import GenerateAICrtiqueButton from './GenerateAICritiqueButton'
+import ActiveAccordionControl from '../Exam/dependent components/ActiveAccordionControl'
 
 const StudentExamSubmissionView = () => {
 
@@ -19,7 +20,10 @@ const StudentExamSubmissionView = () => {
 
     const [examSubmissionInformation, setExamSubmissionInformation] = useState(null)
 
-    console.log(examSubmissionInformation)
+
+    const [activeAccordion, setActiveAccodrion] = useState([1, 0])
+    const nameArray = ['Submission Upload', 'Rubric Marks']
+
     useEffect(() => {
 
         async function handleSubmissionFetch() {
@@ -50,6 +54,9 @@ const StudentExamSubmissionView = () => {
 
     return (
         <Container>
+
+
+
             <div className='border border-light rounded p-3 d-flex flex-column' style={{ minHeight: '350px', flex: 1 }}>
                 <div className='d-flex justify-content-between'>
                     <div>
@@ -65,22 +72,35 @@ const StudentExamSubmissionView = () => {
                         />
                     </div>
                 </div>
+                <ActiveAccordionControl
+                    activeAccordion={activeAccordion}
+                    setActiveAccordion={setActiveAccodrion}
+                    nameArray={nameArray}
+                />
 
 
-                <UploadDownloadFileAccordion
-                    parentObject={examSubmissionInformation}
-                    setParentObject={setExamSubmissionInformation}
-                    submissionType={'EXAM_SUBMISSION'}
-                    accordionName={'Submission Upload'}
-                    lastDisplayed={false}
-                    activeDisplay={true}
-                />
-                <EditableRubricMarks
-                    examSubmissionInformation={examSubmissionInformation}
-                    setExamSubmissionInformation={setExamSubmissionInformation}
-                    lastDisplayed={true}
-                    activeDisplay={true}
-                />
+                {activeAccordion[0] === 1 ?
+                    <UploadDownloadFileAccordion
+                        parentObject={examSubmissionInformation}
+                        setParentObject={setExamSubmissionInformation}
+                        submissionType={'EXAM_SUBMISSION'}
+                        accordionName={'Submission Upload'}
+                        lastDisplayed={false}
+                        activeDisplay={true}
+                    /> :
+                    null
+
+
+                }
+
+                {activeAccordion[1] === 1 ?
+                    <EditableRubricMarks
+                        examSubmissionInformation={examSubmissionInformation}
+                        setExamSubmissionInformation={setExamSubmissionInformation}
+                        lastDisplayed={true}
+                        activeDisplay={true}
+                    />
+                    : null}
 
 
             </div>
