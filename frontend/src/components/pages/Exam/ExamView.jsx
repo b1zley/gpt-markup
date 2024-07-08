@@ -125,6 +125,7 @@ const ExamView = () => {
                         lastDisplayed={true}
                         putUrl={`${BASE_API_URL}module/${module_id}/exam/${exam_id}`}
                         textBoxHeight={'550px'}
+                        uploadFunctionality={true}
                     />
                     :
                     null

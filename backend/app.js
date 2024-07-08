@@ -39,6 +39,10 @@ const studentRoutes = require('./routes/studentRoutes')
 app.use('/student', verifyJwt, studentRoutes)
 
 
+const decodeRTFRoutes = require('./routes/decodeRTFRoutes')
+app.use('/convert', verifyJwt, decodeRTFRoutes)
+
+
 // unprotected login route
 const authenticationRoutes = require('./routes/authenticationRoutes')
 app.use('/super_authentication', authenticationRoutes)
