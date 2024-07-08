@@ -22,6 +22,11 @@ const StudentExamSubmissionsTable = ({examInformation, studentExamSubmissions, s
 
     }
 
+
+    async function handleStudentMarkForTrainingClick(i){
+        
+    }
+
     return(
         <Table responsive bordered hover className=''>
                         <thead>
@@ -67,6 +72,10 @@ const StudentExamSubmissionsTable = ({examInformation, studentExamSubmissions, s
                                             </LinkContainer>
                                             <Button className='my-1' variant='warning' onClick={() => { handleStudentRemoveClick(i) }}>
                                                 Remove
+                                            </Button>
+
+                                            <Button className='my-1 ms-1' variant='success' onClick={() => { handleStudentMarkForTrainingClick(i) }}>
+                                                Mark for training
                                             </Button>
                                         </div>
 
