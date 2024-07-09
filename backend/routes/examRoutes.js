@@ -20,6 +20,7 @@ router.use('/:exam_id/student_exam_submission', studentExamSubmissionRoutes)
 router.post('/:exam_id/file_type', examControllers.handlePostFileTypeToExam)
 
 // delete file type
+router.delete('/:exam_id/file_type/:file_type_id', examControllers.handleDeleteFileTypeFromExam)
 
 
 // endpoints for rubric

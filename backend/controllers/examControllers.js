@@ -106,8 +106,8 @@ async function handlePostFileTypeToExam(req, res) {
         const { file_type_id } = req.body
         const responseFromInsert = await queryInsertNewFileTypeExam(exam_id, file_type_id)
         return res.status(201).send()
-        
-    } catch(err){
+
+    } catch (err) {
         return res.status(500).send()
     }
 
@@ -118,7 +118,7 @@ async function queryInsertNewFileTypeExam(exam_id, file_type_id) {
     const sqlQuery = "INSERT INTO `exam_file_type` (`exam_file_type_id`, `exam_id`, `file_type_id`) VALUES (NULL, ?, ?);"
     const bindingParams = [exam_id, file_type_id]
     const [responseFromInsert] = await db.query(sqlQuery, bindingParams)
-    if(responseFromInsert.affectedRows === 1){
+    if (responseFromInsert.affectedRows === 1) {
         return true
     } else {
         throw new Error()
@@ -127,9 +127,22 @@ async function queryInsertNewFileTypeExam(exam_id, file_type_id) {
 
 async function handleDeleteFileTypeFromExam(req, res) {
     // to do
+    try {
+        const { module_id, exam_id, file_type_id } = req.params
+        const response = await queryDeleteFileTypeFromExam(exam_id, file_type_id)
+        return res.status(204).send()
 
+    } catch (err) {
+        console.log(err)
+        return res.status(500).send()
+    }
+}
 
-
+async function queryDeleteFileTypeFromExam(exam_id, file_type_id) {
+    const sqlQuery = "DELETE FROM exam_file_type WHERE `exam_file_type`.`file_type_id` = ? AND `exam_file_type`.`exam_id` = ?"
+    const bindingParams = [file_type_id, exam_id]
+    const [responseFromDeletion] = await db.query(sqlQuery, bindingParams)
+    return true
 }
 
 async function queryGetFileTypesByExamId(exam_id) {
