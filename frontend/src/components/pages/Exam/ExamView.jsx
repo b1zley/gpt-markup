@@ -18,6 +18,7 @@ import StudentsInExamAccordion from "./dependent components/ExamSubmissionsAccor
 import RubricComponentsView from "./dependent components/RubricComponentsView";
 import UploadDownloadFileAccordion from "../../shared/UploadDownloadFileAccordion";
 import ActiveAccordionControl from "./dependent components/ActiveAccordionControl";
+import EditableFileTypesAccordion from "./dependent components/EditableFileTypesAccordion";
 
 const ExamView = () => {
     let { module_id, exam_id } = useParams();
@@ -26,7 +27,7 @@ const ExamView = () => {
     const [fetchStatus, setFetchStatus] = useState('pending');
 
 
-    const [activeAccordion, setActiveAccodrion] = useState([1, 0, 0, 0, 0, 0])
+    const [activeAccordion, setActiveAccodrion] = useState([1, 0, 0, 0, 0, 0, 0])
 
 
 
@@ -93,6 +94,7 @@ const ExamView = () => {
 
     const nameArray = [
         'Exam Question',
+        'File Types',
         'Rubric',
         'Prompt Specifications',
         'Model Answer',
@@ -132,6 +134,17 @@ const ExamView = () => {
 
 
                 {activeAccordion[1] === 1 ?
+                    <EditableFileTypesAccordion
+                        lastDisplayed={true}
+                        examInformation={examInformation}
+                        setExamInformation={setExamInformation}
+                    />
+                    :
+                    null
+                }
+
+
+                {activeAccordion[2] === 1 ?
                     <RubricComponentsView
                         examInformation={examInformation}
                         setExamInformation={setExamInformation}
@@ -141,7 +154,7 @@ const ExamView = () => {
                 }
 
                 {
-                    activeAccordion[2] === 1 ?
+                    activeAccordion[3] === 1 ?
                         <EditableExamAccordion
                             parentObject={examInformation}
                             setParentObject={setExamInformation}
@@ -155,7 +168,7 @@ const ExamView = () => {
                 }
 
                 {
-                    activeAccordion[3] === 1 ?
+                    activeAccordion[4] === 1 ?
                         <UploadDownloadFileAccordion
                             activeDisplay={true}
                             parentObject={examInformation}
@@ -181,7 +194,7 @@ const ExamView = () => {
 
 
                 {
-                    activeAccordion[4] === 1 ?
+                    activeAccordion[5] === 1 ?
                         <EditAssignedMarkersAccordion
                             lastDisplayed={true}
                             examInformation={examInformation}
@@ -190,7 +203,7 @@ const ExamView = () => {
                 }
 
                 {
-                    activeAccordion[5] === 1 ?
+                    activeAccordion[6] === 1 ?
                         <StudentsInExamAccordion
                             active={activeAccordion[6] === 1}
                             lastDisplayed={true}
