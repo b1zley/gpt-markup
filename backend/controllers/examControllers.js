@@ -297,5 +297,6 @@ module.exports = {
     requestHandlerPostSuperUserInExam,
     handleQueryExamsByModuleId,
     handlePostFileTypeToExam,
-    handleDeleteFileTypeFromExam
+    handleDeleteFileTypeFromExam,
+    queryGetFileTypesByExamId
 }

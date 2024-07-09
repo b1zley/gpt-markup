@@ -2,13 +2,16 @@ const { response } = require('express');
 const { db, axios, backendRoot, storageDirectory } = require('../routesCommonDependencies'); // Common dependencies
 const path = require('path')
 
-const { concatenateJavaFiles, listDirectoryStructure } = require('./codeMinifier/parseFilesConcatenate')
+const { concatenateJavaFiles, listDirectoryStructure, concatenateAnyFiles } = require('./codeMinifier/parseFilesConcatenate')
 
 const { countTokens } = require('./tokenCounter/tokenCounter')
 
 const { handleAiApiCall } = require('./aiApiCallHandler')
 
 const { writeMessageResponseToCSV } = require('../parseRecording')
+
+
+const { queryGetFileTypesByExamId } = require('./examControllers')
 
 // request handlers
 
@@ -285,7 +288,15 @@ async function getExamInformationForAiParse(student_exam_submission_id) {
 
     examInformation.rubric = rubricComponentArray
 
+
+    // get allowed file types in exam
+    examInformation.fileTypes = await getExtensionsArrayExamId(examInformation.exam_id)
     return examInformation
+}
+
+async function getExtensionsArrayExamId(exam_id){
+    rawFileTypeArray = await queryGetFileTypesByExamId(exam_id)
+    return rawFileTypeArray.map((fileType) => fileType.allowed ? `.${fileType.file_type_extension}` : null).filter((element) => element !== null)
 }
 
 async function getNewAICritique(student_exam_submission_id) {
@@ -301,10 +312,13 @@ async function getNewAICritique(student_exam_submission_id) {
 
     // parse model answer as well
     const modelAnswerPath = path.join(storageDirectory, examInformation.unzip)
-    const parsedModelAnswer = await concatenateJavaFiles(modelAnswerPath)
+    console.log('start concat any...')
+    const parsedModelAnswer = await concatenateAnyFiles(modelAnswerPath, examInformation.fileTypes)
+    console.log('end concat any')
     examInformation.model_answer = parsedModelAnswer
 
-    parsedSubmissionAnswer = await getParsedSubmissionAnswerBySESId(student_exam_submission_id)
+    // console.log(examInformation.fileTypes)
+    parsedSubmissionAnswer = await getParsedSubmissionAnswerBySESId(student_exam_submission_id, examInformation.fileTypes)
 
     // console.log(parsedSubmissionAnswer)
 
@@ -322,6 +336,10 @@ async function getNewAICritique(student_exam_submission_id) {
         submissionText: parsedSubmissionAnswer,
         markedSubmissions
     }
+
+    // console.log(examInformation.model_answer)
+    // console.log(informationToSendToLLM.submissionText)
+    // console.log(markedSubmissions[0].submissionText)
 
     const responseFromApiCall = await handleAiApiCall(informationToSendToLLM, student_exam_submission_id)
 
@@ -382,7 +400,7 @@ async function queryInsertOrUpdateAiMark(student_exam_submission_id, rubric_comp
 }
 
 
-async function getParsedSubmissionAnswerBySESId(student_exam_submission_id) {
+async function getParsedSubmissionAnswerBySESId(student_exam_submission_id, extensions) {
     // submission data
     const submissionDataSql = "SELECT fs.* FROM student_exam_submission ses INNER JOIN file_system fs ON ses.file_system_id = fs.file_system_id WHERE ses.student_exam_submission_id = ?"
     const submissionBindingParams = [student_exam_submission_id]
@@ -396,7 +414,7 @@ async function getParsedSubmissionAnswerBySESId(student_exam_submission_id) {
     let parsedSubmissionAnswer = 'File Structure:\n'
     parsedSubmissionAnswer += await listDirectoryStructure(submissionAnswerPath)
     parsedSubmissionAnswer += '\n'
-    parsedSubmissionAnswer += await concatenateJavaFiles(submissionAnswerPath)
+    parsedSubmissionAnswer += await concatenateAnyFiles(submissionAnswerPath, extensions)
 
 
     return parsedSubmissionAnswer
@@ -415,10 +433,12 @@ async function queryGetStudentExamSubmissionsMarkedForTraining(exam_id) {
 
     // must create an 'example object'
 
+    const extensions = await getExtensionsArrayExamId(exam_id)
+
     let markedExamSubmissions = []
     for (const ses_id of markedStudentExamSubmissionIds) {
 
-        const submissionText = await getParsedSubmissionAnswerBySESId(ses_id)
+        const submissionText = await getParsedSubmissionAnswerBySESId(ses_id, extensions)
         const rubricMarkArray = await getRubricMarkArraySESId(ses_id)
 
 
