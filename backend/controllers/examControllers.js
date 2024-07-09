@@ -147,7 +147,7 @@ async function queryDeleteFileTypeFromExam(exam_id, file_type_id) {
 
 async function queryGetFileTypesByExamId(exam_id) {
     try {
-        const sqlQuery = "SELECT ft.file_type_id, ft.file_type_extension, eft.exam_id FROM file_types ft LEFT JOIN exam_file_type eft ON eft.file_type_id = ft.file_type_id WHERE exam_id = ? OR exam_id IS NULL"
+        const sqlQuery = "SELECT ft.file_type_id, ft.file_type_extension, eft.exam_id FROM file_types ft LEFT JOIN exam_file_type eft ON eft.file_type_id = ft.file_type_id WHERE exam_id = ? OR exam_id IS NULL ORDER BY ft.file_type_id"
         const bindingParams = [exam_id]
         const [response] = await db.query(sqlQuery, bindingParams)
 
