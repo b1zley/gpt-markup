@@ -15,6 +15,13 @@ router.post('/:exam_id/super_user', examControllers.requestHandlerPostSuperUserI
 const studentExamSubmissionRoutes = require('./studentExamSubmissionRoutes')
 router.use('/:exam_id/student_exam_submission', studentExamSubmissionRoutes)
 
+
+// add new file type
+router.post('/:exam_id/file_type', examControllers.handlePostFileTypeToExam)
+
+// delete file type
+
+
 // endpoints for rubric
 const rubricRoutes = require('./rubricRoutes')
 router.use('/:exam_id/rubric', rubricRoutes)

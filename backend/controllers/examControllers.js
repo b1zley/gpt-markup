@@ -98,21 +98,58 @@ async function getExamById(req, res) {
     }
 }
 
+
+async function handlePostFileTypeToExam(req, res) {
+
+    try {
+        const { module_id, exam_id } = req.params
+        const { file_type_id } = req.body
+        const responseFromInsert = await queryInsertNewFileTypeExam(exam_id, file_type_id)
+        return res.status(201).send()
+        
+    } catch(err){
+        return res.status(500).send()
+    }
+
+
+}
+
+async function queryInsertNewFileTypeExam(exam_id, file_type_id) {
+    const sqlQuery = "INSERT INTO `exam_file_type` (`exam_file_type_id`, `exam_id`, `file_type_id`) VALUES (NULL, ?, ?);"
+    const bindingParams = [exam_id, file_type_id]
+    const [responseFromInsert] = await db.query(sqlQuery, bindingParams)
+    if(responseFromInsert.affectedRows === 1){
+        return true
+    } else {
+        throw new Error()
+    }
+}
+
+async function handleDeleteFileTypeFromExam(req, res) {
+    // to do
+
+
+
+}
+
 async function queryGetFileTypesByExamId(exam_id) {
     try {
-        const sqlQuery = "SELECT ft.file_type_extension, eft.exam_id FROM file_types ft LEFT JOIN exam_file_type eft ON eft.file_type_id = ft.file_type_id WHERE exam_id = ? OR exam_id IS NULL"
+        const sqlQuery = "SELECT ft.file_type_id, ft.file_type_extension, eft.exam_id FROM file_types ft LEFT JOIN exam_file_type eft ON eft.file_type_id = ft.file_type_id WHERE exam_id = ? OR exam_id IS NULL"
         const bindingParams = [exam_id]
         const [response] = await db.query(sqlQuery, bindingParams)
 
-        let returnObject = {}
-        response.forEach((row) => {
-            const fileType = row.file_type_extension
-            returnObject = {
-                ...returnObject,
-                [fileType]: Number.parseInt(row.exam_id) === Number.parseInt(exam_id)
+        const fileTypeBooleanArray = response.map((row) => {
+
+
+            let returnObject = {
+                file_type_extension: row.file_type_extension,
+                file_type_id: row.file_type_id,
+                allowed: Number.parseInt(row.exam_id) === Number.parseInt(exam_id)
             }
+            return returnObject
         })
-        return returnObject
+        return fileTypeBooleanArray
+
     } catch (err) {
         throw new Error()
     }
@@ -245,5 +282,7 @@ module.exports = {
     deleteExamController,
     requestHandlerDeleteSuperUserInExam,
     requestHandlerPostSuperUserInExam,
-    handleQueryExamsByModuleId
+    handleQueryExamsByModuleId,
+    handlePostFileTypeToExam,
+    handleDeleteFileTypeFromExam
 }
