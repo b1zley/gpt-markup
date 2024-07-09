@@ -87,13 +87,34 @@ async function getExamById(req, res) {
 
         examObject = {
             ...examObject,
-            rubric: await queryGetRubricComponentsByExamId(exam_id)
+            rubric: await queryGetRubricComponentsByExamId(exam_id),
+            fileTypes: await queryGetFileTypesByExamId(exam_id)
         }
 
 
         return res.status(200).json(examObject)
     } catch (err) {
         return res.status(500).send()
+    }
+}
+
+async function queryGetFileTypesByExamId(exam_id) {
+    try {
+        const sqlQuery = "SELECT ft.file_type_extension, eft.exam_id FROM file_types ft LEFT JOIN exam_file_type eft ON eft.file_type_id = ft.file_type_id WHERE exam_id = ? OR exam_id IS NULL"
+        const bindingParams = [exam_id]
+        const [response] = await db.query(sqlQuery, bindingParams)
+
+        let returnObject = {}
+        response.forEach((row) => {
+            const fileType = row.file_type_extension
+            returnObject = {
+                ...returnObject,
+                [fileType]: Number.parseInt(row.exam_id) === Number.parseInt(exam_id)
+            }
+        })
+        return returnObject
+    } catch (err) {
+        throw new Error()
     }
 }
 
