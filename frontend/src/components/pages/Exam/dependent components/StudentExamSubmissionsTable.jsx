@@ -9,7 +9,8 @@ import axiosToBackend from '../../../../axiosToBackend'
 
 const StudentExamSubmissionsTable = ({ examInformation, studentExamSubmissions, setStudentExamSubmissions }) => {
 
-    async function handleStudentRemoveClick(i) {
+    async function handleStudentRemoveClick(e, i) {
+        e.stopPropagation()
         const submissionToDelete = studentExamSubmissions[i]
         const apiDeleteExamSubmissionUrl = `${BASE_API_URL}module/${examInformation.module_id}/exam/${submissionToDelete.exam_id}/student_exam_submission/${submissionToDelete.student_exam_submission_id}`
         const deleteExamSubmissionResponse = await axiosToBackend.delete(apiDeleteExamSubmissionUrl)
@@ -23,8 +24,9 @@ const StudentExamSubmissionsTable = ({ examInformation, studentExamSubmissions, 
     }
 
 
-    async function handleStudentMarkForTrainingClick(i) {
+    async function handleStudentMarkForTrainingClick(e, i) {
         try {
+            e.stopPropagation()
             // handle request to backend
             const submissionForTraining = studentExamSubmissions[i]
             const { module_id, exam_id } = examInformation
@@ -44,9 +46,10 @@ const StudentExamSubmissionsTable = ({ examInformation, studentExamSubmissions, 
     }
 
 
-    async function handleStudentUnmarkForTrainingClick(i) {
+    async function handleStudentUnmarkForTrainingClick(e, i) {
 
         try {
+            e.stopPropagation()
             // handle request to backend
             const submissionForTraining = studentExamSubmissions[i]
             const { module_id, exam_id } = examInformation
@@ -89,46 +92,47 @@ const StudentExamSubmissionsTable = ({ examInformation, studentExamSubmissions, 
 
 
                 {studentExamSubmissions.map((studentExamSubmission, i) =>
+                    <LinkContainer key={studentExamSubmission.student_exam_submission_id} to={`${location.pathname}/student_exam_submission/${studentExamSubmission.student_exam_submission_id}`}>
 
-                    <tr key={studentExamSubmission.student_exam_submission_id}>
-                        <td>
-                            {studentExamSubmission.student_number}
-                        </td>
-                        <td>
-                            {studentExamSubmission.student_name}
-                        </td>
-                        <td className=''>
-                            {studentExamSubmission.file_system_id ? <BootstrapTick size={20} /> : null}
-                        </td>
-                        <td>
-                            {studentExamSubmission.marker_mark ? studentExamSubmission.marker_mark : '-'}
-                        </td>
-                        <td >
-                            <div className='d-flex justify-content-center'>
-                                <LinkContainer to={`${location.pathname}/student_exam_submission/${studentExamSubmission.student_exam_submission_id}`}>
-                                    <Button className='my-1 me-1'>
-                                        View
-                                    </Button>
-                                </LinkContainer>
-                                <Button className='my-1' variant='warning' onClick={() => { handleStudentRemoveClick(i) }}>
-                                    Remove
-                                </Button>
+                        <tr >
+                            <td>
+                                {studentExamSubmission.student_number}
+                            </td>
+                            <td>
+                                {studentExamSubmission.student_name}
+                            </td>
+                            <td className=''>
+                                {studentExamSubmission.file_system_id ? <BootstrapTick size={20} /> : null}
+                            </td>
+                            <td>
+                                {studentExamSubmission.marker_mark ? studentExamSubmission.marker_mark : '-'}
+                            </td>
+                            <td >
+                                <div className='d-flex justify-content-center'>
 
 
-                                {studentExamSubmission.marked_for_training ?
-                                    <Button className='my-1 ms-1' variant='success' onClick={() => { handleStudentUnmarkForTrainingClick(i) }}>
-                                        Unmark for training
-                                    </Button> :
-                                    <Button className='my-1 ms-1' variant='success' onClick={() => { handleStudentMarkForTrainingClick(i) }}>
-                                        Mark for training
+                                    <Button className='my-1' variant='warning' onClick={(e) => { handleStudentRemoveClick(e, i) }}>
+                                        Remove
                                     </Button>
 
-                                }
 
-                            </div>
+                                    {studentExamSubmission.marked_for_training ?
+                                        <Button className='my-1 ms-1' variant='success' onClick={(e) => { handleStudentUnmarkForTrainingClick(e, i) }}>
+                                            Unmark for training
+                                        </Button> :
+                                        <Button className='my-1 ms-1' variant='success' onClick={(e) => { handleStudentMarkForTrainingClick(e, i) }}>
+                                            Mark for training
+                                        </Button>
 
-                        </td>
-                    </tr>
+                                    }
+
+                                </div>
+
+                            </td>
+
+                        </tr>
+                    </LinkContainer>
+
                 )}
 
             </tbody>
