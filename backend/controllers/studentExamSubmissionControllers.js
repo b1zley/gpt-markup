@@ -272,6 +272,8 @@ async function getExamInformationForAiParse(student_exam_submission_id) {
 
     const [responseFromExamQuery] = await db.query(examSqlQuery, examBindingParams)
     const examInformation = responseFromExamQuery[0]
+    // console.log(responseFromExamQuery)
+    // console.log(examInformation)
 
     // rubric components with exam
     const rubricSqlQuery = "SELECT rc.rubric_component_id, rc.name, rc.rubric_component_desc, rc.maximum FROM exam e INNER JOIN rubric_component rc ON e.exam_id = rc.exam_id WHERE e.exam_id = ?"
@@ -304,7 +306,7 @@ async function getNewAICritique(student_exam_submission_id) {
     let examInformation = await getExamInformationForAiParse(student_exam_submission_id)
 
     const { exam_id } = examInformation
-    console.log('exam_id', exam_id)
+    // console.log('exam_id', exam_id)
 
 
     const markedSubmissions = await queryGetStudentExamSubmissionsMarkedForTraining(exam_id)
@@ -312,9 +314,9 @@ async function getNewAICritique(student_exam_submission_id) {
 
     // parse model answer as well
     const modelAnswerPath = path.join(storageDirectory, examInformation.unzip)
-    console.log('start concat any...')
+    // console.log('start concat any...')
     const parsedModelAnswer = await concatenateAnyFiles(modelAnswerPath, examInformation.fileTypes)
-    console.log('end concat any')
+    // console.log('end concat any')
     examInformation.model_answer = parsedModelAnswer
 
     // console.log(examInformation.fileTypes)
@@ -336,6 +338,8 @@ async function getNewAICritique(student_exam_submission_id) {
         submissionText: parsedSubmissionAnswer,
         markedSubmissions
     }
+
+    // console.log(Object.keys(examInformation))
 
     // console.log(examInformation.model_answer)
     // console.log(informationToSendToLLM.submissionText)

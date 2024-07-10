@@ -19,7 +19,7 @@ function writeMessageResponseToCSV(student_exam_submission_id, responseFromApiCa
     // console.log(responseFromApiCall)
     // console.log(Object.keys(responseFromApiCall))
     const { TEMPERATURE, TOP_P, SEED, MODEL, system_fingerprint } = responseFromApiCall.testParameters
-    console.log(responseFromApiCall)
+    // console.log(responseFromApiCall)
     messages.forEach((response, i) => {
 
 

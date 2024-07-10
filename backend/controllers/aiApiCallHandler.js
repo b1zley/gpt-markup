@@ -12,8 +12,7 @@ const { writeClaudeMessageResponseToCSV, writeMessageResponseToCSV } = require('
 const AI_MODE = "claude"
 
 
-const exampleSystemMessageString = `You are a marker for a university level programming exam. The course you are marking for is a Master’s conversion course, teaching students from a variety of backgrounds the skills they need to succeed as a modern software developer. 
-The exam you are marking will be delivered to you as an entire java project file, which has been concatenated into a single string, and partially minified to remove whitespace from code blocks.
+const exampleSystemMessageString = `The exam you are marking will be delivered to you as an entire code project file, which has been concatenated into a single string, and partially minified to remove whitespace from code blocks.
 Please provide feedback and a mark for each rubric component in the following JSON format, only return valid, parseable JSON with escaped newlines, if there is only one rubric component, there should only be one element within the array.:
 [
   {"aiFeedbackToParse": "example feedback for Part 1", "aiMarkToParse": 25.5},
@@ -173,7 +172,7 @@ async function handleApiCallClaude(informationForLLM, student_exam_submission_id
 
     const { examInformation, submissionText } = informationForLLM
 
-    console.log(examInformation.rubric.length)
+    // console.log(examInformation.rubric.length)
 
 
 
@@ -192,12 +191,18 @@ async function handleApiCallClaude(informationForLLM, student_exam_submission_id
         const examString = examInformationParseOneRubricComponent(examInformation, rubricComponentCounter)
         const systemMessage = exampleSystemMessageString + examString
 
+
+        const { prompt_specifications, prompt_engineering } = informationForLLM.examInformation
+
+        const dynamicSystemMessage = prompt_specifications + prompt_engineering + examString
+        // console.log(dynamicSystemMessage)
+
         const markedSubmissionMessageArray = createMarkedSubmissionMessageArrayOneRubricComponent(markedSubmissions, rubricComponentCounter)
 
         let claudeObject = {
             model: claude_model,
             max_tokens: 1000,
-            system: systemMessage,
+            system: dynamicSystemMessage,
             messages: [...markedSubmissionMessageArray, { role: "user", content: submissionText }],
             temperature: claudeTemp
         }
@@ -205,6 +210,7 @@ async function handleApiCallClaude(informationForLLM, student_exam_submission_id
         console.log(`fetching from claude... ${rubricComponentCounter}`)
         // console.log(claudeObject.messages[2])
         // continue
+        // console.log('stopping here')
         // return
         // throw new Error('STOP')
         const aiResponse = await anthropic.messages.create(claudeObject)
@@ -232,23 +238,30 @@ async function handleApiCallClaude(informationForLLM, student_exam_submission_id
     return responseObject
 }
 
+function delay(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
 
 async function generateAICritiqueMethodStub(informationForLLM, student_exam_submission_id) {
 
 
     const { markedSubmissions, examInformation, submissionText } = informationForLLM
+    // console.log('keys')
+    // console.log(Object.keys(informationForLLM.examInformation))
+    // console.log(informationForLLM.examInformation.prompt_specifications)
+    await delay(2000)
 
     let responsesContentArray = []
     for (let rubricComponentCounter = 0; rubricComponentCounter < examInformation.rubric.length; rubricComponentCounter++) {
 
         const aiMarkToParse = 3
-        const aiFeedbackToParse = `This is example feedback for Rubric Component ${rubricComponentCounter + 1}`
+        const aiFeedbackToParse = `This is example feedback for Rubric Component ${rubricComponentCounter + 1} ${Math.random()}`
 
         const responseObject = { aiMarkToParse, aiFeedbackToParse }
         responsesContentArray.push(responseObject)
     }
 
-    console.log(responsesContentArray)
+    // console.log(responsesContentArray)
 
     const dummyTestParameters = {
         TEMPERATURE: 'testTemp',

@@ -17,7 +17,7 @@ async function createNewExam(req, res) {
         return res.status(400).send()
     }
 
-    const createExamSqlQuery = "INSERT INTO `exam` (`exam_id`, `module_id`, `exam_name`, `exam_question`,  `file_system_id`, `prompt_specifications`, `chosen_ai_model_id`) VALUES (NULL, ?, ?, NULL,  NULL, NULL, NULL);"
+    const createExamSqlQuery = "INSERT INTO `exam` (`exam_id`, `module_id`, `exam_name`, `exam_question`,  `file_system_id`, `prompt_specifications`, `chosen_ai_model_id`) VALUES (NULL, ?, ?, NULL,  NULL, NULL, 3);"
     const bindingParamsCreateExamQuery = [module_id, exam_name]
     try {
         const [responseFromInsert] = await db.query(createExamSqlQuery, bindingParamsCreateExamQuery)
@@ -147,21 +147,30 @@ async function queryDeleteFileTypeFromExam(exam_id, file_type_id) {
 
 async function queryGetFileTypesByExamId(exam_id) {
     try {
-        const sqlQuery = "SELECT ft.file_type_id, ft.file_type_extension, eft.exam_id FROM file_types ft LEFT JOIN exam_file_type eft ON eft.file_type_id = ft.file_type_id WHERE exam_id = ? OR exam_id IS NULL ORDER BY ft.file_type_id"
+        const sqlQuery = "SELECT ft.file_type_id, ft.file_type_extension FROM file_types ft LEFT JOIN exam_file_type eft ON eft.file_type_id = ft.file_type_id WHERE exam_id = ? ORDER BY ft.file_type_id"
         const bindingParams = [exam_id]
         const [response] = await db.query(sqlQuery, bindingParams)
 
-        const fileTypeBooleanArray = response.map((row) => {
+        const fileTypesSqlQuery = "SELECT ft.file_type_id, ft.file_type_extension FROM file_types ft"
+        const [fileTypeRows] = await db.query(fileTypesSqlQuery)
+        const finalFileTypes = fileTypeRows.map((row) => {
+            let allowed = false
+            response.forEach((responseRow) => {
+                if(responseRow.file_type_id === row.file_type_id){
+                    allowed = true
+                    return
+                }
+            })
 
-
-            let returnObject = {
-                file_type_extension: row.file_type_extension,
-                file_type_id: row.file_type_id,
-                allowed: Number.parseInt(row.exam_id) === Number.parseInt(exam_id)
+            let newObject = {
+                ...row,
+                allowed
             }
-            return returnObject
+            return newObject
         })
-        return fileTypeBooleanArray
+
+
+        return finalFileTypes
 
     } catch (err) {
         throw new Error()
