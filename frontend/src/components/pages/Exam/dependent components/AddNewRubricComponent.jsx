@@ -3,6 +3,8 @@ import Button from 'react-bootstrap/Button'
 import Form from 'react-bootstrap/Form'
 
 import { useEffect, useState } from 'react'
+import { useLocation, useNavigate } from 'react-router-dom'
+
 import BASE_API_URL from '../../../../BASE_API_URL'
 
 import axiosToBackend from '../../../../axiosToBackend'
@@ -10,6 +12,16 @@ import axiosToBackend from '../../../../axiosToBackend'
 const AddNewRubricComponent = ({ examInformation, setExamInformation }) => {
 
     const [newRubricComponentName, setNewRubricComponentName] = useState('')
+
+    const location = useLocation()
+    const navigate = useNavigate()
+
+    console.log(location)
+    function handleRedirectToNewComponent(rubric_component_id){
+        const newUrl = `${location.pathname}/rubric_component/${rubric_component_id}`
+        navigate(newUrl)
+        
+    }
 
     async function handleRubricFormSubmit(event) {
         event.preventDefault()
@@ -42,6 +54,8 @@ const AddNewRubricComponent = ({ examInformation, setExamInformation }) => {
 
             setExamInformation(newExamInformation)
             setNewRubricComponentName('')
+
+            handleRedirectToNewComponent(newRubricComponentId)
         } else {
             window.alert('Failed to create new rubric')
         }
