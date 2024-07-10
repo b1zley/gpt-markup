@@ -102,6 +102,12 @@ const ExamView = () => {
         'Student Submissions'
     ]
 
+    const examQuestionDescription = `Input the exam question in its entirety.
+    All information that is provided to the student should be provided here excluding any example data e.g. CSV files. This can also be uploaded as an RTF file.
+    `
+
+    const promptSpecificationDescription = `Input additional prompt specifications for the LLM here. These should be brief, and not speak to data formatting. Instead, this should be a declarative statement that helps the LLM to understand the context for the exam it is marking. e.g. You are a marker for a university level programming exam. The course your are marking is a Master's conversion course.`
+
     return (
         <Container>
             <div className='border border-light rounded p-3 d-flex flex-column' style={{ minHeight: '350px', flex: 1 }}>
@@ -127,6 +133,7 @@ const ExamView = () => {
                         putUrl={`${BASE_API_URL}module/${module_id}/exam/${exam_id}`}
                         textBoxHeight={'550px'}
                         uploadFunctionality={true}
+                        description={examQuestionDescription}
                     />
                     :
                     null
@@ -162,6 +169,7 @@ const ExamView = () => {
                             userFriendlyParam={'Prompt Specifications'}
                             lastDisplayed={true}
                             putUrl={`${BASE_API_URL}module/${module_id}/exam/${exam_id}`}
+                            description={promptSpecificationDescription}
                         />
                         :
                         null

@@ -57,9 +57,9 @@ const EditableFileTypesAccordion = ({ lastDisplayed, examInformation, setExamInf
                     </Accordion.Header>
                     <Accordion.Body>
                         <div className='mb-2'>
-                            Select which file types should be parsed by the LLM during evaluation:
+                            Select which file types should be parsed by the LLM during evaluation.
                         </div>
-
+                        <hr className='divider' />
                         <Form>
                             {fileTypes.map((fileType, i) => {
 

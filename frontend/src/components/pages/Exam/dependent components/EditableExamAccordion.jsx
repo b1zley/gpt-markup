@@ -16,7 +16,8 @@ const EditableExamAccordion = ({
     userFriendlyParam, putUrl,
     inputType,
     textBoxHeight,
-    uploadFunctionality
+    uploadFunctionality,
+    description
 }) => {
 
     const [editMode, setEditMode] = useState(false)
@@ -68,7 +69,10 @@ const EditableExamAccordion = ({
                 <Accordion.Item eventKey="0" className={lastDisplayed ? null : "border-bottom-0"}>
                     <Accordion.Header>{userFriendlyParam}</Accordion.Header>
                     <Accordion.Body>
-
+                        <div>
+                            {description}
+                        </div>
+                        <hr className='divider' />
                         <div className="d-flex overflow-auto" style={{ height: textBoxHeight ? textBoxHeight : '150px' }}>
                             <InputGroup className="me-1" style={{ width: '100%' }}>
                                 <Form.Control
@@ -83,7 +87,7 @@ const EditableExamAccordion = ({
                             </InputGroup>
 
                             <div className='ms-auto d-flex flex-column align-items-between'>
-                                <Button variant={'success'} onClick={(e) => {handleCommitClicked(e, editText)}} className='my-1' style={{ height: '38px' }}>Commit</Button>
+                                <Button variant={'success'} onClick={(e) => { handleCommitClicked(e, editText) }} className='my-1' style={{ height: '38px' }}>Commit</Button>
                                 <Button variant={'warning'} onClick={handleRevertClicked} className='my-1 text-white' style={{ height: '38px' }}>Revert</Button>
                             </div>
                         </div>
@@ -98,8 +102,10 @@ const EditableExamAccordion = ({
                 <Accordion.Item eventKey="0" className={lastDisplayed ? null : "border-bottom-0"}>
                     <Accordion.Header>{userFriendlyParam}</Accordion.Header>
                     <Accordion.Body>
-
-
+                        <div>
+                            {description}
+                        </div>
+                        <hr className='divider' />
                         <div className="d-flex overflow-auto" style={{ height: textBoxHeight ? textBoxHeight : '150px' }}>
                             <pre style={{ width: '100%' }}>
                                 {parentObject[param] ? parentObject[param] : 'None added...'}
