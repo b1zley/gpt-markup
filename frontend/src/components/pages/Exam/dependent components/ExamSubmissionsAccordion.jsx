@@ -13,6 +13,7 @@ import { useLocation } from 'react-router-dom'
 import { LinkContainer } from 'react-router-bootstrap'
 import StudentExamSubmissionsTable from './StudentExamSubmissionsTable'
 import AddStudentExamSubmission from './AddStudentExamSubmission'
+import DownloadSEScsv from './DownloadSEScsv'
 
 
 
@@ -49,6 +50,7 @@ const StudentsInExamAccordion = ({ lastDisplayed, examInformation }) => {
                     Student Submissions
                 </Accordion.Header>
                 <Accordion.Body >
+                    <DownloadSEScsv examInformation={examInformation}/>
                     <StudentExamSubmissionsTable
                         examInformation={examInformation}
                         studentExamSubmissions={studentExamSubmissions}
