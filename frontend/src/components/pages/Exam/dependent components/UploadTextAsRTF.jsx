@@ -30,7 +30,7 @@ const UploadTextAsRTF = ({ parentObject,
                     <Modal.Title>Upload {userFriendlyParam}</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                    <div>Please upload the exam question in RTF format.</div>
+                    <div>Please upload the {userFriendlyParam} in RTF format.</div>
                     <UploadRTFControls
                         parentObject={parentObject}
                         setParentObject={setParentObject}
