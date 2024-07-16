@@ -325,7 +325,7 @@ async function queryGenerateResultsAsCSV(exam_id) {
     const rubricComponentIds = await queryGetRubricComponentsByExamId(exam_id)
     let csvString = 'student_name, student_number'
     rubricComponentIds.forEach((rcid, i) => {
-        csvString += `,rubric_component_mark_${i}, rubric_component_critique_${i}`
+        csvString += `,rubric_component_mark_${i+1}, rubric_component_critique_${i+1}`
     })
     csvString += `\n`
     // console.log(csvString)
