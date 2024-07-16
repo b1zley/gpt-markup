@@ -3,7 +3,7 @@ import ListGroup from "react-bootstrap/ListGroup"
 
 const RatingRangeGroupDisplay = ({ rating_ranges }) => {
 
-
+    console.log('rating ranges',rating_ranges)
 
     return (
 

@@ -60,9 +60,10 @@ const RubricComponentsTable = ({ examInformation, setExamInformation }) => {
                                 <p>{rubric_component.rubric_component_desc}</p>
                             </td>
                             <td>
-                                <RatingRangeGroupDisplay
+                                {console.log('rubric component',rubric_component)}
+                                {/* <RatingRangeGroupDisplay
                                     rating_ranges={rubric_component.rating_ranges}
-                                />
+                                /> */}
                             </td>
                             <td>
                                 {rubric_component.maximum}

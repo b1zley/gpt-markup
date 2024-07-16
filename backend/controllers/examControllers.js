@@ -354,7 +354,7 @@ async function queryGenerateResultsAsCSV(exam_id) {
 
 async function queryGetStudentExamSubmissionsInfoForCSV(exam_id) {
     // should also get the rubric component ids
-    const rubricComponentIds = await queryGetRubricComponentsByExamId(exam_id)
+    const rubricComponentIds = await queryGetRubricComponentsShallowByExamId(exam_id)
     // console.log('rcid', rubricComponentIds)
 
     let selectClause = `SELECT ses.student_exam_submission_id, ses.marked_for_training, 
@@ -381,7 +381,7 @@ async function queryGetStudentExamSubmissionsInfoForCSV(exam_id) {
 }
 
 
-async function queryGetRubricComponentsByExamId(exam_id) {
+async function queryGetRubricComponentsShallowByExamId(exam_id) {
     const sqlQuery = 'SELECT * FROM rubric_component WHERE exam_id = ?'
     const bindingParams = [exam_id]
 

@@ -17,6 +17,7 @@ import AddNewRubricComponent from './AddNewRubricComponent'
 const RubricComponentsView = ({ lastDisplayed, examInformation, setExamInformation }) => {
     console.log(examInformation.rubric)
     const location = useLocation()
+    console.log('exam information from rcv:', examInformation)
 
 
 
