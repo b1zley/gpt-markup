@@ -11,6 +11,7 @@ import { LinkContainer } from 'react-router-bootstrap'
 import { useLocation } from 'react-router-dom'
 import RubricComponentsTable from './RubricComponentsTable'
 import AddNewRubricComponent from './AddNewRubricComponent'
+import UploadRubricComponentsModal from './UploadRubricComponentsModal'
 
 
 
@@ -31,6 +32,10 @@ const RubricComponentsView = ({ lastDisplayed, examInformation, setExamInformati
                         setExamInformation={setExamInformation}
                     />
                     <hr className='divider' />
+                    <UploadRubricComponentsModal
+                        examInformation={examInformation}
+                        setExamInformation={setExamInformation}
+                    />
                     <AddNewRubricComponent
                         examInformation={examInformation}
                         setExamInformation={setExamInformation}
