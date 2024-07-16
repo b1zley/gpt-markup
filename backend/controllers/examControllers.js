@@ -156,7 +156,7 @@ async function queryGetFileTypesByExamId(exam_id) {
         const finalFileTypes = fileTypeRows.map((row) => {
             let allowed = false
             response.forEach((responseRow) => {
-                if(responseRow.file_type_id === row.file_type_id){
+                if (responseRow.file_type_id === row.file_type_id) {
                     allowed = true
                     return
                 }
@@ -294,6 +294,104 @@ async function queryInsertExamSuperUser(super_user_id, exam_id) {
     return true
 }
 
+/**
+ * return csv string
+ * @param {*} req 
+ * @param {*} res 
+ * @returns 
+ */
+async function requestHandlerGetResultsAsCSV(req, res) {
+
+    try {
+        const { exam_id } = req.params
+        const csvString = await queryGenerateResultsAsCSV(exam_id)
+        res.setHeader('Content-Type', 'text/csv')
+        res.setHeader('Content-Disposition', `attachment;filename=examResults-${exam_id}.csv`)
+        return res.send(csvString)
+    } catch (err) {
+        console.log(err)
+        return res.status(500).send()
+    }
+
+
+}
+
+/**
+ * generate csv string
+ * @param {*} exam_id 
+ */
+async function queryGenerateResultsAsCSV(exam_id) {
+    // need to get the rubric components and columns for each
+    const rubricComponentIds = await queryGetRubricComponentsByExamId(exam_id)
+    let csvString = 'student_name, student_number'
+    rubricComponentIds.forEach((rcid, i) => {
+        csvString += `,rubric_component_mark_${i}, rubric_component_critique_${i}`
+    })
+    csvString += `\n`
+    // console.log(csvString)
+    // get each rubric component for each student exam submission
+    const sesData = await queryGetStudentExamSubmissionsInfoForCSV(exam_id)
+    // console.log('this is ses data')
+    // console.log(sesData)
+    sesData.forEach((sesRow, i) => {
+        let csvRow = `${sesRow.student_name},${sesRow.student_number}`
+        // console.log(Object.keys(sesRow))
+        const objectKeys = Object.keys(sesRow)
+        for (let i = 7; i < objectKeys.length; i++) {
+            const keyName = objectKeys[i]
+            const value = sesRow[objectKeys[i]]
+            // console.log(`${keyName}: ${value}`)
+            csvRow += `,${value}`
+        }
+        csvRow += `\n`
+        csvString += csvRow
+    })
+    // console.log(csvString)
+    // console.log(exam_id)
+    return csvString
+}
+
+
+async function queryGetStudentExamSubmissionsInfoForCSV(exam_id) {
+    // should also get the rubric component ids
+    const rubricComponentIds = await queryGetRubricComponentsByExamId(exam_id)
+    // console.log('rcid', rubricComponentIds)
+
+    let selectClause = `SELECT ses.student_exam_submission_id, ses.marked_for_training, 
+    ses.exam_id, ses.student_id, ses.exam_submission,
+    student.student_name, student.student_number`
+
+    let groupByClause = `GROUP BY ses.student_exam_submission_id, ses.student_id, ses.exam_id`
+    // programmatically add rc ids
+    rubricComponentIds.forEach((rcid, i) => {
+        selectClause += `, MAX(CASE WHEN rcsm.rubric_component_id = ${rcid} THEN rcsm.rubric_component_mark END) AS rubric_component_${rcid}_mark`
+        selectClause += `, MAX(CASE WHEN rcsm.rubric_component_id = ${rcid} THEN rcsm.rubric_component_critique END) AS rubric_component_${rcid}_critique`
+    })
+    const rcsmSqlQuery = `${selectClause}
+    FROM student_exam_submission ses 
+    LEFT JOIN rubric_component_submission_mark rcsm ON ses.student_exam_submission_id = rcsm.student_exam_submission_id 
+    INNER JOIN student ON student.student_id = ses.student_id WHERE exam_id = ?
+    ${groupByClause}`
+
+    const rcsmBindingParams = [exam_id]
+    // console.log(rcsmSqlQuery)
+    const [submissionsInfoResponse] = await db.query(rcsmSqlQuery, rcsmBindingParams)
+    // console.log(submissionsInfoResponse)
+    return submissionsInfoResponse
+}
+
+
+async function queryGetRubricComponentsByExamId(exam_id) {
+    const sqlQuery = 'SELECT * FROM rubric_component WHERE exam_id = ?'
+    const bindingParams = [exam_id]
+
+    const [response] = await db.query(sqlQuery, bindingParams)
+
+    return response.map((row) => row.rubric_component_id)
+
+
+}
+
 
 module.exports = {
     createNewExam,
@@ -307,5 +405,6 @@ module.exports = {
     handleQueryExamsByModuleId,
     handlePostFileTypeToExam,
     handleDeleteFileTypeFromExam,
-    queryGetFileTypesByExamId
+    queryGetFileTypesByExamId,
+    requestHandlerGetResultsAsCSV
 }

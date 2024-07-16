@@ -23,6 +23,10 @@ router.post('/:exam_id/file_type', examControllers.handlePostFileTypeToExam)
 router.delete('/:exam_id/file_type/:file_type_id', examControllers.handleDeleteFileTypeFromExam)
 
 
+
+// generate and download csv file of exam results
+router.get('/:exam_id/results_csv', examControllers.requestHandlerGetResultsAsCSV)
+
 // endpoints for rubric
 const rubricRoutes = require('./rubricRoutes')
 router.use('/:exam_id/rubric', rubricRoutes)
