@@ -406,5 +406,6 @@ module.exports = {
     handlePostFileTypeToExam,
     handleDeleteFileTypeFromExam,
     queryGetFileTypesByExamId,
-    requestHandlerGetResultsAsCSV
+    requestHandlerGetResultsAsCSV,
+    queryGetRubricComponentsByExamId
 }

@@ -2,6 +2,13 @@
 const { response } = require('express');
 const { db, axios, backendRoot, storageDirectory } = require('../routesCommonDependencies'); // Common dependencies
 
+const examControllers = require('./examControllers')
+
+
+const path = require('path')
+
+const fs = require('fs').promises
+
 // request handlers
 async function handlePostNewRubricToExam(req, res) {
     try {
@@ -89,16 +96,16 @@ async function handlePostRatingRangeInRubricComponent(req, res) {
     }
 }
 
-async function handleDeleteRatingRange(req,res){
-    try{
-        const {rating_range_id} = req.params
+async function handleDeleteRatingRange(req, res) {
+    try {
+        const { rating_range_id } = req.params
         await queryDeleteRatingRange(rating_range_id)
         return res.status(204).send()
 
-    } catch(err){
+    } catch (err) {
         return res.status(500).send()
     }
-    
+
 }
 
 // query functions
@@ -224,15 +231,93 @@ async function queryUpdateRatingRange(rating_range_id, updateArray) {
     return true
 }
 
-async function queryDeleteRatingRange(rating_range_id){
+async function queryDeleteRatingRange(rating_range_id) {
     console.log(rating_range_id)
-
     const sqlQuery = "DELETE FROM `rating_range` WHERE `rating_range`.`rating_range_id` = ?"
     const bindingParams = [rating_range_id]
-    
+
     const [responseFromDelete] = await db.query(sqlQuery, bindingParams)
     return true
 
+}
+
+
+async function handleRequestCSVUploadRubricComponents(req, res) {
+    try {
+        const { exam_id } = req.params
+        const csvData = await fs.readFile(req.file.path, 'utf-8')
+        const lines = csvData.split('\r\n')
+        let rubricComponents = []
+        // initialize at 1 to skip 0
+        for (let lineI = 1; lineI < lines.length; lineI++) {
+            const line = lines[lineI]
+            const cells = line.split(',')
+            const rcName = cells[0]
+            const rcDesc = cells[1]
+            const maxPoints = cells[2]
+            let rating_ranges = []
+            let cellI = 3
+            while (cellI < cells.length) {
+                const rangeDesc = cells[cellI]
+                const rangeMin = cells[cellI + 1]
+                const rangeMax = cells[cellI + 2]
+                const ratingRangeObject = {
+                    rangeDesc, rangeMin, rangeMax
+                }
+
+                rating_ranges.push(ratingRangeObject)
+                cellI += 3
+            }
+            const rcComponentObject = {
+                rcName,
+                rcDesc,
+                maxPoints,
+                rating_ranges
+            }
+            // console.log(rcComponentObject)
+            if (!rcName && !rcDesc && !maxPoints) {
+                continue
+            } else {
+                rubricComponents.push(rcComponentObject)
+            }
+
+        }
+
+        // console.log(rubricComponents)
+
+        await queryCreateNewRubricFromRCArray(rubricComponents, exam_id)
+        // might have to send something more complicated so the frontend knows what to render
+        // this is fine for now
+        // just reuse function to send new rcs in entirity
+        return res.status(201).json(await examControllers.queryGetRubricComponentsByExamId(exam_id))
+    } catch (err) {
+        console.log(err)
+        return res.status(500).send()
+    }
+
+
+}
+
+
+async function queryCreateNewRubricFromRCArray(rubricComponentArray, exam_id) {
+    console.log(rubricComponentArray)
+    for (const rubricComponent of rubricComponentArray) {
+        const { rcName, rcDesc, maxPoints } = rubricComponent
+        // create rubric component
+        const rcSqlQuery = "INSERT INTO `rubric_component` (`rubric_component_id`, `name`, `rubric_component_desc`, `maximum`, `exam_id`, `component_order`) VALUES (NULL, ?, ?, ?, ?, NULL);"
+        const rcBindingParams = [rcName, rcDesc, maxPoints, exam_id]
+        const [response] = await db.query(rcSqlQuery, rcBindingParams)
+        // console.log(response)
+        const newRcID = response.insertId
+        // create rating ranges using rubric component id
+        for (const ratingRange of rubricComponent.rating_ranges) {
+            console.log(ratingRange)
+            const rrSqlQuery = "INSERT INTO `rating_range` (`rating_range_id`, `rating_min_incl`, `rating_max_incl`, `rating_desc`, `rubric_component_id`) VALUES (NULL, ?, ?, ?, ?);"
+            const rrBindingParams = [ratingRange.rangeMin, ratingRange.rangeMax, ratingRange.rangeDesc, newRcID]
+            const [responseFromRR] = await db.query(rrSqlQuery, rrBindingParams)
+            // console.log(responseFromRR)
+        }
+    }
 }
 
 module.exports = {
@@ -243,6 +328,7 @@ module.exports = {
     handlePutUpdateRubricComponentById,
     handlePostRatingRangeInRubricComponent,
     handlePutRequestRatingRange,
-    handleDeleteRatingRange
+    handleDeleteRatingRange,
+    handleRequestCSVUploadRubricComponents
 
 }
