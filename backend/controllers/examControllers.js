@@ -392,6 +392,20 @@ async function queryGetRubricComponentsShallowByExamId(exam_id) {
 
 }
 
+async function requestHandlerLockOrUnlockExam(req, res){
+
+
+}
+
+async function queryLockExam(exam_id){
+
+}
+
+async function queryUnlockExam(exam_id){
+    
+}
+
+
 
 module.exports = {
     createNewExam,

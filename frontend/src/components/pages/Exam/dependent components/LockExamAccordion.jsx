@@ -19,6 +19,7 @@ const LockExamAccordion = ({ examInformation, setExamInformation }) => {
 
     // const [studentExamSubmissions, setStudentExamSubmissions] = useState([])
     const [markedForTraining, setMarkedForTraining] = useState([])
+    const [isChecked, setIsChecked] = useState(!!examInformation.is_locked)
 
     useEffect(() => {
 
@@ -29,15 +30,32 @@ const LockExamAccordion = ({ examInformation, setExamInformation }) => {
             const newExamSubmissions = responseFromFetchExams.data
             // handle setting state from response data
             // setStudentExamSubmissions(newExamSubmissions)
-            console.log(newExamSubmissions)
+            // console.log(newExamSubmissions)
             const newMarkedForTraining = newExamSubmissions.filter((ses) => !!ses.marked_for_training)
             setMarkedForTraining(newMarkedForTraining)
-            console.log(newMarkedForTraining)
+            // console.log(newMarkedForTraining)
 
         }
         handleStudentExamSubmissionsFetch()
     }, [examInformation.exam_id, examInformation.module_id])
 
+    async function handleExamLockChange(e) {
+        // console.log('change!')
+        const checked = !isChecked
+        // console.log(checked)
+        try{
+            const {module_id, exam_id } = examInformation
+            const reqBody = {
+                is_locked:checked
+            }
+            const apiUrl = `${BASE_API_URL}module/${module_id}/exam/${exam_id}`
+            const response = await axiosToBackend.put(apiUrl, reqBody)
+            setIsChecked(checked)
+        } catch(err){
+            console.log(err)
+            window.alert('Failed to update exam lock')
+        }
+    }
 
     return (
         <Accordion defaultActiveKey="0" >
@@ -45,7 +63,6 @@ const LockExamAccordion = ({ examInformation, setExamInformation }) => {
                 <Accordion.Header>
                     Checklist
                 </Accordion.Header>
-
                 <Accordion.Body>
                     <p>
                         For the AI to generate feedback, the following data must be provided:
@@ -107,15 +124,16 @@ const LockExamAccordion = ({ examInformation, setExamInformation }) => {
                             </tbody>
                         </Table>
                     </div>
-                    <hr className="divider"/>
+                    <hr className="divider" />
                     <p>
                         Once all parameters have been marked as ready, the Exam can be locked, and AI generation can take place:
                     </p>
-                    <Form>
-                        <Form.Check // prettier-ignore
+                    <Form >
+                        <Form.Check onChange={(e) => handleExamLockChange(e)} // prettier-ignore
                             type="switch"
                             id="custom-switch"
                             label="Lock Exam"
+                            checked={isChecked}
                         />
                     </Form>
                 </Accordion.Body>
