@@ -100,7 +100,7 @@ const ExamView = () => {
         'Prompt Specifications',
         'Model Answer',
         'Engaged SuperUsers',
-        'Exam Lock',
+        'Checklist',
         'Student Submissions'
     ]
 

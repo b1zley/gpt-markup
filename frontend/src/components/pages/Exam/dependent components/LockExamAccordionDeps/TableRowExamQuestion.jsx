@@ -8,23 +8,29 @@ const TableRowExamQuestion = ({ contentTitle, contentToDisplay, ready, useModal 
 
 
     return (
-            <tr>
-                <td>
-                    {contentTitle}
-                </td>
-                <td>
-                    {useModal ? <ContentDisplayModal
-                        contentTitle={contentTitle}
-                        contentToDisplay={contentToDisplay}
-                        size={'lg'}
-                    /> : <>{contentToDisplay}</> }
-                    
-                </td>
-                <td>
-                    {ready ? <BootstrapTick size={'30'} /> : <BootstrapX size={'30'} />}
+        <tr>
+            <td>
+                {contentTitle}
+            </td>
+            <td>
+                {ready ?
+                    useModal ?
+                        <ContentDisplayModal
+                            contentTitle={contentTitle}
+                            contentToDisplay={contentToDisplay}
+                            size={'lg'}
+                        />
+                        :
+                        <>{contentToDisplay}</>
+                    : 'Not set yet...'}
 
-                </td>
-            </tr>
+
+            </td>
+            <td>
+                {ready ? <BootstrapTick size={'30'} /> : <BootstrapX size={'30'} />}
+
+            </td>
+        </tr>
     )
 
 
