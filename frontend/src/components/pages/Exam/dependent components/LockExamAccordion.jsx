@@ -31,6 +31,15 @@ const LockExamAccordion = ({ examInformation, setExamInformation }) => {
         markedForTraining.length > 0
     ]
 
+    function allTrue (truthArray){
+        for(const element of truthArray){
+            if(!element){
+                return false
+            }
+        }
+        return true
+    }
+
     useEffect(() => {
 
         async function handleStudentExamSubmissionsFetch() {
@@ -155,7 +164,7 @@ const LockExamAccordion = ({ examInformation, setExamInformation }) => {
                     </p>
 
 
-                    {readyArray ?
+                    {allTrue(readyArray) ?
                         <Form >
                             <Form.Check onChange={(e) => handleExamLockChange(e)} // prettier-ignore
                                 type="switch"
