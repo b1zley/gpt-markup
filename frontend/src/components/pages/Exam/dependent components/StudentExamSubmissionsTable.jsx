@@ -7,7 +7,7 @@ import BASE_API_URL from '../../../../BASE_API_URL'
 
 import axiosToBackend from '../../../../axiosToBackend'
 
-const StudentExamSubmissionsTable = ({ examInformation, studentExamSubmissions, setStudentExamSubmissions }) => {
+const StudentExamSubmissionsTable = ({ hideControls, examInformation, studentExamSubmissions, setStudentExamSubmissions }) => {
 
     async function handleStudentRemoveClick(e, i) {
         e.stopPropagation()
@@ -78,7 +78,9 @@ const StudentExamSubmissionsTable = ({ examInformation, studentExamSubmissions, 
                     <th>Student Name</th>
                     <th>Submitted</th>
                     <th>Agreed Mark</th>
-                    <th>Controls</th>
+
+                    {hideControls ? null : <th>Controls</th>}
+
                 </tr>
             </thead>
             <tbody>
@@ -107,7 +109,8 @@ const StudentExamSubmissionsTable = ({ examInformation, studentExamSubmissions, 
                             <td>
                                 {studentExamSubmission.marker_mark ? studentExamSubmission.marker_mark : '-'}
                             </td>
-                            <td >
+
+                            {hideControls ? null : <td >
                                 <div className='d-flex justify-content-center'>
 
 
@@ -128,7 +131,8 @@ const StudentExamSubmissionsTable = ({ examInformation, studentExamSubmissions, 
 
                                 </div>
 
-                            </td>
+                            </td>}
+
 
                         </tr>
                     </LinkContainer>

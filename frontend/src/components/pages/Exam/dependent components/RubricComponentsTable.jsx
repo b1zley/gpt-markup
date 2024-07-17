@@ -10,10 +10,10 @@ import BASE_API_URL from '../../../../BASE_API_URL'
 import axiosToBackend from '../../../../axiosToBackend'
 
 
-const RubricComponentsTable = ({ examInformation, setExamInformation }) => {
+const RubricComponentsTable = ({ examInformation, setExamInformation, hideControls }) => {
 
 
-    
+
 
     async function handleRemoveRubricComponentClick(rubricComponent, i) {
         // delete request to api
@@ -47,9 +47,10 @@ const RubricComponentsTable = ({ examInformation, setExamInformation }) => {
                         <th>
                             Max Points
                         </th>
-                        <th>
+                        {hideControls ? null : <th>
                             Controls
-                        </th>
+                        </th>}
+
                     </tr>
                 </thead>
                 <tbody>
@@ -60,7 +61,7 @@ const RubricComponentsTable = ({ examInformation, setExamInformation }) => {
                                 <p>{rubric_component.rubric_component_desc}</p>
                             </td>
                             <td>
-                                {console.log('rubric component',rubric_component)}
+                                {console.log('rubric component', rubric_component)}
                                 <RatingRangeGroupDisplay
                                     rating_ranges={rubric_component.rating_ranges}
                                 />
@@ -68,27 +69,32 @@ const RubricComponentsTable = ({ examInformation, setExamInformation }) => {
                             <td>
                                 {rubric_component.maximum}
                             </td>
-                            <td >
-                                <div
-                                    style={{ height: '100%' }}
-                                    className='d-flex  align-items-center'
-                                >
-                                    <LinkContainer
-                                        variant={'success'}
-                                        to={`${location.pathname}/rubric_component/${rubric_component.rubric_component_id}`}
+
+                            {hideControls ? null :
+                                <td >
+                                    <div
+                                        style={{ height: '100%' }}
+                                        className='d-flex  align-items-center'
                                     >
-                                        <Button >
-                                            Edit
+                                        <LinkContainer
+                                            variant={'success'}
+                                            to={`${location.pathname}/rubric_component/${rubric_component.rubric_component_id}`}
+                                        >
+                                            <Button >
+                                                Edit
+                                            </Button>
+                                        </LinkContainer>
+                                        <Button
+                                            onClick={() => { handleRemoveRubricComponentClick(rubric_component, i) }}
+                                            variant='warning'
+                                        >
+                                            Remove
                                         </Button>
-                                    </LinkContainer>
-                                    <Button
-                                        onClick={() => { handleRemoveRubricComponentClick(rubric_component, i) }}
-                                        variant='warning'
-                                    >
-                                        Remove
-                                    </Button>
-                                </div>
-                            </td>
+                                    </div>
+                                </td>
+
+                            }
+
                         </tr>
                     )}
                 </tbody>

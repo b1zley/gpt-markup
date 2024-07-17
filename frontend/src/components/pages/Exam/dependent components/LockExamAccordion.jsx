@@ -17,9 +17,19 @@ const LockExamAccordion = ({ examInformation, setExamInformation }) => {
 
     const tableHeaders = ['Parameter', 'Values', 'Ready']
 
-    // const [studentExamSubmissions, setStudentExamSubmissions] = useState([])
+    const [studentExamSubmissions, setStudentExamSubmissions] = useState([])
     const [markedForTraining, setMarkedForTraining] = useState([])
     const [isChecked, setIsChecked] = useState(!!examInformation.is_locked)
+
+
+    const readyArray = [
+        examInformation.exam_question ? true : false,
+        examInformation.fileTypes.filter((ft) => ft.allowed).length > 0,
+        examInformation.rubric.length > 0,
+        examInformation.prompt_specifications,
+        examInformation.file_system_id,
+        markedForTraining.length > 0
+    ]
 
     useEffect(() => {
 
@@ -29,7 +39,7 @@ const LockExamAccordion = ({ examInformation, setExamInformation }) => {
             const responseFromFetchExams = await axiosToBackend.get(apiFetchExamSubmissionsUrl)
             const newExamSubmissions = responseFromFetchExams.data
             // handle setting state from response data
-            // setStudentExamSubmissions(newExamSubmissions)
+            setStudentExamSubmissions(newExamSubmissions)
             // console.log(newExamSubmissions)
             const newMarkedForTraining = newExamSubmissions.filter((ses) => !!ses.marked_for_training)
             setMarkedForTraining(newMarkedForTraining)
@@ -39,19 +49,27 @@ const LockExamAccordion = ({ examInformation, setExamInformation }) => {
         handleStudentExamSubmissionsFetch()
     }, [examInformation.exam_id, examInformation.module_id])
 
+
+    useEffect(()=> {
+
+        const newMarkedForTraining = studentExamSubmissions.filter((ses) => !!ses.marked_for_training)
+        setMarkedForTraining(newMarkedForTraining)
+
+    }, [studentExamSubmissions])
+
     async function handleExamLockChange(e) {
         // console.log('change!')
         const checked = !isChecked
         // console.log(checked)
-        try{
-            const {module_id, exam_id } = examInformation
+        try {
+            const { module_id, exam_id } = examInformation
             const reqBody = {
-                is_locked:checked
+                is_locked: checked
             }
             const apiUrl = `${BASE_API_URL}module/${module_id}/exam/${exam_id}`
             const response = await axiosToBackend.put(apiUrl, reqBody)
             setIsChecked(checked)
-        } catch(err){
+        } catch (err) {
             console.log(err)
             window.alert('Failed to update exam lock')
         }
@@ -94,8 +112,11 @@ const LockExamAccordion = ({ examInformation, setExamInformation }) => {
                                     contentTitle={'Rubric'}
                                     contentToDisplay={<RubricComponentsTable
                                         examInformation={examInformation}
-                                        setExamInformation={setExamInformation} />}
-                                    ready={examInformation.rubric.length > 0}
+                                        setExamInformation={setExamInformation} 
+                                        hideControls={true}
+                                        />}
+                                    
+                                        ready={examInformation.rubric.length > 0}
                                     useModal={true}
                                 />
                                 <TableRowExamQuestion
@@ -117,6 +138,7 @@ const LockExamAccordion = ({ examInformation, setExamInformation }) => {
                                         setExamInformation={setExamInformation}
                                         studentExamSubmissions={markedForTraining}
                                         setStudentExamSubmissions={setMarkedForTraining}
+                                        hideControls={true}
                                     />}
                                     ready={markedForTraining.length > 0}
                                     useModal={true}
@@ -126,16 +148,39 @@ const LockExamAccordion = ({ examInformation, setExamInformation }) => {
                     </div>
                     <hr className="divider" />
                     <p>
-                        Once all parameters have been marked as ready, the Exam can be locked, and AI generation can take place:
+                        Once all parameters have been marked as ready, the Exam can be marked as ready, and AI generation can take place (note: while an exam is marked as ready it can't be edited):
                     </p>
-                    <Form >
-                        <Form.Check onChange={(e) => handleExamLockChange(e)} // prettier-ignore
-                            type="switch"
-                            id="custom-switch"
-                            label="Lock Exam"
-                            checked={isChecked}
-                        />
-                    </Form>
+
+
+                    {readyArray ?
+                        <Form >
+                            <Form.Check onChange={(e) => handleExamLockChange(e)} // prettier-ignore
+                                type="switch"
+                                id="custom-switch"
+                                label="Mark Ready"
+                                checked={isChecked}
+                            />
+                        </Form>
+
+                        :
+                        <>
+                            <p>
+                                All parameters not ready!
+                            </p>
+                            <Form >
+                                <Form.Check  // prettier-ignore
+                                    type="switch"
+                                    id="custom-switch"
+                                    label="Lock Exam"
+                                    checked={isChecked}
+                                    disabled
+                                />
+                            </Form>
+                        </>
+
+
+                    }
+
                 </Accordion.Body>
 
 
