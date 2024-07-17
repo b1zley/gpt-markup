@@ -13,18 +13,18 @@ const UploadRubricComponentsModal = ({ examInformation, setExamInformation }) =>
 
 
     const tableHeadings = [
-        'rubric component name', 'rubric component desc',
-        'max points', 'range 1 desc', 'range 1 min',
-        'range 1 max', 'range 2 desc', 'range 2 min',
-        'range 2 max'
+        'Rubric Component Name', 'Rubric Component Desc',
+        'Max Points', 'Range 1 Desc', 'Range 1 Min',
+        'Range 1 Max', 'Range 2 Desc', 'Range 2 Min',
+        'Range 2 Max'
     ]
 
     const row1Examples = [
-        'Program Functionality', 'This is the description for program functionality', '6', 'EXCELLENT', '5', '6', 'SHIT', '0', '4.99'
+        'Example Component 1', 'This is the description for example component 1', '6', 'EXCELLENT', '5', '6', 'BAD', '0', '4.99'
     ]
 
     const row2Examples = [
-        'ANOTHER COMPONENT', 'This is another component desc', '1', 'GOOD', '1', '1', null, null, null
+        'Example Component 2', 'This is the description for example component 2', '1', 'GOOD', '1', '1', null, null, null
     ]
 
     return (
