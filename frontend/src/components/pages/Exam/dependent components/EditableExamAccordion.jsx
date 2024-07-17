@@ -23,6 +23,9 @@ const EditableExamAccordion = ({
     const [editMode, setEditMode] = useState(false)
     const [editText, setEditText] = useState(parentObject[param])
 
+    const { is_locked } = parentObject
+
+
     const handleEditModeClicked = (event) => { setEditMode(!editMode) }
     const handleCommitClicked = async (event, editText) => {
         if (inputType && inputType === 'decimal') {
@@ -110,16 +113,21 @@ const EditableExamAccordion = ({
                             <pre style={{ width: '100%' }}>
                                 {parentObject[param] ? parentObject[param] : 'None added...'}
                             </pre>
-                            <Button onClick={handleEditModeClicked} className="ms-auto" style={{ height: '38px' }}>Edit</Button>
-                            <UploadTextAsRTF
-                                parentObject={parentObject}
-                                setParentObject={setParentObject}
-                                param={param}
-                                editText={editText}
-                                setEditText={setEditText}
-                                userFriendlyParam={userFriendlyParam}
-                                handleCommitClicked={handleCommitClicked}
-                            />
+                            {is_locked ? null :
+                                <>
+                                    <Button onClick={handleEditModeClicked} className="ms-auto" style={{ height: '38px' }}>Edit</Button>
+                                    <UploadTextAsRTF
+                                        parentObject={parentObject}
+                                        setParentObject={setParentObject}
+                                        param={param}
+                                        editText={editText}
+                                        setEditText={setEditText}
+                                        userFriendlyParam={userFriendlyParam}
+                                        handleCommitClicked={handleCommitClicked}
+                                    />
+                                </>
+                            }
+
                         </div>
 
 

@@ -50,7 +50,7 @@ const LockExamAccordion = ({ examInformation, setExamInformation }) => {
     }, [examInformation.exam_id, examInformation.module_id])
 
 
-    useEffect(()=> {
+    useEffect(() => {
 
         const newMarkedForTraining = studentExamSubmissions.filter((ses) => !!ses.marked_for_training)
         setMarkedForTraining(newMarkedForTraining)
@@ -69,6 +69,9 @@ const LockExamAccordion = ({ examInformation, setExamInformation }) => {
             const apiUrl = `${BASE_API_URL}module/${module_id}/exam/${exam_id}`
             const response = await axiosToBackend.put(apiUrl, reqBody)
             setIsChecked(checked)
+            let newExamInformation = { ...examInformation }
+            newExamInformation.is_locked = checked
+            setExamInformation(newExamInformation)
         } catch (err) {
             console.log(err)
             window.alert('Failed to update exam lock')
@@ -112,11 +115,11 @@ const LockExamAccordion = ({ examInformation, setExamInformation }) => {
                                     contentTitle={'Rubric'}
                                     contentToDisplay={<RubricComponentsTable
                                         examInformation={examInformation}
-                                        setExamInformation={setExamInformation} 
+                                        setExamInformation={setExamInformation}
                                         hideControls={true}
-                                        />}
-                                    
-                                        ready={examInformation.rubric.length > 0}
+                                    />}
+
+                                    ready={examInformation.rubric.length > 0}
                                     useModal={true}
                                 />
                                 <TableRowExamQuestion
@@ -148,7 +151,7 @@ const LockExamAccordion = ({ examInformation, setExamInformation }) => {
                     </div>
                     <hr className="divider" />
                     <p>
-                        Once all parameters have been marked as ready, the Exam can be marked as ready, and AI generation can take place (note: while an exam is marked as ready it can't be edited):
+                        Once all parameters have been marked as ready, the Exam can be marked as ready, and AI generation can take place (note: while an exam is marked as ready it can&apos;t be edited):
                     </p>
 
 

@@ -31,6 +31,8 @@ const RubricComponentsTable = ({ examInformation, setExamInformation, hideContro
         }
     }
 
+    hideControls = examInformation.is_locked
+
 
 
     return (

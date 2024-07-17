@@ -63,18 +63,38 @@ const EditableFileTypesAccordion = ({ lastDisplayed, examInformation, setExamInf
                         <Form>
                             {fileTypes.map((fileType, i) => {
 
-
-                                return (
-                                    <Fragment key={i}>
-                                        <Form.Check
-                                            type="switch"
-                                            id={`fileType-${i}`}
-                                            onChange={(e) => { handleFileTypeAllowedChange(e, fileType, i) }}
-                                            label={`${fileType.file_type_extension}`}
-                                            defaultChecked={fileType.allowed}
-                                        />
-                                    </Fragment>
-                                )
+                                if(examInformation.is_locked){
+                                    // disable
+                                    return (
+                                        <Fragment key={i} >
+                                            <div className='d-flex'>
+                                                <Form.Check
+                                                    type="switch"
+                                                    id={`fileType-${i}`}
+                                                    onChange={(e) => { handleFileTypeAllowedChange(e, fileType, i) }}
+                                                    
+                                                    defaultChecked={fileType.allowed}
+                                                    disabled
+                                                />
+                                                <p>{fileType.file_type_extension}</p>
+                                            </div>
+                                        </Fragment>
+                                    )
+                                } else {
+                                    // don't
+                                    return (
+                                        <Fragment key={i}>
+                                            <Form.Check
+                                                type="switch"
+                                                id={`fileType-${i}`}
+                                                onChange={(e) => { handleFileTypeAllowedChange(e, fileType, i) }}
+                                                label={`${fileType.file_type_extension}`}
+                                                defaultChecked={fileType.allowed}
+                                            />
+                                        </Fragment>
+                                    )
+                                }
+                                
 
                             })}
 

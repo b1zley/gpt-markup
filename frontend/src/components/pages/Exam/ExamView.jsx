@@ -186,6 +186,7 @@ const ExamView = () => {
                             submissionType={'EXAM_MODEL_ANSWER'}
                             accordionName={'Model Answer'}
                             lastDisplayed={true}
+                            hideControls={!!examInformation.is_locked}
                         />
                         :
                         null
