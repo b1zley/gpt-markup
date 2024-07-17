@@ -19,6 +19,7 @@ import RubricComponentsView from "./dependent components/RubricComponentsView";
 import UploadDownloadFileAccordion from "../../shared/UploadDownloadFileAccordion";
 import ActiveAccordionControl from "./dependent components/ActiveAccordionControl";
 import EditableFileTypesAccordion from "./dependent components/EditableFileTypesAccordion";
+import LockExamAccordion from "./dependent components/LockExamAccordion";
 
 const ExamView = () => {
     let { module_id, exam_id } = useParams();
@@ -27,7 +28,7 @@ const ExamView = () => {
     const [fetchStatus, setFetchStatus] = useState('pending');
 
 
-    const [activeAccordion, setActiveAccodrion] = useState([1, 0, 0, 0, 0, 0, 0])
+    const [activeAccordion, setActiveAccodrion] = useState([1, 0, 0, 0, 0, 0, 0, 0])
 
 
 
@@ -99,6 +100,7 @@ const ExamView = () => {
         'Prompt Specifications',
         'Model Answer',
         'Engaged SuperUsers',
+        'Exam Lock',
         'Student Submissions'
     ]
 
@@ -212,6 +214,17 @@ const ExamView = () => {
 
                 {
                     activeAccordion[6] === 1 ?
+                        <LockExamAccordion
+                        examInformation={examInformation}
+                        setExamInformation={setExamInformation}
+                        />
+                        :
+                        null
+                }
+
+
+                {
+                    activeAccordion[7] === 1 ?
                         <StudentsInExamAccordion
                             active={activeAccordion[6] === 1}
                             lastDisplayed={true}
