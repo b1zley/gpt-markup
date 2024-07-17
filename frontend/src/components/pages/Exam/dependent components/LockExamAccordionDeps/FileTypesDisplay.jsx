@@ -1,3 +1,4 @@
+import { Fragment } from "react"
 
 
 
@@ -10,9 +11,9 @@ const FileTypesDisplay = ({fileTypes}) => {
     return (
         <>
             {allowedFileTypes.map((fileType, i)=>
-                <>
+                <Fragment key={i}>
                 {fileType}{i < allowedFileTypes.length-1 ? <>,&nbsp;</> : null }
-                </>
+                </Fragment>
             )}
         </>
     )
