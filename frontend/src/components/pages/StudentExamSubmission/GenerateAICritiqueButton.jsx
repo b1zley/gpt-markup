@@ -8,7 +8,7 @@ import { useState } from 'react'
 
 const GenerateAICrtiqueButton = ({ examSubmissionInformation, setExamSubmissionInformation }) => {
 
-
+    console.log(examSubmissionInformation)
 
     const { module_id, exam_id, student_exam_submission_id } = examSubmissionInformation
     async function handleGenerateButtonClick() {
@@ -29,6 +29,17 @@ const GenerateAICrtiqueButton = ({ examSubmissionInformation, setExamSubmissionI
             }
         }
         console.log('loop finished...')
+    }
+
+
+    if (!examSubmissionInformation.is_locked) {
+        return (
+            <Button
+                className='mb-1'
+                disabled >
+                Lock Exam from Checklist to generate critique
+            </Button>
+        )
     }
 
     if (!examSubmissionInformation.file_system_id) {

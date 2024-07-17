@@ -76,26 +76,31 @@ async function updateExam(req, res) {
  */
 async function getExamById(req, res) {
     try {
-        const sqlQuery = 'SELECT * FROM exam INNER JOIN module ON exam.module_id = module.module_id LEFT JOIN trained_model ON exam.chosen_ai_model_id = trained_model.trained_model_id WHERE exam_id = ?'
         const exam_id = req.params.exam_id
-        const [responseFromSqlQuery] = await db.query(sqlQuery, [exam_id])
-
-        let examObject = responseFromSqlQuery[0]
-
-        // find rubric components which match exam_id
-        queryGetRubricComponentsByExamId(exam_id)
-
-        examObject = {
-            ...examObject,
-            rubric: await queryGetRubricComponentsByExamId(exam_id),
-            fileTypes: await queryGetFileTypesByExamId(exam_id)
-        }
-
-
-        return res.status(200).json(examObject)
+        return res.status(200).json(await queryGetExamById(exam_id))
     } catch (err) {
         return res.status(500).send()
     }
+}
+
+async function queryGetExamById(exam_id) {
+
+    const sqlQuery = 'SELECT * FROM exam INNER JOIN module ON exam.module_id = module.module_id LEFT JOIN trained_model ON exam.chosen_ai_model_id = trained_model.trained_model_id WHERE exam_id = ?'
+    
+    const [responseFromSqlQuery] = await db.query(sqlQuery, [exam_id])
+
+    let examObject = responseFromSqlQuery[0]
+
+    // find rubric components which match exam_id
+    queryGetRubricComponentsByExamId(exam_id)
+
+    examObject = {
+        ...examObject,
+        rubric: await queryGetRubricComponentsByExamId(exam_id),
+        fileTypes: await queryGetFileTypesByExamId(exam_id)
+    }
+
+    return examObject
 }
 
 
@@ -325,7 +330,7 @@ async function queryGenerateResultsAsCSV(exam_id) {
     const rubricComponentIds = await queryGetRubricComponentsByExamId(exam_id)
     let csvString = 'student_name, student_number'
     rubricComponentIds.forEach((rcid, i) => {
-        csvString += `,rubric_component_mark_${i+1}, rubric_component_critique_${i+1}`
+        csvString += `,rubric_component_mark_${i + 1}, rubric_component_critique_${i + 1}`
     })
     csvString += `\n`
     // console.log(csvString)
@@ -392,17 +397,17 @@ async function queryGetRubricComponentsShallowByExamId(exam_id) {
 
 }
 
-async function requestHandlerLockOrUnlockExam(req, res){
+async function requestHandlerLockOrUnlockExam(req, res) {
 
 
 }
 
-async function queryLockExam(exam_id){
+async function queryLockExam(exam_id) {
 
 }
 
-async function queryUnlockExam(exam_id){
-    
+async function queryUnlockExam(exam_id) {
+
 }
 
 
@@ -421,5 +426,6 @@ module.exports = {
     handleDeleteFileTypeFromExam,
     queryGetFileTypesByExamId,
     requestHandlerGetResultsAsCSV,
-    queryGetRubricComponentsByExamId
+    queryGetRubricComponentsByExamId,
+    queryGetExamById
 }

@@ -11,7 +11,9 @@ const { handleAiApiCall } = require('./aiApiCallHandler')
 const { writeMessageResponseToCSV } = require('../parseRecording')
 
 
-const { queryGetFileTypesByExamId } = require('./examControllers')
+const { queryGetFileTypesByExamId, queryGetExamById } = require('./examControllers')
+
+
 
 // request handlers
 
@@ -104,7 +106,7 @@ async function handlePutUpdateStudentExamSubmission(req, res) {
 // query functions
 
 async function queryGetExamSubmissionExamSubmissionId(student_exam_submission_id) {
-    const sqlQuery = "SELECT ses.student_exam_submission_id, e.exam_id, s.student_id, ses.exam_submission, ses.file_system_id, m.module_id, e.exam_name, e.exam_question, e.prompt_specifications, e.chosen_ai_model_id, m.module_name, s.student_name, s.student_number FROM student_exam_submission ses LEFT JOIN exam e ON ses.exam_id = e.exam_id LEFT JOIN module m ON e.module_id = m.module_id LEFT JOIN student s ON ses.student_id = s.student_id WHERE ses.student_exam_submission_id = ?"
+    const sqlQuery = "SELECT ses.student_exam_submission_id, e.exam_id, e.is_locked, s.student_id, ses.exam_submission, ses.file_system_id, m.module_id, e.exam_name, e.exam_question, e.prompt_specifications, e.chosen_ai_model_id, m.module_name, s.student_name, s.student_number FROM student_exam_submission ses LEFT JOIN exam e ON ses.exam_id = e.exam_id LEFT JOIN module m ON e.module_id = m.module_id LEFT JOIN student s ON ses.student_id = s.student_id WHERE ses.student_exam_submission_id = ?"
     const bindingParams = [student_exam_submission_id]
     const [responseFromQuery] = await db.query(sqlQuery, bindingParams)
     const examSubmission = responseFromQuery[0]
@@ -225,8 +227,16 @@ async function queryGetColumnsStudentExamSubmission() {
 // handle new ai critique generation
 async function handlePostGetNewAICritique(req, res) {
     try {
-        const { student_exam_submission_id } = req.params
 
+        const { student_exam_submission_id, exam_id } = req.params
+
+        
+        // check if exam is locked
+        const examInformation = await queryGetExamById(exam_id)
+
+        if(examInformation.is_locked != 1){
+            throw new Error('Exam not locked')
+        }
         // get new ai critique from ai
         // return entire new student exam submission object?
         await getNewAICritique(student_exam_submission_id)
