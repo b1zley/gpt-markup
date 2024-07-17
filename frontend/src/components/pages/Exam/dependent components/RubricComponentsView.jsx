@@ -32,14 +32,24 @@ const RubricComponentsView = ({ lastDisplayed, examInformation, setExamInformati
                         setExamInformation={setExamInformation}
                     />
                     <hr className='divider' />
-                    <UploadRubricComponentsModal
-                        examInformation={examInformation}
-                        setExamInformation={setExamInformation}
-                    />
-                    <AddNewRubricComponent
-                        examInformation={examInformation}
-                        setExamInformation={setExamInformation}
-                    />
+
+                    {examInformation.is_locked ?
+                        'Unlock this exam in checklist to modify the rubric'
+                        :
+                        <>
+                            <UploadRubricComponentsModal
+                                examInformation={examInformation}
+                                setExamInformation={setExamInformation}
+                            />
+                            <AddNewRubricComponent
+                                examInformation={examInformation}
+                                setExamInformation={setExamInformation}
+                            />
+                        </>
+
+
+                    }
+
                 </Accordion.Body>
             </Accordion.Item>
         </Accordion>
