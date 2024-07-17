@@ -34,7 +34,7 @@ const StudentsInExamAccordion = ({ lastDisplayed, examInformation }) => {
             const newExamSubmissions = responseFromFetchExams.data
             // handle setting state from response data
             setStudentExamSubmissions(newExamSubmissions)
-            console.log(newExamSubmissions)
+            // console.log(newExamSubmissions)
 
 
         }

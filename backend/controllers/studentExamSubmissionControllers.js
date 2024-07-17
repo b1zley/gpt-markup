@@ -159,7 +159,7 @@ async function queryGetExamSubmissionByExamId(exam_id) {
     // dynmacically construct part of query
 
     const componentCases = rubricComponentIds.map((id) =>
-        `SUM(CASE WHEN rcsm.rubric_component_id = ${id} THEN rcsm.rubric_component_mark ELSE 0 END) AS rubric_component_${id}`
+        `SUM(CASE WHEN rcsm.rubric_component_id = ${id} THEN rcsm.rubric_component_mark ELSE NULL END) AS rubric_component_${id}`
     )
     // need to also calculate total agreed mark...
 

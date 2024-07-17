@@ -9,6 +9,43 @@ import axiosToBackend from '../../../../axiosToBackend'
 
 const StudentExamSubmissionsTable = ({ hideControls, examInformation, studentExamSubmissions, setStudentExamSubmissions }) => {
 
+
+    console.log(studentExamSubmissions)
+    // console.log(examInformation.rubric)
+
+    // const rubricLength = examInformation.rubric.length
+    // console.log(rubricLength)
+
+    // console.log(getRubricComponentIdsFromSES(studentExamSubmissions[0]))
+
+
+
+
+    function getRubricComponentIdsFromSES(studentExamSubmission) {
+        const sesKeyList = Object.keys(studentExamSubmission)
+        let rubricComponentsPresentInSES = []
+        for (const key of sesKeyList) {
+            if (key.includes(`rubric_component_`) && studentExamSubmission[key] !== null) {
+                const rcId = key.substring(17, key.length)
+                rubricComponentsPresentInSES.push(rcId)
+            }
+        }
+        return rubricComponentsPresentInSES
+    }
+
+
+    function canSESBeMarkedForTraining(studentExamSubmission){
+        if(getRubricComponentIdsFromSES(studentExamSubmission).length !== examInformation.rubric.length){
+            return false
+        }
+        if(!studentExamSubmission.file_system_id ){
+            return false
+        }
+
+        return true
+    }
+
+
     async function handleStudentRemoveClick(e, i) {
         e.stopPropagation()
         const submissionToDelete = studentExamSubmissions[i]
@@ -110,28 +147,38 @@ const StudentExamSubmissionsTable = ({ hideControls, examInformation, studentExa
                                 {studentExamSubmission.marker_mark ? studentExamSubmission.marker_mark : '-'}
                             </td>
 
-                            {hideControls ? null : <td >
-                                <div className='d-flex justify-content-center'>
+                            {hideControls ? null :
+                                <td >
+                                    <div className='d-flex justify-content-center'>
 
 
-                                    <Button className='my-1' variant='warning' onClick={(e) => { handleStudentRemoveClick(e, i) }}>
-                                        Remove
-                                    </Button>
-
-
-                                    {studentExamSubmission.marked_for_training ?
-                                        <Button className='my-1 ms-1' variant='success' onClick={(e) => { handleStudentUnmarkForTrainingClick(e, i) }}>
-                                            Unmark for training
-                                        </Button> :
-                                        <Button className='my-1 ms-1' variant='success' onClick={(e) => { handleStudentMarkForTrainingClick(e, i) }}>
-                                            Mark for training
+                                        <Button className='my-1' variant='warning' onClick={(e) => { handleStudentRemoveClick(e, i) }}>
+                                            Remove
                                         </Button>
 
-                                    }
 
-                                </div>
+                                        {
+                                            canSESBeMarkedForTraining(studentExamSubmission) ?
+                                                studentExamSubmission.marked_for_training ?
+                                                    <Button className='my-1 ms-1' variant='success' onClick={(e) => { handleStudentUnmarkForTrainingClick(e, i) }}>
+                                                        Unmark for training
+                                                    </Button> :
+                                                    <Button className='my-1 ms-1' variant='success' onClick={(e) => { handleStudentMarkForTrainingClick(e, i) }}>
+                                                        Mark for training
+                                                    </Button>
 
-                            </td>}
+
+                                                :
+                                                <Button className='my-1 ms-1' variant='success' disabled onClick={(e) => { handleStudentMarkForTrainingClick(e, i) }}>
+                                                    Missing Submission /Mark
+                                                </Button>
+                                        }
+
+
+
+                                    </div>
+
+                                </td>}
 
 
                         </tr>
