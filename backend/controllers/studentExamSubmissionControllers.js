@@ -11,7 +11,7 @@ const { handleAiApiCall } = require('./aiApiCallHandler')
 const { writeMessageResponseToCSV } = require('../parseRecording')
 
 
-const { queryGetFileTypesByExamId, queryGetExamById } = require('./examControllers')
+const { queryGetFileTypesByExamId, queryGetExamById, queryGetRubricComponentsByExamId } = require('./examControllers')
 
 
 
@@ -45,6 +45,7 @@ async function handleGetExamSubmissionEntryByExamId(req, res) {
         const { module_id, exam_id } = req.params
         return res.status(200).json(await queryGetExamSubmissionByExamId(exam_id))
     } catch (err) {
+        console.log(err)
         return res.status(500).send()
     }
 }
@@ -144,9 +145,56 @@ async function queryCreateNewExamSubmission(exam_id, student_id) {
 }
 
 async function queryGetExamSubmissionByExamId(exam_id) {
+
+    // oy vey, i need to return the fucking rubric component marks
+    // life is a trip :()
+
+    const rubricComponents = await queryGetRubricComponentsByExamId(exam_id)
+    
+
+    const rubricComponentIds = rubricComponents.map((rc) => rc.rubric_component_id)
+
+
+    // console.log(rubricComponentIds)
+    // dynmacically construct part of query
+
+    const componentCases = rubricComponentIds.map((id) =>
+        `SUM(CASE WHEN rcsm.rubric_component_id = ${id} THEN rcsm.rubric_component_mark ELSE 0 END) AS rubric_component_${id}`
+    )
     // need to also calculate total agreed mark...
 
-    const sqlQuery = "SELECT ses.student_exam_submission_id, ses.marked_for_training, ses.exam_id, ses.student_id, ses.exam_submission, COALESCE(SUM(rcsm.rubric_component_mark), NULL) AS marker_mark, ses.file_system_id, student.student_name, student.student_number FROM student_exam_submission ses LEFT JOIN rubric_component_submission_mark rcsm ON ses.student_exam_submission_id = rcsm.student_exam_submission_id INNER JOIN student ON student.student_id = ses.student_id WHERE exam_id = ? GROUP BY ses.student_exam_submission_id, ses.student_id, ses.exam_id"
+    // const sqlQuery = "SELECT ses.student_exam_submission_id, ses.marked_for_training, ses.exam_id, ses.student_id, ses.exam_submission, COALESCE(SUM(rcsm.rubric_component_mark), NULL) AS marker_mark, ses.file_system_id, student.student_name, student.student_number FROM student_exam_submission ses LEFT JOIN rubric_component_submission_mark rcsm ON ses.student_exam_submission_id = rcsm.student_exam_submission_id INNER JOIN student ON student.student_id = ses.student_id WHERE exam_id = ? GROUP BY ses.student_exam_submission_id, ses.student_id, ses.exam_id"
+
+    const sqlQuery = `
+            SELECT 
+                ses.student_exam_submission_id, 
+                ses.marked_for_training, 
+                ses.exam_id, 
+                ses.student_id, 
+                ses.exam_submission, 
+                COALESCE(SUM(rcsm.rubric_component_mark), NULL) AS marker_mark, 
+                ses.file_system_id, 
+                student.student_name, 
+                student.student_number,
+                ${componentCases}
+            FROM 
+                student_exam_submission ses 
+            LEFT JOIN 
+                rubric_component_submission_mark rcsm 
+            ON 
+                ses.student_exam_submission_id = rcsm.student_exam_submission_id 
+            INNER JOIN 
+                student 
+            ON 
+                student.student_id = ses.student_id 
+            WHERE 
+                exam_id = ? 
+            GROUP BY 
+                ses.student_exam_submission_id, 
+                ses.student_id, 
+                ses.exam_id;
+        `;
+
     const bindingParams = [exam_id]
 
     const [queryResponse] = await db.query(sqlQuery, bindingParams)
@@ -230,11 +278,11 @@ async function handlePostGetNewAICritique(req, res) {
 
         const { student_exam_submission_id, exam_id } = req.params
 
-        
+
         // check if exam is locked
         const examInformation = await queryGetExamById(exam_id)
 
-        if(examInformation.is_locked != 1){
+        if (examInformation.is_locked != 1) {
             throw new Error('Exam not locked')
         }
         // get new ai critique from ai
@@ -306,7 +354,7 @@ async function getExamInformationForAiParse(student_exam_submission_id) {
     return examInformation
 }
 
-async function getExtensionsArrayExamId(exam_id){
+async function getExtensionsArrayExamId(exam_id) {
     rawFileTypeArray = await queryGetFileTypesByExamId(exam_id)
     return rawFileTypeArray.map((fileType) => fileType.allowed ? `.${fileType.file_type_extension}` : null).filter((element) => element !== null)
 }
