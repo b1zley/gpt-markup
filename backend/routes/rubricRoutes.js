@@ -42,5 +42,8 @@ router.delete('/:rubric_component_id/rating_range/:rating_range_id', rubricContr
 router.post('/csv_upload', upload.single('file'), rubricControllers.handleRequestCSVUploadRubricComponents)
 
 
+
+router.post('/:rubric_component_id/rating_range/complete', rubricControllers.handlePostRequestCreateNewRatingRangeComplete)
+
 module.exports = router
 

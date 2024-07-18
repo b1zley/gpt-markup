@@ -11,6 +11,8 @@ import { FloatingLabel } from 'react-bootstrap'
 import { useState, useEffect } from 'react'
 
 import Modal from 'react-bootstrap/Modal'
+import BASE_API_URL from '../../../../BASE_API_URL'
+import axiosToBackend from '../../../../axiosToBackend'
 
 const AddNewMarkingRangeModalDialogBox = ({ rubricComponent, setRubricComponent, setShowModal }) => {
 
@@ -20,18 +22,35 @@ const AddNewMarkingRangeModalDialogBox = ({ rubricComponent, setRubricComponent,
     const [maxInclusive, setMaxInclusive] = useState('')
 
 
+    // console.log(rubricComponent)
+
     async function handleSubmit(e) {
-        e.preventDefault()
-        console.log(descriptionInput)
-        console.log(minInclusive)
-        console.log(maxInclusive)
+        try {
+            e.preventDefault()
+            // handle post request!
+            let postBody = {
+                rating_desc: descriptionInput,
+                rating_min_incl: minInclusive,
+                rating_max_incl: maxInclusive
+            }
 
+            const { module_id, exam_id, rubric_component_id } = rubricComponent
+            const postUrl = `${BASE_API_URL}module/${module_id}/exam/${exam_id}/rubric/${rubric_component_id}/rating_range/complete`
+            const response = await axiosToBackend.post(postUrl, postBody)
 
-        // handle post request!
-
-
-        // dynamically adjust render and close modal
-
+            // update render
+            postBody = { ...postBody, rating_range_id: response.data.rating_range_id }
+            let newRatingRanges = [...rubricComponent.rating_ranges]
+            newRatingRanges.push(postBody)
+            let newRubricComponent = { ...rubricComponent }
+            newRubricComponent.rating_ranges = newRatingRanges
+            setRubricComponent(newRubricComponent)
+            // close modal
+            setShowModal(false)
+        } catch (err) {
+            console.log(err)
+            window.alert('Failed to update rating ranges')
+        }
     }
 
 
@@ -79,22 +98,22 @@ const AddNewMarkingRangeModalDialogBox = ({ rubricComponent, setRubricComponent,
                 </FloatingLabel>
 
 
+                <Modal.Footer>
 
+                    <Button variant="primary" type="submit" >
+                        Submit
+                    </Button>
+
+                    <Button variant="secondary" onClick={(e) => setShowModal(false)} >
+                        Close
+                    </Button>
+
+                </Modal.Footer>
 
 
             </Form>
 
-            <Modal.Footer>
 
-                <Button variant="primary" type="submit" >
-                    Submit
-                </Button>
-
-                <Button variant="secondary" onClick={(e) => setShowModal(false)} >
-                    Close
-                </Button>
-
-            </Modal.Footer>
         </>
     )
 

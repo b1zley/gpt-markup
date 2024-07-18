@@ -320,6 +320,29 @@ async function queryCreateNewRubricFromRCArray(rubricComponentArray, exam_id) {
     }
 }
 
+
+
+async function handlePostRequestCreateNewRatingRangeComplete(req, res) {
+
+    try {
+        const { module_id, exam_id, rubric_component_id } = req.params
+        const { rating_desc, rating_min_incl, rating_max_incl } = req.body
+        const responseFromInsert = await queryCreateNewRatingRangeComplete(rubric_component_id, rating_desc, rating_min_incl, rating_max_incl)
+        return res.status(201).json({rating_range_id: responseFromInsert})
+    } catch (err) {
+        return res.status(500).send()
+    }
+}
+
+// to do
+async function queryCreateNewRatingRangeComplete(rubric_component_id, rating_desc, rating_min_incl, rating_max_incl) {
+    const sqlQuery = 'INSERT INTO `rating_range` (`rating_range_id`, `rating_min_incl`, `rating_max_incl`, `rating_desc`, `rubric_component_id`) VALUES (NULL, ?, ?, ?, ?);'
+    const bindingParams = [rating_min_incl, rating_max_incl, rating_desc, rubric_component_id]
+    const [responseFromInsert] = await db.query(sqlQuery, bindingParams)
+    const insertId = responseFromInsert.insertId
+    return insertId
+}
+
 module.exports = {
 
     handleRemoveRubricFromExam,
@@ -329,6 +352,7 @@ module.exports = {
     handlePostRatingRangeInRubricComponent,
     handlePutRequestRatingRange,
     handleDeleteRatingRange,
-    handleRequestCSVUploadRubricComponents
+    handleRequestCSVUploadRubricComponents,
+    handlePostRequestCreateNewRatingRangeComplete
 
 }
