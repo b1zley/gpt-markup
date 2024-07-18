@@ -329,7 +329,7 @@ async function getExamInformationForAiParse(student_exam_submission_id) {
     // aggregate data of interest
 
     // JUST EXAM INFO HERE.
-    const examSqlQuery = "SELECT e.exam_id, e.exam_name, e.exam_question, e.prompt_specifications, m.module_id, m.module_name, fs.file_system_id, fs.zip, fs.unzip, tm.trained_model_id, tm.api_id, tm.prompt_engineering, tm.model_name FROM student_exam_submission ses INNER JOIN exam e ON ses.exam_id = e.exam_id INNER JOIN module m on e.module_id = m.module_id INNER JOIN trained_model tm ON e.chosen_ai_model_id = tm.trained_model_id INNER JOIN file_system fs ON e.file_system_id = fs.file_system_id WHERE ses.student_exam_submission_id = ?"
+    const examSqlQuery = "SELECT e.exam_id, e.exam_name, e.exam_question, e.prompt_specifications,e.temperature,e.top_p,e.top_p_mode, m.module_id, m.module_name, fs.file_system_id, fs.zip, fs.unzip, tm.trained_model_id, tm.api_id, tm.prompt_engineering, tm.model_name FROM student_exam_submission ses INNER JOIN exam e ON ses.exam_id = e.exam_id INNER JOIN module m on e.module_id = m.module_id INNER JOIN trained_model tm ON e.chosen_ai_model_id = tm.trained_model_id INNER JOIN file_system fs ON e.file_system_id = fs.file_system_id WHERE ses.student_exam_submission_id = ?"
     const examBindingParams = [student_exam_submission_id]
 
     const [responseFromExamQuery] = await db.query(examSqlQuery, examBindingParams)
@@ -355,6 +355,7 @@ async function getExamInformationForAiParse(student_exam_submission_id) {
 
     // get allowed file types in exam
     examInformation.fileTypes = await getExtensionsArrayExamId(examInformation.exam_id)
+    // console.log('examInformation',examInformation)
     return examInformation
 }
 

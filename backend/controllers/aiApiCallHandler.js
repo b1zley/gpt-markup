@@ -178,8 +178,8 @@ async function handleApiCallClaude(informationForLLM, student_exam_submission_id
 
     // console.log(submissionText)
 
-    let claudeTemp = examInformation.temperature ? examInformation.temperature : null
-    let claude_top_p = examInformation.top_p ? examInformation.top_p : null
+    let claudeTemp = examInformation.temperature
+    let claude_top_p = examInformation.top_p 
     let claude_seed = undefined
     let claude_model = "claude-3-5-sonnet-20240620"
 
@@ -207,7 +207,7 @@ async function handleApiCallClaude(informationForLLM, student_exam_submission_id
             messages: [...markedSubmissionMessageArray, { role: "user", content: submissionText }],
         }
 
-        if (!claude_top_p) {
+        if (!examInformation.top_p_mode) {
             claudeObject = {
                 ...claudeObject,
                 temperature: claudeTemp
@@ -220,7 +220,7 @@ async function handleApiCallClaude(informationForLLM, student_exam_submission_id
         }
 
 
-        console.log(claudeObject)
+        // console.log(claudeObject)
         console.log(`fetching from claude... ${rubricComponentCounter}`)
         // console.log(claudeObject.messages[2])
         // continue

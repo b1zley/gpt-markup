@@ -8,6 +8,10 @@ const { db, axios, backendRoot, storageDirectory } = require('../routesCommonDep
  * @param {*} res 
  */
 async function createNewExam(req, res) {
+
+    const initialTopP = 0
+    const initialTemp = 0
+
     console.log(req.params)
     console.log(req.body)
     const module_id = req.params.module_id
@@ -17,7 +21,7 @@ async function createNewExam(req, res) {
         return res.status(400).send()
     }
 
-    const createExamSqlQuery = "INSERT INTO `exam` (`exam_id`, `module_id`, `exam_name`, `exam_question`,  `file_system_id`, `prompt_specifications`, `chosen_ai_model_id`) VALUES (NULL, ?, ?, NULL,  NULL, NULL, 3);"
+    const createExamSqlQuery = "INSERT INTO `exam` (`exam_id`, `module_id`, `exam_name`, `exam_question`,  `file_system_id`, `prompt_specifications`, `chosen_ai_model_id`, `temperature`, `top_p`) VALUES (NULL, ?, ?, NULL,  NULL, NULL, 3, 0,0);"
     const bindingParamsCreateExamQuery = [module_id, exam_name]
     try {
         const [responseFromInsert] = await db.query(createExamSqlQuery, bindingParamsCreateExamQuery)
