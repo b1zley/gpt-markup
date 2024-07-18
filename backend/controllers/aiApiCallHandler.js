@@ -178,8 +178,8 @@ async function handleApiCallClaude(informationForLLM, student_exam_submission_id
 
     // console.log(submissionText)
 
-    let claudeTemp = 0.0
-    let claude_top_p = undefined
+    let claudeTemp = examInformation.temperature ? examInformation.temperature : null
+    let claude_top_p = examInformation.top_p ? examInformation.top_p : null
     let claude_seed = undefined
     let claude_model = "claude-3-5-sonnet-20240620"
 
@@ -199,20 +199,34 @@ async function handleApiCallClaude(informationForLLM, student_exam_submission_id
 
         const markedSubmissionMessageArray = createMarkedSubmissionMessageArrayOneRubricComponent(markedSubmissions, rubricComponentCounter)
 
+
         let claudeObject = {
             model: claude_model,
             max_tokens: 1000,
             system: dynamicSystemMessage,
             messages: [...markedSubmissionMessageArray, { role: "user", content: submissionText }],
-            temperature: claudeTemp
         }
 
+        if (!claude_top_p) {
+            claudeObject = {
+                ...claudeObject,
+                temperature: claudeTemp
+            }
+        } else {
+            claudeObject = {
+                ...claudeObject,
+                top_p: claude_top_p
+            }
+        }
+
+
+        console.log(claudeObject)
         console.log(`fetching from claude... ${rubricComponentCounter}`)
         // console.log(claudeObject.messages[2])
         // continue
         // console.log('stopping here')
         // return
-        // throw new Error('STOP')
+        throw new Error('STOP')
         const aiResponse = await anthropic.messages.create(claudeObject)
 
         const parameterizedAiMessage = JSON.parse(aiResponse.content[0].text)

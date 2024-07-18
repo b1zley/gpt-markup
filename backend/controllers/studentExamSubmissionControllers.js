@@ -150,7 +150,7 @@ async function queryGetExamSubmissionByExamId(exam_id) {
     // life is a trip :()
 
     const rubricComponents = await queryGetRubricComponentsByExamId(exam_id)
-    
+
 
     const rubricComponentIds = rubricComponents.map((rc) => rc.rubric_component_id)
 
@@ -158,8 +158,11 @@ async function queryGetExamSubmissionByExamId(exam_id) {
     // console.log(rubricComponentIds)
     // dynmacically construct part of query
 
-    const componentCases = rubricComponentIds.map((id) =>
-        `SUM(CASE WHEN rcsm.rubric_component_id = ${id} THEN rcsm.rubric_component_mark ELSE NULL END) AS rubric_component_${id}`
+
+    const commaSeparator = rubricComponentIds.length > 0 ? ',' : ''
+
+    const componentCases = rubricComponentIds.map((id) => 
+            `SUM(CASE WHEN rcsm.rubric_component_id = ${id} THEN rcsm.rubric_component_mark ELSE NULL END) AS rubric_component_${id}`
     )
     // need to also calculate total agreed mark...
 
@@ -175,7 +178,8 @@ async function queryGetExamSubmissionByExamId(exam_id) {
                 COALESCE(SUM(rcsm.rubric_component_mark), NULL) AS marker_mark, 
                 ses.file_system_id, 
                 student.student_name, 
-                student.student_number,
+                student.student_number
+                ${commaSeparator}
                 ${componentCases}
             FROM 
                 student_exam_submission ses 
