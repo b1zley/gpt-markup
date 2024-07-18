@@ -9,13 +9,30 @@ import BASE_API_URL from '../../../../BASE_API_URL'
 
 import axiosToBackend from '../../../../axiosToBackend'
 
+import useConfirmation from '../../../hooks/useConfirmation'
 
 const RubricComponentsTable = ({ examInformation, setExamInformation, hideControls }) => {
 
+    const [confirm, ConfirmationModal] = useConfirmation()
 
 
+    const DeleteRCConfirmationModalBody = ({ rubricComponent }) => {
+        return (
+            <>
+                <div>Are you sure you want to delete this rubric component:</div>
+                <strong>
+                    {rubricComponent.name}
+                </strong>
+                <div>This action is irreversible!</div>
+            </>
+        )
+    }
 
     async function handleRemoveRubricComponentClick(rubricComponent, i) {
+        const confirmation = await confirm(<DeleteRCConfirmationModalBody rubricComponent={rubricComponent} />)
+        if (!confirmation) {
+            return
+        }
         // delete request to api
         const { rubric_component_id } = rubricComponent
         const apiDeleteRequestURL = `${BASE_API_URL}module/${examInformation.module_id}/exam/${examInformation.exam_id}/rubric/${rubric_component_id}`
@@ -106,7 +123,7 @@ const RubricComponentsTable = ({ examInformation, setExamInformation, hideContro
 
             </Table>
 
-
+            <ConfirmationModal />
         </>
 
     )
