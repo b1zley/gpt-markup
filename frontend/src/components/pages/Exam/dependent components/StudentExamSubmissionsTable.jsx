@@ -7,8 +7,11 @@ import BASE_API_URL from '../../../../BASE_API_URL'
 
 import axiosToBackend from '../../../../axiosToBackend'
 
+import useConfirmation from '../../../hooks/useConfirmation'
+
 const StudentExamSubmissionsTable = ({ hideControls, examInformation, studentExamSubmissions, setStudentExamSubmissions }) => {
 
+    const [confirm, ConfirmationModal] = useConfirmation()
 
     console.log(studentExamSubmissions)
     // console.log(examInformation.rubric)
@@ -34,21 +37,42 @@ const StudentExamSubmissionsTable = ({ hideControls, examInformation, studentExa
     }
 
 
-    function canSESBeMarkedForTraining(studentExamSubmission){
-        if(getRubricComponentIdsFromSES(studentExamSubmission).length !== examInformation.rubric.length){
+    function canSESBeMarkedForTraining(studentExamSubmission) {
+        if (getRubricComponentIdsFromSES(studentExamSubmission).length !== examInformation.rubric.length) {
             return false
         }
-        if(!studentExamSubmission.file_system_id ){
+        if (!studentExamSubmission.file_system_id) {
             return false
         }
 
         return true
     }
 
+    const RemoveStudentModalBody = ({ submissionToDelete }) => {
+        console.log(submissionToDelete)
+        return (
+            <>
+                <div>
+                    Are you sure you want to remove the student submission:
+                </div>
+                    Student Number: <strong> {submissionToDelete.student_number}</strong>
+                    <br></br>
+                    Student Name: <strong> {submissionToDelete.student_name}</strong>
+                <div>
+                    This action is irreversible!
+                </div>
+            </>
+        )
+    }
+
 
     async function handleStudentRemoveClick(e, i) {
         e.stopPropagation()
         const submissionToDelete = studentExamSubmissions[i]
+        const confirmation = await confirm(<RemoveStudentModalBody submissionToDelete={submissionToDelete} />)
+        if (!confirmation) {
+            return
+        }
         const apiDeleteExamSubmissionUrl = `${BASE_API_URL}module/${examInformation.module_id}/exam/${submissionToDelete.exam_id}/student_exam_submission/${submissionToDelete.student_exam_submission_id}`
         const deleteExamSubmissionResponse = await axiosToBackend.delete(apiDeleteExamSubmissionUrl)
         if (deleteExamSubmissionResponse.status === 204) {
@@ -187,6 +211,7 @@ const StudentExamSubmissionsTable = ({ hideControls, examInformation, studentExa
                 )}
 
             </tbody>
+            <ConfirmationModal />
         </Table>
     )
 
