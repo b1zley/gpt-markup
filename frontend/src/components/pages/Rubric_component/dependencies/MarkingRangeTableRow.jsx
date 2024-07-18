@@ -16,8 +16,6 @@ const MarkingRangeTableRow = ({ rubricComponent, setRubricComponent, index }) =>
 
 
     const DeletionModalBody = () => {
-
-
         return (<>
             <div className='mb-0'>Are you sure you want to delete the following rating range:</div>
             <strong className='mt-1'>{rubricComponent.rating_ranges[index].rating_desc}</strong>
