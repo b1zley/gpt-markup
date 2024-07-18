@@ -21,10 +21,6 @@ const EditableMarkingRanges = ({ lastDisplayed, rubricComponent, setRubricCompon
                         rubricComponent={rubricComponent}
                         setRubricComponent={setRubricComponent}
                     />
-                    <AddNewMarkingRangeButton
-                        rubricComponent={rubricComponent}
-                        setRubricComponent={setRubricComponent}
-                    />
 
                     <AddNewMarkingRangeModalButton
                         rubricComponent={rubricComponent}
