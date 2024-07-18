@@ -28,17 +28,11 @@ const MarkingRangeTableRow = ({ rubricComponent, setRubricComponent, index }) =>
 
 
     async function handleRemoveButtonClick(event) {
-
-
-
         const ratingRangeIdToDelete = rubricComponent.rating_ranges[index].rating_range_id
-        console.log(rubricComponent.rating_ranges[index])
         const confirmation = await confirm(<DeletionModalBody />)
-        console.log(confirmation)
         if (!confirmation) {
             return
         }
-
         const apiDeleteUrl = `${BASE_API_URL}module/${rubricComponent.module_id}/exam/${rubricComponent.exam_id}/rubric/${rubricComponent.rubric_component_id}/rating_range/${ratingRangeIdToDelete}`
         const responseFromDelete = await axiosToBackend.delete(apiDeleteUrl)
 
