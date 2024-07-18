@@ -5,10 +5,35 @@ import {Link} from 'react-router-dom'
 
 import BASE_API_URL from '../../../../BASE_API_URL'
 import axiosToBackend from '../../../../axiosToBackend'
+import useConfirmation from '../../../hooks/useConfirmation'
 
 const EditableModuleDisplay = ({modules, setModules}) => {
 
+    const [confirm, ConfirmationModal] = useConfirmation()
+
+    const DeleteModuleConfirmModal = ({module}) => {
+
+        return(
+            <>
+                <div>
+                    Are you sure you want to delete:
+                </div>
+                <strong>{module.module_name}</strong>
+                <div>
+                    This action is irreversible!
+                </div>
+            </>
+        )
+
+    }
+
     async function handleDeleteButtonClick(module_id, index){
+
+        const confirmation = await confirm(<DeleteModuleConfirmModal module={modules[index]}/> )
+        if(!confirmation){
+            return
+        }
+
         const deleteUrl = `${BASE_API_URL}module/${module_id}`
         const responseFromDelete = await axiosToBackend.delete(deleteUrl)
         console.log(responseFromDelete)
@@ -54,6 +79,7 @@ const EditableModuleDisplay = ({modules, setModules}) => {
                         </ListGroup.Item>
 
                     )}
+                    <ConfirmationModal />
                 </ListGroup>
 
     )

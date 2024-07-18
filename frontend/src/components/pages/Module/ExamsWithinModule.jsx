@@ -4,9 +4,34 @@ import { Link } from "react-router-dom"
 import BASE_API_URL from "../../../BASE_API_URL"
 import axiosToBackend from '../../../axiosToBackend'
 
+import useConfirmation from "../../hooks/useConfirmation"
+
 const ExamsWithinModule = ({ module_id, examsWithinModule, setExamsWithinModule }) => {
+    const [confirm, ConfirmationModal] = useConfirmation()
+
+    const DeleteExamConfirmModal = ({exam}) => {
+
+
+        return (
+            <>  
+                <div>
+                    Are you sure you want to delete the exam:
+                </div>
+                <strong>
+                    {exam.exam_name}
+                </strong>
+                <div>
+                    This action is irreversible!
+                </div>
+            </>
+        )
+    }
 
     const handleDeleteExam = async (event, exam) => {
+        const confirmation = await confirm(<DeleteExamConfirmModal exam={exam} /> )
+        if(!confirmation){
+            return
+        }
 
         event.preventDefault(); // Prevent the default action of the event
         event.stopPropagation(); // Stop the event from propagating further
@@ -15,11 +40,11 @@ const ExamsWithinModule = ({ module_id, examsWithinModule, setExamsWithinModule 
         const examIdToDelete = exam.exam_id
         const moduleIdToDeleteFrom = module_id
         const apiDeleteUrl = `${BASE_API_URL}module/${moduleIdToDeleteFrom}/exam/${examIdToDelete}`
-        
+
         console.log(apiDeleteUrl)
         try {
             const responseFromDelete = await axiosToBackend.delete(apiDeleteUrl)
-            if(responseFromDelete.status != 204){
+            if (responseFromDelete.status != 204) {
                 throw new Error()
             }
             const indexToRemove = examsWithinModule.findIndex(element => element.exam_id === examIdToDelete)
@@ -59,6 +84,7 @@ const ExamsWithinModule = ({ module_id, examsWithinModule, setExamsWithinModule 
                 )}
 
             </ListGroup>
+            <ConfirmationModal /> 
         </>
     )
 }
