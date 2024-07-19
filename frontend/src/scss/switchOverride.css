@@ -1,0 +1,22 @@
+/* custom.css */
+.custom-switch .form-check-input {
+    width: 6rem !important; /* Increase the width of the switch */
+    height: 1.3rem !important; /* Increase the height of the switch */
+    background-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0naHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmcnIHZpZXdCb3g9Jy00IC00IDggOCc+PGNpcmNsZSByPSczJyBmaWxsPScjZmZmZmZmJy8+PC9zdmc+") !important;
+    background-color: #24549c !important; /* Set your desired background color */
+    border-color: #24549c !important; /* Set your desired border color */
+    box-shadow: none !important; /* Remove focus shadow */
+  }
+  
+  .custom-switch .form-check-input:checked {
+    background-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0naHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmcnIHZpZXdCb3g9Jy00IC00IDggOCc+PGNpcmNsZSByPSczJyBmaWxsPScjZmZmZmZmJy8+PC9zdmc+") !important;
+    background-color: #24549c !important; /* Ensure same color for checked state */
+    border-color: #24549c !important; /* Ensure same color for checked state */
+    box-shadow: none !important; /* Remove focus shadow */
+  }
+  
+  /* Remove the blue highlight when clicked */
+  .custom-switch .form-check-input:focus {
+    box-shadow: none !important;
+  }
+  

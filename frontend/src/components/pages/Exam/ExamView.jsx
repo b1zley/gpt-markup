@@ -20,6 +20,7 @@ import UploadDownloadFileAccordion from "../../shared/UploadDownloadFileAccordio
 import ActiveAccordionControl from "./dependent components/ActiveAccordionControl";
 import EditableFileTypesAccordion from "./dependent components/EditableFileTypesAccordion";
 import LockExamAccordion from "./dependent components/LockExamAccordion";
+import AdvancedAISpecs from "./dependent components/AdvancedAISpecs";
 
 const ExamView = () => {
     let { module_id, exam_id } = useParams();
@@ -97,7 +98,7 @@ const ExamView = () => {
         'Exam Question',
         'File Types',
         'Rubric',
-        'Prompt Specifications',
+        'AI Options',
         'Model Answer',
         'Engaged SuperUsers',
         'Checklist',
@@ -164,15 +165,22 @@ const ExamView = () => {
 
                 {
                     activeAccordion[3] === 1 ?
-                        <EditableExamAccordion
-                            parentObject={examInformation}
-                            setParentObject={setExamInformation}
-                            param={'prompt_specifications'}
-                            userFriendlyParam={'Prompt Specifications'}
-                            lastDisplayed={true}
-                            putUrl={`${BASE_API_URL}module/${module_id}/exam/${exam_id}`}
-                            description={promptSpecificationDescription}
-                        />
+                        <>
+                            <EditableExamAccordion
+                                parentObject={examInformation}
+                                setParentObject={setExamInformation}
+                                param={'prompt_specifications'}
+                                userFriendlyParam={'Prompt Specifications'}
+                                lastDisplayed={true}
+                                putUrl={`${BASE_API_URL}module/${module_id}/exam/${exam_id}`}
+                                description={promptSpecificationDescription}
+                            />
+                            <AdvancedAISpecs
+                                examInformation={examInformation}
+                                setExamInformation={setExamInformation}
+                            />
+                        </>
+
                         :
                         null
                 }
@@ -216,8 +224,8 @@ const ExamView = () => {
                 {
                     activeAccordion[6] === 1 ?
                         <LockExamAccordion
-                        examInformation={examInformation}
-                        setExamInformation={setExamInformation}
+                            examInformation={examInformation}
+                            setExamInformation={setExamInformation}
                         />
                         :
                         null
