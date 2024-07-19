@@ -97,6 +97,7 @@ const UploadDownloadFileAccordion = ({ parentObject, setParentObject, submission
                         contentTitle={'Project Files'}
                         contentToDisplay={<MyFileBrowser basePath={`${submissionType}x--xextractedx--x${parentObject.file_system_id}`} /> }
                         size='xl'
+                        fullscreen={true}
                     />
                     
                     // <MyFileBrowser basePath={`${submissionType}x--xextractedx--x${parentObject.file_system_id}`} />

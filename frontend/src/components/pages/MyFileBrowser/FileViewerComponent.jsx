@@ -55,7 +55,7 @@ const FileViewerComponent = ({ fileToViewUrl }) => {
     }
 
     return (
-        <div className='d-flex flex-column' style={{ height: '500px' }}>
+        <div className='d-flex flex-column' style={{ height: '470px' }}>
             {error && <div>{error}</div>}
 
             <h6>File Name: {userFriendlyFileNamer(fileToViewUrl)}</h6>

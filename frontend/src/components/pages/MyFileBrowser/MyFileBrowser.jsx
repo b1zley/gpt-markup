@@ -9,6 +9,7 @@ import Container from 'react-bootstrap/Container';
 import Button from 'react-bootstrap/Button'
 import { Row } from 'react-bootstrap';
 import { Col } from 'react-bootstrap'
+import FileNavigationButton from './FileNavigationButton';
 
 const MyFileBrowser = ({ basePath }) => {
     const [files, setFiles] = useState([]);
@@ -82,35 +83,28 @@ const MyFileBrowser = ({ basePath }) => {
 
     return (
 
-        <div className='my-2 border rounded ' style={{ minHeight: "200px" }} >
-            <Container className='my-2'>
+        <div className='my-2 border rounded p-2 ' style={{ minHeight: "200px" }} >
                 <h3>{userFriendlyPath(currentPath)}</h3>
-                <hr className='divider'/>
-
-                <Container className=''>
-                    <Row>
-                        <Col xs={4} className='px-1 border-end'>
-                            <Button variant="light" onClick={navigateUp} disabled={currentPath === basePath}>Up</Button>
-                            <div className='overflow-auto mt-0 pt-1  px-0 d-flex flex-column' >
-                                {files.map((file, index) => (
-                                    <Button variant="light" style={{ borderRadius: 0 }} key={index} onClick={() => handleFileDirClick(file)}>
-                                        {file.name}
-                                    </Button>
-                                ))}
-                            </div>
-                        </Col>
-                        <Col xs={8} className='px-1 mt-2'>
+                <hr className='divider' />
+                <Button variant="light" onClick={navigateUp} disabled={currentPath === basePath}>Up</Button>
+                <div className='overflow-auto mt-0 pt-1 px-0 d-flex flex-wrap ' >
+                    {files.map((file, index) => (
+                        // <Button variant="light" style={{ borderRadius: 0 }} key={index} onClick={() => handleFileDirClick(file)}>
+                        //     {file.name}
+                        // </Button>
+                        <FileNavigationButton key={index}
+                            onClickFunction={handleFileDirClick}
+                            file={file}
+                        />
+                    ))}
+                </div>
                             {fileToViewUrl ? <FileViewerComponent
                                 fileToViewUrl={fileToViewUrl}
-                            /> : <div className='' style={{ height: '500px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>Please specify a file to view</div>}
-
-                        </Col>
-                    </Row>
-                </Container>
+                            /> : <div className='' style={{ height: '700px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>Please specify a file to view</div>}
 
 
 
-            </Container>
+
         </div>
     );
 };
