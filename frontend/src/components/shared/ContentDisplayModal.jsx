@@ -4,7 +4,7 @@ import Button from 'react-bootstrap/Button'
 import Modal from 'react-bootstrap/Modal'
 
 
-const ContentDisplayModal = ({ contentTitle, contentToDisplay, size }) => {
+const ContentDisplayModal = ({ contentTitle, contentToDisplay, size, fullscreen }) => {
 
     const [show, setShow] = useState(false);
 
@@ -17,7 +17,7 @@ const ContentDisplayModal = ({ contentTitle, contentToDisplay, size }) => {
                 Display {contentTitle}
             </Button>
 
-            <Modal show={show} onHide={handleClose} size={size}>
+            <Modal show={show} onHide={handleClose} size={size} fullscreen={fullscreen}>
                 <Modal.Header closeButton>
                     <Modal.Title>{contentTitle}</Modal.Title>
                 </Modal.Header>

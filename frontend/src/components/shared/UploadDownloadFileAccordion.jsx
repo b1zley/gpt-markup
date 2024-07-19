@@ -12,6 +12,7 @@ import axiosToBackend from '../../axiosToBackend'
 import { useEffect } from 'react'
 
 import MyFileBrowser from "../pages/MyFileBrowser/MyFileBrowser"
+import ContentDisplayModal from "./ContentDisplayModal"
 
 const UploadDownloadFileAccordion = ({ parentObject, setParentObject, submissionType, accordionName, lastDisplayed, activeDisplay, hideControls }) => {
 
@@ -91,7 +92,19 @@ const UploadDownloadFileAccordion = ({ parentObject, setParentObject, submission
                     </div>
 
 
-                    {parentObject.file_system_id ? <MyFileBrowser basePath={`${submissionType}x--xextractedx--x${parentObject.file_system_id}`} /> : 'None uploaded'}
+                    {parentObject.file_system_id ?
+                    <ContentDisplayModal 
+                        contentTitle={'Project Files'}
+                        contentToDisplay={<MyFileBrowser basePath={`${submissionType}x--xextractedx--x${parentObject.file_system_id}`} /> }
+                        size='xl'
+                    />
+                    
+                    // <MyFileBrowser basePath={`${submissionType}x--xextractedx--x${parentObject.file_system_id}`} />
+                    
+                    
+                    :
+                    
+                    'None uploaded'}
                 </Accordion.Body>
             </Accordion.Item>
         </Accordion>)
