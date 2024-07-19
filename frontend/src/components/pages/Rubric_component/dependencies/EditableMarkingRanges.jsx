@@ -10,7 +10,7 @@ import AddNewMarkingRangeModalButton from './AddNewMarkingRangeModalButton'
 const EditableMarkingRanges = ({ lastDisplayed, rubricComponent, setRubricComponent }) => {
 
     return (
-        <Accordion>
+        <Accordion defaultActiveKey="0">
             <Accordion.Item eventKey="0" className={lastDisplayed ? null : "border-bottom-0"}>
                 <Accordion.Header>
                     Marking Ranges
