@@ -10,27 +10,35 @@ import AddNewMarkingRangeModalButton from './AddNewMarkingRangeModalButton'
 const EditableMarkingRanges = ({ lastDisplayed, rubricComponent, setRubricComponent }) => {
 
     return (
-        <Accordion defaultActiveKey="0">
-            <Accordion.Item eventKey="0" className={lastDisplayed ? null : "border-bottom-0"}>
-                <Accordion.Header>
-                    Marking Ranges
-                </Accordion.Header>
+        <>
 
-                <Accordion.Body>
-                    <MarkingRangeTable
-                        rubricComponent={rubricComponent}
-                        setRubricComponent={setRubricComponent}
-                    />
+            <Accordion defaultActiveKey="0">
+                <Accordion.Item eventKey="0" className={lastDisplayed ? null : "border-bottom-0"}>
+                    <Accordion.Header>
+                        Marking Ranges
+                    </Accordion.Header>
 
-                    <AddNewMarkingRangeModalButton
-                        rubricComponent={rubricComponent}
-                        setRubricComponent={setRubricComponent}
-                    />
+                    <Accordion.Body>
+                        <div className='my-2'>
+                            Double-click a cell to modify its value!
+                        </div>
 
-                </Accordion.Body>
+                        <MarkingRangeTable
+                            rubricComponent={rubricComponent}
+                            setRubricComponent={setRubricComponent}
+                        />
 
-            </Accordion.Item>
-        </Accordion>
+                        <AddNewMarkingRangeModalButton
+                            rubricComponent={rubricComponent}
+                            setRubricComponent={setRubricComponent}
+                        />
+
+                    </Accordion.Body>
+
+                </Accordion.Item>
+            </Accordion>
+        </>
+
     )
 
 }
