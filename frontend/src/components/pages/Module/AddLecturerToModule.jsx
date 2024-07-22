@@ -6,11 +6,15 @@ import Button from 'react-bootstrap/Button'
 import { useState, useEffect } from 'react'
 import BASE_API_URL from '../../../BASE_API_URL'
 import axiosToBackend from '../../../axiosToBackend'
+import useConfirmation from '../../hooks/useConfirmation'
 
 const AddLecturerToModule = ({ lecturersInModule, setLecturersInModule, allLecturers, module_id }) => {
 
     const [lecturersToShow, setLecturersToShow] = useState([])
     const [lecturerToAddId, setLecturerToAdd] = useState('')
+
+
+    const [confirm, ConfirmationModal] = useConfirmation()
 
     useEffect(() => {
         let updatedLecturersToShow = []
@@ -29,28 +33,29 @@ const AddLecturerToModule = ({ lecturersInModule, setLecturersInModule, allLectu
 
 
     async function handleSubmitLecturerAdd(event) {
-        event.preventDefault()
-        const postUrl = `${BASE_API_URL}super_user/module/${module_id}/lecturer`
-        const postBody = {
-            super_user_id: lecturerToAddId
+        try {
+            event.preventDefault()
+            const postUrl = `${BASE_API_URL}super_user/module/${module_id}/lecturer`
+            const postBody = {
+                super_user_id: lecturerToAddId
+            }
+            const responseFromPost = await axiosToBackend.post(postUrl, postBody)
+            if (responseFromPost.status === 201) {
+                let updatedLecturersInModule = lecturersInModule.slice(0, lecturersInModule.length)
+                let lecturerToAddObject = allLecturers.find((lecturer) => Number.parseInt(lecturer.super_user_id) === Number.parseInt(lecturerToAddId))
+                updatedLecturersInModule.push(lecturerToAddObject)
+                setLecturersInModule(updatedLecturersInModule)
+            } 
+        } catch (error) {
+            await confirm('Failed to add lecturer')
         }
-        const responseFromPost = await axiosToBackend.post(postUrl, postBody)
-        if (responseFromPost.status === 201) {
-            let updatedLecturersInModule = lecturersInModule.slice(0, lecturersInModule.length)
-            let lecturerToAddObject = allLecturers.find((lecturer) => Number.parseInt(lecturer.super_user_id) === Number.parseInt(lecturerToAddId))
-            updatedLecturersInModule.push(lecturerToAddObject)
-            setLecturersInModule(updatedLecturersInModule)
-        } else {
-            window.alert('Failed to add lecturer to module')
-        }
-
-
 
     }
 
 
     return (
         <div className='my-1'>
+            <ConfirmationModal />
             <h6>Assign lecturer:</h6>
             <Form onSubmit={handleSubmitLecturerAdd}>
                 <Form.Select

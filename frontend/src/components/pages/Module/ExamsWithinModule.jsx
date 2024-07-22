@@ -52,7 +52,7 @@ const ExamsWithinModule = ({ module_id, examsWithinModule, setExamsWithinModule 
             console.log(responseFromDelete)
             setExamsWithinModule(newArray)
         } catch (err) {
-            window.alert('Failed to remove')
+            await confirm('Failed to delete exam')
         }
 
 

@@ -9,6 +9,7 @@ import Container from 'react-bootstrap/Container';
 import Button from 'react-bootstrap/Button'
 import { Row } from 'react-bootstrap';
 import { Col } from 'react-bootstrap'
+import useConfirmation from '../../hooks/useConfirmation';
 
 const MyFileBrowser = ({ basePath }) => {
     const [files, setFiles] = useState([]);
@@ -16,6 +17,7 @@ const MyFileBrowser = ({ basePath }) => {
     const DELIM = 'x--x'
 
     const [fileToViewUrl, setFileToViewUrl] = useState('')
+
 
     useEffect(() => {
         setCurrentPath(basePath)
@@ -33,7 +35,6 @@ const MyFileBrowser = ({ basePath }) => {
                 const response = await axiosToBackend.get(`${BASE_API_URL}files/${currentPath}`);
                 setFiles(response.data);
             } catch (error) {
-
                 console.error('Error fetching files', error);
             }
         };

@@ -3,48 +3,53 @@ import { Form, Button } from 'react-bootstrap'
 
 import BASE_API_URL from '../../../BASE_API_URL'
 import axiosToBackend from '../../../axiosToBackend'
+import useConfirmation from '../../hooks/useConfirmation'
 
 
 const CreateExamWithinModule = ({ module_id, examsWithinModule, setExamsWithinModule }) => {
 
     const [selectedExamName, setSelectedExamName] = useState(null)
 
+    const [confirm, ConfirmationModal] = useConfirmation()
+
     const handleExamCreation = async (event) => {
-        event.preventDefault()
-        if (!selectedExamName) {
-            window.alert('Enter an exam name')
-            return
+        try {
+            event.preventDefault()
+            if (!selectedExamName) {
+                window.alert('Enter an exam name')
+                return
+            }
+    
+            const apiUrl = `${BASE_API_URL}module/${module_id}/exam`
+            const requestBody = { exam_name: selectedExamName }
+    
+    
+            // send api request
+            const responseFromCreateExamRequest = await axiosToBackend.post(apiUrl, requestBody)
+            console.log(responseFromCreateExamRequest)
+            const returnedExamId = responseFromCreateExamRequest.data.exam_id
+            // do stuff with response
+    
+            if (responseFromCreateExamRequest.status === 201) {
+                let newArray = [].concat(examsWithinModule)
+                newArray.push({
+                    chosen_ai_model_id: null,
+                    exam_id: returnedExamId,
+                    exam_name: selectedExamName,
+                    exam_question: null,
+                    file_system_id: null,
+                    model_answer: null,
+                    module_id,
+                    prompt_specifications: null,
+                    rubric: null
+                })
+                setExamsWithinModule(newArray)
+    
+            } 
+    
+        } catch (error) {
+            await confirm('Failed to create exam')
         }
-
-        const apiUrl = `${BASE_API_URL}module/${module_id}/exam`
-        const requestBody = { exam_name: selectedExamName }
-
-
-        // send api request
-        const responseFromCreateExamRequest = await axiosToBackend.post(apiUrl, requestBody)
-        console.log(responseFromCreateExamRequest)
-        const returnedExamId = responseFromCreateExamRequest.data.exam_id
-        // do stuff with response
-
-        if (responseFromCreateExamRequest.status === 201) {
-            let newArray = [].concat(examsWithinModule)
-            newArray.push({
-                chosen_ai_model_id: null,
-                exam_id: returnedExamId,
-                exam_name: selectedExamName,
-                exam_question: null,
-                file_system_id: null,
-                model_answer: null,
-                module_id,
-                prompt_specifications: null,
-                rubric: null
-            })
-            setExamsWithinModule(newArray)
-
-        } else {
-            window.alert('Failed to create exam')
-        }
-
     }
 
     const handleExamNameChange = (event) => {
@@ -66,6 +71,7 @@ const CreateExamWithinModule = ({ module_id, examsWithinModule, setExamsWithinMo
                     Create Exam
                 </Button>
             </Form>
+            <ConfirmationModal />
         </div>
     )
 }

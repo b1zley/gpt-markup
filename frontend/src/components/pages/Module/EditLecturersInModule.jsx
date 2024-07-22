@@ -9,6 +9,7 @@ import Col from 'react-bootstrap/Col'
 import BASE_API_URL from '../../../BASE_API_URL'
 import axiosToBackend from '../../../axiosToBackend'
 import AddLecturerToModule from './AddLecturerToModule'
+import useConfirmation from '../../hooks/useConfirmation'
 
 
 const EditLecturersInModule = ({ module_id }) => {
@@ -17,6 +18,8 @@ const EditLecturersInModule = ({ module_id }) => {
     const [allLecturers, setAllLecturers] = useState([])
     
     const [fetchLoading, setFetchLoading] = useState(true)
+
+    const [confirm, ConfirmationModal] = useConfirmation()
     
 
 
@@ -40,15 +43,17 @@ const EditLecturersInModule = ({ module_id }) => {
 
 
     async function handleRemoveAccessFromLecturer(super_user_id, index) {
-        console.log(super_user_id)
-        console.log(index)
-        const apiDeleteUrl = `${BASE_API_URL}super_user/module/${module_id}/lecturer/${super_user_id}`
-        const responseFromDelete = await axiosToBackend.delete(apiDeleteUrl)
-        if (responseFromDelete.status === 204) {
-            let newLecturers = lecturersInModule.slice(0, index).concat(lecturersInModule.slice(index + 1))
-            setLecturersInModule(newLecturers)
-        } else {
-            window.alert('Failed to remove access')
+        try {
+            console.log(super_user_id)
+            console.log(index)
+            const apiDeleteUrl = `${BASE_API_URL}super_user/module/${module_id}/lecturer/${super_user_id}`
+            const responseFromDelete = await axiosToBackend.delete(apiDeleteUrl)
+            if (responseFromDelete.status === 204) {
+                let newLecturers = lecturersInModule.slice(0, index).concat(lecturersInModule.slice(index + 1))
+                setLecturersInModule(newLecturers)
+            } 
+        } catch (error) {
+            await confirm('Failed to remove access from lecturer')
         }
     }
 
@@ -104,6 +109,7 @@ const EditLecturersInModule = ({ module_id }) => {
                 allLecturers={allLecturers}
                 module_id={module_id}
             />
+            <ConfirmationModal />
             
         </div>
         
