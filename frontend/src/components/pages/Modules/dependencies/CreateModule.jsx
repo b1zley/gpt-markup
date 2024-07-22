@@ -5,32 +5,38 @@ import Button from 'react-bootstrap/Button'
 import { useState, useEffect } from 'react'
 import BASE_API_URL from '../../../../BASE_API_URL'
 import axiosToBackend from '../../../../axiosToBackend'
+import useConfirmation from '../../../hooks/useConfirmation'
 
 const CreateModule = ({ modules, setModules }) => {
     const [inputModuleName, setInputModuleName] = useState('')
+
+    const [confirm, ConfirmationModal] = useConfirmation()
+
     async function handleInputNameChange(event) {
         setInputModuleName(event.target.value)
     }
     async function handleFormSubmit(event) {
-        event.preventDefault()
-        const postUrl = `${BASE_API_URL}module`
-        const postBody = {
-            "module_name": inputModuleName
-        }
-        const responseFromPost = await axiosToBackend.post(postUrl, postBody)
-        if(responseFromPost.status === 201){
-            // do stuff
-            let updatedModules = modules.slice(0,modules.length)
-
-            let newModule = {
-                module_id : responseFromPost.data.module_id,
-                module_name : inputModuleName,
-                exams:[]
+        try {
+            event.preventDefault()
+            const postUrl = `${BASE_API_URL}module`
+            const postBody = {
+                "module_name": inputModuleName
             }
-            updatedModules.push(newModule)
-            setModules(updatedModules)
-        } else{
-            window.alert('Failed to create module')
+            const responseFromPost = await axiosToBackend.post(postUrl, postBody)
+            if(responseFromPost.status === 201){
+                // do stuff
+                let updatedModules = modules.slice(0,modules.length)
+    
+                let newModule = {
+                    module_id : responseFromPost.data.module_id,
+                    module_name : inputModuleName,
+                    exams:[]
+                }
+                updatedModules.push(newModule)
+                setModules(updatedModules)
+            } 
+        } catch (error) {
+            await confirm('Failed to create new exam')
         }
     }
 
@@ -53,6 +59,7 @@ const CreateModule = ({ modules, setModules }) => {
                     Create Module
                 </Button>
             </Form>
+            <ConfirmationModal />
         </div>
     )
 
