@@ -20,6 +20,7 @@ function SharedNavBar({ logoImageSrc = logoImage, brandName = 'MarkUp-GPT' }) {
   async function handleLogout() {
     logout()
     navigate('/login')
+
   }
 
 
