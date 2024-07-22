@@ -14,6 +14,7 @@ import BASE_API_URL from '../../../BASE_API_URL'
 import axios from 'axios'
 
 import { useAuth } from '../../../contexts/AuthContext'
+import CreateAccount from './CreateAccount'
 
 const Login = () => {
 
@@ -81,6 +82,8 @@ const Login = () => {
                     </Button>
                 </Form>
             </div>
+
+            <CreateAccount />
         </Container>
     )
 

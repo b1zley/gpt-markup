@@ -5,8 +5,24 @@ import NavDropdown from 'react-bootstrap/NavDropdown';
 import { LinkContainer } from 'react-router-bootstrap';
 
 import logoImage from '../../assets/img/ChatGPT_logo.svg.png';
+import { useAuth } from '../../contexts/AuthContext';
+
+import { useNavigate } from 'react-router-dom'
 
 function SharedNavBar({ logoImageSrc = logoImage, brandName = 'MarkUp-GPT' }) {
+
+
+  const { login, user, logout } = useAuth()
+  const navigate = useNavigate()
+
+
+
+  async function handleLogout() {
+    logout()
+    navigate('/login')
+  }
+
+
   return (
     <Navbar expand="lg" style={{ 'minHeight': '10vh' }} className="bg-light">
       <Container>
@@ -42,12 +58,20 @@ function SharedNavBar({ logoImageSrc = logoImage, brandName = 'MarkUp-GPT' }) {
           </Nav>
 
           <Nav className='ms-auto'>
-            <NavDropdown className='mx-2 ' style={{'padding':'0'}} title="Account" id="basic-nav-dropdown">
-              <LinkContainer to='/login'>
-                <NavDropdown.Item  style={{ 'width': '100%' }}>
-                  Login
+            <NavDropdown className='mx-2 ' style={{ 'padding': '0' }} title="Account" id="basic-nav-dropdown">
+
+              {user ?
+                <NavDropdown.Item style={{ 'width': '100%' }} onClick={handleLogout}>
+                  Logout
                 </NavDropdown.Item>
-              </LinkContainer>
+                :
+                <LinkContainer to='/login'>
+                  <NavDropdown.Item style={{ 'width': '100%' }}>
+                    Login
+                  </NavDropdown.Item>
+                </LinkContainer>
+              }
+
             </NavDropdown>
           </Nav>
 
