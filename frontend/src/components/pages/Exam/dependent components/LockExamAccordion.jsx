@@ -10,6 +10,7 @@ import { useState, useEffect } from 'react'
 import BASE_API_URL from "../../../../BASE_API_URL"
 import axiosToBackend from "../../../../axiosToBackend"
 import StudentExamSubmissionsTable from "./StudentExamSubmissionsTable"
+import useConfirmation from "../../../hooks/useConfirmation"
 
 const LockExamAccordion = ({ examInformation, setExamInformation }) => {
     console.log('this is some exam information')
@@ -21,6 +22,8 @@ const LockExamAccordion = ({ examInformation, setExamInformation }) => {
     const [markedForTraining, setMarkedForTraining] = useState([])
     const [isChecked, setIsChecked] = useState(!!examInformation.is_locked)
 
+
+    const [confirm, ConfirmationModal] = useConfirmation()
 
     const readyArray = [
         examInformation.exam_question ? true : false,
@@ -82,8 +85,7 @@ const LockExamAccordion = ({ examInformation, setExamInformation }) => {
             newExamInformation.is_locked = checked
             setExamInformation(newExamInformation)
         } catch (err) {
-            console.log(err)
-            window.alert('Failed to update exam lock')
+            await confirm('Failed to update exam lock')
         }
     }
 
@@ -199,7 +201,7 @@ const LockExamAccordion = ({ examInformation, setExamInformation }) => {
             </Accordion.Item>
 
 
-
+            <ConfirmationModal />
         </Accordion>
     )
 
