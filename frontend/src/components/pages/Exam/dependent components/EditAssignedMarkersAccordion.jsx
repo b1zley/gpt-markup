@@ -11,6 +11,7 @@ import axiosToBackend from '../../../../axiosToBackend'
 import LoadingSpinner from '../../../shared/LoadingSpinner'
 import { Col, Row } from 'react-bootstrap'
 import BASE_API_URL from '../../../../BASE_API_URL'
+import useConfirmation from '../../../hooks/useConfirmation'
 const EditAssignedMarkersAccordion = ({ lastDisplayed, examInformation }) => {
 
     // fetch assigned markers from api
@@ -22,6 +23,9 @@ const EditAssignedMarkersAccordion = ({ lastDisplayed, examInformation }) => {
     const [markersToDisplay, setMarkersToDisplay] = useState([])
 
     const [selectedNewMarker, setSelectedNewMarker] = useState(undefined)
+
+    const [confirm, ConfirmationModal] = useConfirmation()
+
 
     function sortSuperUsers(a, b) {
         const aTypeId = a.super_user_type_id
@@ -85,35 +89,43 @@ const EditAssignedMarkersAccordion = ({ lastDisplayed, examInformation }) => {
 
 
     async function handleRemoveAccessFromMarker(superUserId, indexToRemove) {
-        const apiRemoveEngagedSuperUserURL = `${BASE_API_URL}module/${examInformation.module_id}/exam/${examInformation.exam_id}/super_user/${superUserId}`
-        const deleteRequestResponse = await axiosToBackend.delete(apiRemoveEngagedSuperUserURL)
-        if (deleteRequestResponse.status === 204) {
-            let newSuperUserArray = engagedSuperUsers.slice(0, indexToRemove).concat(engagedSuperUsers.slice(indexToRemove + 1))
-            setEngagedSuperUsers(newSuperUserArray)
-            handleEngagedMarkersChange(newSuperUserArray, allMarkers)
-        } else {
-            window.alert('Deletion failed!')
+        try {
+            const apiRemoveEngagedSuperUserURL = `${BASE_API_URL}module/${examInformation.module_id}/exam/${examInformation.exam_id}/super_user/${superUserId}`
+            const deleteRequestResponse = await axiosToBackend.delete(apiRemoveEngagedSuperUserURL)
+            if (deleteRequestResponse.status === 204) {
+                let newSuperUserArray = engagedSuperUsers.slice(0, indexToRemove).concat(engagedSuperUsers.slice(indexToRemove + 1))
+                setEngagedSuperUsers(newSuperUserArray)
+                handleEngagedMarkersChange(newSuperUserArray, allMarkers)
+            } else {
+                window.alert('Deletion failed!')
+            }
+        } catch (error) {
+            await confirm('Failed to delete marker')
         }
     }
 
     async function handleNewMarkerSubmit(event) {
-        event.preventDefault()
-        let newSuperUserArray = engagedSuperUsers.slice(0, engagedSuperUsers.length)
-        newSuperUserArray.push(JSON.parse(selectedNewMarker))
-        newSuperUserArray.sort((a, b) => sortSuperUsers(a, b))
-        // api post request
-        const requestBody = {
-            super_user_id: JSON.parse(selectedNewMarker).super_user_id
-        }
-        const apiUrl = `${BASE_API_URL}module/${examInformation.module_id}/exam/${examInformation.exam_id}/super_user/`
-        const responseFromPost = await axiosToBackend.post(apiUrl, requestBody)
-        if (responseFromPost.status === 201) {
-            // handle in render
-            setEngagedSuperUsers(newSuperUserArray)
-            handleEngagedMarkersChange(newSuperUserArray, allMarkers)
-            setSelectedNewMarker(undefined)
-        } else{
-            window.alert('Failed to add marker')
+        try {
+            event.preventDefault()
+            let newSuperUserArray = engagedSuperUsers.slice(0, engagedSuperUsers.length)
+            newSuperUserArray.push(JSON.parse(selectedNewMarker))
+            newSuperUserArray.sort((a, b) => sortSuperUsers(a, b))
+            // api post request
+            const requestBody = {
+                super_user_id: JSON.parse(selectedNewMarker).super_user_id
+            }
+            const apiUrl = `${BASE_API_URL}module/${examInformation.module_id}/exam/${examInformation.exam_id}/super_user/`
+            const responseFromPost = await axiosToBackend.post(apiUrl, requestBody)
+            if (responseFromPost.status === 201) {
+                // handle in render
+                setEngagedSuperUsers(newSuperUserArray)
+                handleEngagedMarkersChange(newSuperUserArray, allMarkers)
+                setSelectedNewMarker(undefined)
+            } else{
+                window.alert('Failed to add marker')
+            }
+        } catch (error) {
+            await confirm('Failed to add marker')
         }
     }
 
@@ -202,6 +214,7 @@ const EditAssignedMarkersAccordion = ({ lastDisplayed, examInformation }) => {
 
                 </Accordion.Body>
             </Accordion.Item>
+            <ConfirmationModal />
         </Accordion>
     )
 
