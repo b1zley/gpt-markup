@@ -4,13 +4,19 @@ import Form from 'react-bootstrap/Form'
 import Button from 'react-bootstrap/Button'
 import { useState } from 'react'
 import useConfirmation from '../../hooks/useConfirmation'
+import BASE_API_URL from '../../../BASE_API_URL'
+import axiosToBackend from '../../../axiosToBackend'
+import { useAuth } from '../../../contexts/AuthContext'
 
 const CreateAccount = () => {
 
 
+    const { login } = useAuth()
+
     const [confirm, ConfirmationModal] = useConfirmation()
 
     const [emailInput, setEmailInput] = useState('')
+    const [nameInput, setNameInput] = useState('')
     const [password1, setPassword1] = useState('')
     const [password2, setPassword2] = useState('')
     const [accountCreationCode, setAccountCreationCode] = useState('')
@@ -20,7 +26,7 @@ const CreateAccount = () => {
         return password1 === password2
     }
 
-    function allFieldsHaveValues(){
+    function allFieldsHaveValues() {
         return !!emailInput && !!password1 && !!password2 && !!accountCreationCode
     }
 
@@ -29,7 +35,7 @@ const CreateAccount = () => {
         console.log('hello from submit account creation')
 
         // validate fields
-        if(!allFieldsHaveValues()){
+        if (!allFieldsHaveValues()) {
             return await confirm('Please fill in all fields to continue...')
         }
 
@@ -38,11 +44,21 @@ const CreateAccount = () => {
             return await confirm('Passwords do not match...')
         }
 
-        const body = {
+        const postBody = {
             email: emailInput,
+            name: nameInput,
             password: password1,
             accountCreationCode
         }
+
+        const postUrl = `${BASE_API_URL}super_authentication/create`
+
+        const response = await axiosToBackend.post(postUrl, postBody)
+
+        console.log(response)
+
+        const token = response.data.token
+        login(token)
 
     }
 
@@ -61,6 +77,15 @@ const CreateAccount = () => {
                             placeholder="Enter email"
                             value={emailInput}
                             onChange={(event) => setEmailInput(event.target.value)}
+                        />
+                    </Form.Group>
+                    <Form.Group className="mb-3">
+                        <Form.Label>Name</Form.Label>
+                        <Form.Control
+                            type="text"
+                            placeholder="Enter name"
+                            value={nameInput}
+                            onChange={(event) => setNameInput(event.target.value)}
                         />
                     </Form.Group>
                     <Form.Group className="mb-3">

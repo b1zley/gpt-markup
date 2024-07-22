@@ -21,14 +21,44 @@ async function handlePostCreateNewUser(req, res) {
     }
 }
 
+
+async function handlePostCreateNewUserCodeValidate(req, res) {
+
+    try {
+        console.log(req.body)
+        const { email, name, password, accountCreationCode } = req.body
+
+        const super_user_type_id = await validateAccountCreationCode(accountCreationCode)
+
+        const createdUser = await queryCreateUser(email, name, password, super_user_type_id)
+        const jwtToReturn = await createJwt(createdUser)
+        return res.status(201).json({ token: jwtToReturn, user: createdUser })
+    } catch (err) {
+        return res.status(401).json({error: err.message})
+    }
+
+}
+
+async function validateAccountCreationCode(accountCreationCode){
+    console.log(accountCreationCode)
+    const sqlQuery = 'SELECT * FROM super_user_type WHERE creation_code = ?'
+    const bindingParams = [accountCreationCode]
+    const [response] = await db.query(sqlQuery, bindingParams)
+    if(response.length === 0 ){
+        throw new Error('BAD CODE')
+    }
+    return response.map((row) => row.super_user_type_id)[0]
+}
+
+
 async function handlePostLogin(req, res) {
 
-    try{
-        const {email, password} = req.body
+    try {
+        const { email, password } = req.body
         const user = await queryLogin(email, password)
         const jwtToReturn = await createJwt(user)
-        return res.status(200).json({token: jwtToReturn, user})
-    } catch (err){
+        return res.status(200).json({ token: jwtToReturn, user })
+    } catch (err) {
         console.log(err)
         return res.status(500).send()
     }
@@ -40,7 +70,7 @@ async function handlePostLogin(req, res) {
 // JWT verification middleware
 function verifyJwt(req, res, next) {
     const authHeader = req.headers['authorization'];
-    
+
     if (!authHeader) {
         return res.status(401).json({ message: 'No token provided' });
     }
@@ -76,9 +106,11 @@ async function queryCreateUser(email, name, password, super_user_type_id) {
     const [responseFromInsert] = await db.query(sqlInsertQuery, bindingParams)
     let returnObject = {
         super_user_id: responseFromInsert.insertId,
-        name,
-        email
+        super_user_name: name,
+        super_user_email: email,
+        super_user_type_id
     }
+    // const userToReturn = { super_user_id, super_user_name, super_user_type, super_user_email }
     return returnObject
 }
 
@@ -98,22 +130,22 @@ async function createJwt(user) {
 }
 
 
-async function queryLogin(email, password){
+async function queryLogin(email, password) {
     const user = await queryGetUserByEmail(email)
-    if(!user){
+    if (!user) {
         throw new Error('email or password invalid')
     }
     const isPasswordValid = await bcrypt.compare(password, user.super_user_password)
-    if(!isPasswordValid){
+    if (!isPasswordValid) {
         throw new Error('email or password invalid')
     }
-    const {super_user_id, super_user_name, super_user_type, super_user_email} = user
-    const userToReturn = {super_user_id, super_user_name, super_user_type, super_user_email}
+    const { super_user_id, super_user_name, super_user_type, super_user_email } = user
+    const userToReturn = { super_user_id, super_user_name, super_user_type, super_user_email }
     return userToReturn
 }
 
 
-async function queryGetUserByEmail(email){
+async function queryGetUserByEmail(email) {
     const sqlQuery = "SELECT * FROM super_user WHERE super_user_email = ?"
     const bindingParams = [email]
     const [responseFromQuery] = await db.query(sqlQuery, bindingParams)
@@ -129,5 +161,6 @@ async function queryGetUserByEmail(email){
 module.exports = {
     handlePostCreateNewUser,
     handlePostLogin,
-    verifyJwt
+    verifyJwt,
+    handlePostCreateNewUserCodeValidate
 }
