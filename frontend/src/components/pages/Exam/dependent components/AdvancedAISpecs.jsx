@@ -120,6 +120,7 @@ const AdvancedAISpecs = ({ examInformation, setExamInformation }) => {
                                                         value={displayedTemperatureValue}
                                                         onChange={(e) => handleTemperatureChange(e)}
                                                         step='0.0000001'
+                                                        disabled={examInformation.top_p_mode}
                                                     />
                                                 </Form.Group>
                                             </Col>
@@ -162,6 +163,7 @@ const AdvancedAISpecs = ({ examInformation, setExamInformation }) => {
                                                         placeholder="0 - 1"
                                                         value={displayedTopPValue}
                                                         onChange={(e) => handleTopPChange(e)}
+                                                        disabled={!examInformation.top_p_mode}
                                                         
                                                     />
                                                 </Form.Group>
