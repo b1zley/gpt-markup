@@ -29,22 +29,26 @@ const RubricComponentsTable = ({ examInformation, setExamInformation, hideContro
     }
 
     async function handleRemoveRubricComponentClick(rubricComponent, i) {
-        const confirmation = await confirm(<DeleteRCConfirmationModalBody rubricComponent={rubricComponent} />)
-        if (!confirmation) {
-            return
-        }
-        // delete request to api
-        const { rubric_component_id } = rubricComponent
-        const apiDeleteRequestURL = `${BASE_API_URL}module/${examInformation.module_id}/exam/${examInformation.exam_id}/rubric/${rubric_component_id}`
-        const responseFromDeleteRequest = await axiosToBackend.delete(apiDeleteRequestURL)
-
-        if (responseFromDeleteRequest.status === 204) {
-            let updatedExamInformation = { ...examInformation }
-            let updatedRubricList = examInformation.rubric.slice(0, i).concat(examInformation.rubric.slice(i + 1))
-            updatedExamInformation.rubric = updatedRubricList
-            setExamInformation(updatedExamInformation)
-        } else {
-            window.alert('Failed to remove rubric component')
+        try {
+            const confirmation = await confirm(<DeleteRCConfirmationModalBody rubricComponent={rubricComponent} />)
+            if (!confirmation) {
+                return
+            }
+            // delete request to api
+            const { rubric_component_id } = rubricComponent
+            const apiDeleteRequestURL = `${BASE_API_URL}module/${examInformation.module_id}/exam/${examInformation.exam_id}/rubric/${rubric_component_id}`
+            const responseFromDeleteRequest = await axiosToBackend.delete(apiDeleteRequestURL)
+    
+            if (responseFromDeleteRequest.status === 204) {
+                let updatedExamInformation = { ...examInformation }
+                let updatedRubricList = examInformation.rubric.slice(0, i).concat(examInformation.rubric.slice(i + 1))
+                updatedExamInformation.rubric = updatedRubricList
+                setExamInformation(updatedExamInformation)
+            } else {
+                window.alert('Failed to remove rubric component')
+            }
+        } catch (error) {
+            await confirm('Failed to remove rubric component')
         }
     }
 
