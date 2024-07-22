@@ -15,6 +15,8 @@ import BASE_API_URL from '../../../../BASE_API_URL'
 import axiosToBackend from '../../../../axiosToBackend'
 import useConfirmation from '../../../hooks/useConfirmation'
 
+import isValidNumber from '../../../../helperFunctions'
+
 const AddNewMarkingRangeModalDialogBox = ({ rubricComponent, setRubricComponent, setShowModal }) => {
 
 
@@ -27,10 +29,7 @@ const AddNewMarkingRangeModalDialogBox = ({ rubricComponent, setRubricComponent,
     // console.log(rubricComponent)
 
 
-    function isValidNumber(input) {
-        const regex = /^\d*\.?\d+$/
-        return regex.test(input)
-    }
+    
 
     async function handleSubmit(e) {
         try {
