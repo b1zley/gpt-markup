@@ -3,6 +3,7 @@ import Button from 'react-bootstrap/Button'
 import Modal from 'react-bootstrap/Modal'
 import {useState} from 'react'
 import AddNewMarkingRangeModalDialogBox from './AddNewMarkingRangeModalDialogBox';
+import useConfirmation from '../../../hooks/useConfirmation';
 
 
 const AddNewMarkingRangeModalButton = ({rubricComponent, setRubricComponent}) => {
@@ -15,8 +16,9 @@ const AddNewMarkingRangeModalButton = ({rubricComponent, setRubricComponent}) =>
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
 
+
     return (
-        <>
+        <>  
             <Button variant="primary" onClick={handleShow}>
                 Add new marking range
             </Button>

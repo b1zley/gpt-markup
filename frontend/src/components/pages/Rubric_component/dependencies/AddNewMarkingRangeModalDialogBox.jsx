@@ -13,6 +13,7 @@ import { useState, useEffect } from 'react'
 import Modal from 'react-bootstrap/Modal'
 import BASE_API_URL from '../../../../BASE_API_URL'
 import axiosToBackend from '../../../../axiosToBackend'
+import useConfirmation from '../../../hooks/useConfirmation'
 
 const AddNewMarkingRangeModalDialogBox = ({ rubricComponent, setRubricComponent, setShowModal }) => {
 
@@ -21,6 +22,7 @@ const AddNewMarkingRangeModalDialogBox = ({ rubricComponent, setRubricComponent,
     const [minInclusive, setMinInclusive] = useState('')
     const [maxInclusive, setMaxInclusive] = useState('')
 
+    const [confirm, ConfirmationModal] = useConfirmation()
 
     // console.log(rubricComponent)
 
@@ -49,14 +51,15 @@ const AddNewMarkingRangeModalDialogBox = ({ rubricComponent, setRubricComponent,
             setShowModal(false)
         } catch (err) {
             console.log(err)
-            window.alert('Failed to update rating ranges')
+            await confirm('Failed to add new marking range')
         }
     }
 
 
 
     return (
-        <>
+        <>  
+            <ConfirmationModal />
             <Form onSubmit={(e) => handleSubmit(e)}>
                 <FloatingLabel
                     controlId="floatingTextarea"
