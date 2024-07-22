@@ -5,6 +5,7 @@ import axiosToBackend from '../../axiosToBackend'
 import Button from 'react-bootstrap/Button'
 import Form from 'react-bootstrap/Form'
 import BASE_API_URL from "../../BASE_API_URL"
+import useConfirmation from "../hooks/useConfirmation"
 
 /**
  * 
@@ -16,6 +17,9 @@ function UploadExamInfo({ submissionType, handleExamUpload }) {
     //chosen file
     const [file, setFile] = useState(null)
     const [uploadedFile, setUploadedFile] = useState(null)
+
+    const [confirm, ConfirmationModal] = useConfirmation()
+
     let submissionTypeUserText = ''
     switch (submissionType) {
         case 'EXAM_SUBMISSION':
@@ -49,27 +53,31 @@ function UploadExamInfo({ submissionType, handleExamUpload }) {
 
 
     const handleSubmit = async (e) => {
-        e.preventDefault()
-        if (file && submissionType) {
-
-            const formData = new FormData()
-            formData.append('file', file)
-            formData.append('uploadType', submissionType)
-
-            const postOptions = { headers: { 'Content-Type': 'multipart/form-data' } }
-            const responseFromPost = await axiosToBackend.post(`${BASE_API_URL}file_system/upload`, formData, postOptions)
-            handleExamUpload(responseFromPost)
-
-
-            if (responseFromPost.status === 201) {
-                setUploadedFile(file)
-
+        try {
+            e.preventDefault()
+            if (file && submissionType) {
+    
+                const formData = new FormData()
+                formData.append('file', file)
+                formData.append('uploadType', submissionType)
+    
+                const postOptions = { headers: { 'Content-Type': 'multipart/form-data' } }
+                const responseFromPost = await axiosToBackend.post(`${BASE_API_URL}file_system/upload`, formData, postOptions)
+                handleExamUpload(responseFromPost)
+    
+    
+                if (responseFromPost.status === 201) {
+                    setUploadedFile(file)
+    
+                } else {
+                    console.log('upload unsuccessful')
+                }
+    
             } else {
-                console.log('upload unsuccessful')
+                window.alert('Please upload a zip file')
             }
-
-        } else {
-            window.alert('Please upload a zip file')
+        } catch (error) {
+            await confirm('Failed to upload new')
         }
     }
 
@@ -91,6 +99,7 @@ function UploadExamInfo({ submissionType, handleExamUpload }) {
 
 
         <div>
+            <ConfirmationModal />
             <Form onSubmit={handleSubmit} >
                 <Form.Group className="mb-3">
                     <Form.Control
