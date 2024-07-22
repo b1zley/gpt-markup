@@ -9,6 +9,7 @@ import Form from 'react-bootstrap/Form'
 
 import BASE_API_URL from '../../../../BASE_API_URL'
 import UploadTextAsRTF from './UploadTextAsRTF'
+import useConfirmation from '../../../hooks/useConfirmation'
 
 const EditableExamAccordion = ({
     parentObject, setParentObject,
@@ -26,12 +27,15 @@ const EditableExamAccordion = ({
     const { is_locked } = parentObject
 
 
+    const [confirm, ConfirmationModal] = useConfirmation()
+
+
     const handleEditModeClicked = (event) => { setEditMode(!editMode) }
     const handleCommitClicked = async (event, editText) => {
         if (inputType && inputType === 'decimal') {
             const regex = /^[0-9.]+$/;
             if (!regex.test(editText)) {
-                window.alert('Decimal values only!')
+                await confirm('Please use decimal values only')
                 return
             }
         }
@@ -39,11 +43,15 @@ const EditableExamAccordion = ({
         console.log(param)
         console.log(editText)
 
-        if (await sendExamPutRequest(param, editText)) {
-            setParentObject({ ...parentObject, [param]: editText })
-            setEditMode(false)
-        } else {
-            window.alert('Failed to update')
+        try {
+            if (await sendExamPutRequest(param, editText)) {
+                setParentObject({ ...parentObject, [param]: editText })
+                setEditMode(false)
+            } else {
+                window.alert('Failed to update')
+            }
+        } catch (err) {
+            await confirm(`Failed to update ${userFriendlyParam}`)
         }
     }
 
@@ -94,7 +102,7 @@ const EditableExamAccordion = ({
                                 <Button variant={'warning'} onClick={handleRevertClicked} className='my-1 text-white' style={{ height: '38px' }}>Revert</Button>
                             </div>
                         </div>
-
+                        <ConfirmationModal />
                     </Accordion.Body>
                 </Accordion.Item>
             </Accordion >

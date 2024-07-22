@@ -5,10 +5,13 @@ import Accordion from 'react-bootstrap/Accordion'
 import Form from 'react-bootstrap/Form'
 import BASE_API_URL from '../../../../BASE_API_URL'
 import axiosToBackend from '../../../../axiosToBackend'
+import useConfirmation from '../../../hooks/useConfirmation'
 
 const EditableFileTypesAccordion = ({ lastDisplayed, examInformation, setExamInformation }) => {
 
     const { fileTypes } = examInformation
+
+    const [confirm, ConfirmationModal] = useConfirmation()
 
     async function handleFileTypeAllowedChange(event, fileType, index) {
         try {
@@ -25,7 +28,7 @@ const EditableFileTypesAccordion = ({ lastDisplayed, examInformation, setExamInf
             setExamInformation({ ...examInformation, fileTypes: updatedFileTypes })
 
         } catch (err) {
-            window.alert('Failed to update file type')
+            await confirm('Failed to update file type')
             event.target.checked = false
         }
 
@@ -74,6 +77,7 @@ const EditableFileTypesAccordion = ({ lastDisplayed, examInformation, setExamInf
                                                     onChange={(e) => { handleFileTypeAllowedChange(e, fileType, i) }}
                                                     
                                                     defaultChecked={fileType.allowed}
+                                                    checked={fileType.allowed}
                                                     disabled
                                                 />
                                                 <p>{fileType.file_type_extension}</p>
@@ -89,7 +93,8 @@ const EditableFileTypesAccordion = ({ lastDisplayed, examInformation, setExamInf
                                                 id={`fileType-${i}`}
                                                 onChange={(e) => { handleFileTypeAllowedChange(e, fileType, i) }}
                                                 label={`${fileType.file_type_extension}`}
-                                                defaultChecked={fileType.allowed}
+                                                
+                                                checked={fileType.allowed}
                                             />
                                         </Fragment>
                                     )
@@ -104,7 +109,8 @@ const EditableFileTypesAccordion = ({ lastDisplayed, examInformation, setExamInf
 
 
                     </Accordion.Body>
-                </Accordion.Item>
+                </Accordion.Item>  
+                <ConfirmationModal />
 
 
             </Accordion>
