@@ -26,9 +26,20 @@ const AddNewMarkingRangeModalDialogBox = ({ rubricComponent, setRubricComponent,
 
     // console.log(rubricComponent)
 
+
+    function isValidNumber(input) {
+        const regex = /^\d*\.?\d+$/
+        return regex.test(input)
+    }
+
     async function handleSubmit(e) {
         try {
             e.preventDefault()
+
+            if (!isValidNumber(minInclusive) || !isValidNumber(maxInclusive)) {
+                //
+                return await confirm('Failed to add new marking range - decimal values only for min and max inclusive!')
+            }
             // handle post request!
             let postBody = {
                 rating_desc: descriptionInput,
@@ -58,7 +69,7 @@ const AddNewMarkingRangeModalDialogBox = ({ rubricComponent, setRubricComponent,
 
 
     return (
-        <>  
+        <>
             <ConfirmationModal />
             <Form onSubmit={(e) => handleSubmit(e)}>
                 <FloatingLabel

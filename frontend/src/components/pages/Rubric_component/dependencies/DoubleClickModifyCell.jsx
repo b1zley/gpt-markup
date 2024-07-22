@@ -5,7 +5,7 @@ import axiosToBackend from '../../../../axiosToBackend'
 import Form from 'react-bootstrap/Form'
 import useConfirmation from "../../../hooks/useConfirmation"
 
-const DoubleClickModifyCell = ({ parameterInCell, rubricComponent, setRubricComponent, index }) => {
+const DoubleClickModifyCell = ({ parameterInCell, rubricComponent, setRubricComponent, index, dataType }) => {
 
 
 
@@ -16,6 +16,10 @@ const DoubleClickModifyCell = ({ parameterInCell, rubricComponent, setRubricComp
 
     const [editPart, setEditPart] = useState(false)
     const [textPart, setTextPart] = useState(rating_range[parameterInCell])
+
+
+
+
 
     const handlePutRequest = useCallback(async (paramToUpdate, valueToUpdate) => {
         try {
@@ -45,21 +49,40 @@ const DoubleClickModifyCell = ({ parameterInCell, rubricComponent, setRubricComp
         setTextPart(event.target.value)
     }
 
+
+
     const handlePartSubmit = useCallback(
         async (parameter) => {
-            
+
+            async function failToUpdate(parameter, reason) {
+                setEditPart(false)
+                setTextPart(rubricComponent.rating_ranges[index][parameter])
+                await confirm(`Failed to update marking range ${reason}`)
+            }
+            function isValidNumber(input) {
+                const regex = /^\d*\.?\d+$/
+                return regex.test(input)
+            }
+
+
+            if (dataType === 'decimal' && !isValidNumber(textPart)) {
+                //
+                return await failToUpdate(parameter, '- decimal values only!')
+
+            }
+
+
+
             if (await handlePutRequest(parameter, textPart)) {
                 let updatedRubricComponent = { ...rubricComponent };
                 updatedRubricComponent.rating_ranges[index][parameter] = textPart;
                 setRubricComponent(updatedRubricComponent);
                 setEditPart(false)
             } else {
-                setEditPart(false)
-                setTextPart(rubricComponent.rating_ranges[index][parameter])
-                await confirm('Failed to update marking range')
+                await failToUpdate(parameter, '- connection failed')
             }
 
-        }, [handlePutRequest, rubricComponent, textPart, index, setRubricComponent, confirm]
+        }, [confirm, handlePutRequest, rubricComponent, textPart, index, setRubricComponent, dataType]
     )
 
 

@@ -56,18 +56,21 @@ const MarkingRangeTableRow = ({ rubricComponent, setRubricComponent, index }) =>
                     rubricComponent={rubricComponent}
                     setRubricComponent={setRubricComponent}
                     index={index}
+                    dataType={'text'}
                 />
                 <DoubleClickModifyCell
                     parameterInCell={'rating_min_incl'}
                     rubricComponent={rubricComponent}
                     setRubricComponent={setRubricComponent}
                     index={index}
+                    dataType={'decimal'}
                 />
                 <DoubleClickModifyCell
                     parameterInCell={'rating_max_incl'}
                     rubricComponent={rubricComponent}
                     setRubricComponent={setRubricComponent}
                     index={index}
+                    dataType={'decimal'}
                 />
                 <td>
                     <Button variant="warning" onClick={handleRemoveButtonClick}>
