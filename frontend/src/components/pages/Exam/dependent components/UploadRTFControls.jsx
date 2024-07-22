@@ -8,31 +8,36 @@ import Button from 'react-bootstrap/Button'
 
 import axiosToBackend from '../../../../axiosToBackend'
 import BASE_API_URL from '../../../../BASE_API_URL'
+import useConfirmation from '../../../hooks/useConfirmation'
 
 const UploadRTFControls = ({ parentObject, setParentObject, param, userFriendlyParam, editText, setEditText, handleCommitClicked }) => {
 
     //chosen file
     const [file, setFile] = useState(null)
-
+    const [confirm, ConfirmationModal] = useConfirmation()
 
     async function handleSubmit(e) {
         e.preventDefault()
         console.log(file)
-        if (file ) {
+        if (file) {
+            try {
+                const formData = new FormData()
+                formData.append('file', file)
+                formData.append('uploadType', param)
 
-            const formData = new FormData()
-            formData.append('file', file)
-            formData.append('uploadType', param)
+                const postOptions = { headers: { 'Content-Type': 'multipart/form-data' } }
+                const responseFromPost = await axiosToBackend.post(`${BASE_API_URL}convert/RtfToPlainText`, formData, postOptions)
+                
+                // response should include file text 
+                const textFromRTF = responseFromPost.data.content
 
-            const postOptions = { headers: { 'Content-Type': 'multipart/form-data' } }
-            const responseFromPost = await axiosToBackend.post(`${BASE_API_URL}convert/RtfToPlainText`, formData, postOptions)
-            
-            // response should include file text 
-            const textFromRTF = responseFromPost.data.content
+                // update render
+                setEditText(textFromRTF)
+                handleCommitClicked(e, textFromRTF)
+            } catch (err) {
+                await confirm('Failed to upload RTF')
+            }
 
-            // update render
-            setEditText(textFromRTF)
-            handleCommitClicked(e, textFromRTF)
 
         } else {
             window.alert('Please upload a zip file')
@@ -77,6 +82,7 @@ const UploadRTFControls = ({ parentObject, setParentObject, param, userFriendlyP
                     </Button>
                 }
             </Form>
+            <ConfirmationModal />
             {/* {uploadedFile ? <div> File uploaded: {uploadedFile.name}</div>
                 : <div> File uploaded: None New</div>} */}
         </>
