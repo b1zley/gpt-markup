@@ -3,6 +3,7 @@ import { useState } from 'react'
 import Form from 'react-bootstrap/Form'
 import BASE_API_URL from '../../../BASE_API_URL'
 import axiosToBackend from '../../../axiosToBackend'
+import useConfirmation from '../../hooks/useConfirmation'
 
 
 const DoubleClickModifyMarkCell = ({ parameterInCell, examSubmissionInformation, setExamSubmissionInformation, index }) => {
@@ -10,6 +11,7 @@ const DoubleClickModifyMarkCell = ({ parameterInCell, examSubmissionInformation,
     const [editPart, setEditPart] = useState(false)
     const [textPart, setTextPart] = useState(examSubmissionInformation.rubric[index][parameterInCell] ? examSubmissionInformation.rubric[index][parameterInCell] : '')
 
+    const [confirm, ConfirmationModal] = useConfirmation()
     async function handleDoubleClickPart() {
         setEditPart(true)
     }
@@ -19,13 +21,16 @@ const DoubleClickModifyMarkCell = ({ parameterInCell, examSubmissionInformation,
     }
 
     async function handlePartSubmit(){
-        setEditPart(false)
-        if (await handlePutRequest(parameterInCell, textPart)) {
-            let updatedExamSubmissionInformation = {...examSubmissionInformation}
-            examSubmissionInformation.rubric[index][parameterInCell] = textPart
-            setExamSubmissionInformation(updatedExamSubmissionInformation);
-        } else {
-            window.alert('Failed to update marking range')
+        try {
+            setEditPart(false)
+            if (await handlePutRequest(parameterInCell, textPart)) {
+                let updatedExamSubmissionInformation = {...examSubmissionInformation}
+                examSubmissionInformation.rubric[index][parameterInCell] = textPart
+                setExamSubmissionInformation(updatedExamSubmissionInformation);
+            } 
+        } catch (error) {
+            await confirm('Failed to update marking range')
+            setTextPart(examSubmissionInformation.rubric[index][parameterInCell])
         }
     }
 
@@ -64,6 +69,7 @@ const DoubleClickModifyMarkCell = ({ parameterInCell, examSubmissionInformation,
                     onKeyDown={handlePartKeyDown}
                 /> :
                 examSubmissionInformation.rubric[index][parameterInCell] ? examSubmissionInformation.rubric[index][parameterInCell] : 'Double click to add...'}
+            <ConfirmationModal />
         </td>
     )
 
