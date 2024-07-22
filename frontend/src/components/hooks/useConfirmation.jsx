@@ -16,16 +16,18 @@ const useConfirmation = () => {
         setConfirmationState({ isOpen: false, resolve: null });
     };
 
-    const ConfirmationModal = () => (
+    const ConfirmationModal = ({hideClose}) => (
         <Modal show={confirmationState.isOpen} onHide={() => handleClose(false)}>
             <Modal.Header closeButton>
                 <Modal.Title>Confirm</Modal.Title>
             </Modal.Header>
             <Modal.Body>{confirmationState.message}</Modal.Body>
             <Modal.Footer>
-                <Button variant="secondary" onClick={() => handleClose(false)}>
+                
+                {hideClose ? null : <Button variant="secondary" onClick={() => handleClose(false)}>
                     Cancel
-                </Button>
+                </Button>}
+                
                 <Button variant="primary" onClick={() => handleClose(true)}>
                     Confirm
                 </Button>

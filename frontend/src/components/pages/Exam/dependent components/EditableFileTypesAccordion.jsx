@@ -110,7 +110,7 @@ const EditableFileTypesAccordion = ({ lastDisplayed, examInformation, setExamInf
 
                     </Accordion.Body>
                 </Accordion.Item>  
-                <ConfirmationModal />
+                <ConfirmationModal hideClose={true} />
 
 
             </Accordion>

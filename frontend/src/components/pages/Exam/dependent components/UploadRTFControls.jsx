@@ -27,7 +27,7 @@ const UploadRTFControls = ({ parentObject, setParentObject, param, userFriendlyP
 
                 const postOptions = { headers: { 'Content-Type': 'multipart/form-data' } }
                 const responseFromPost = await axiosToBackend.post(`${BASE_API_URL}convert/RtfToPlainText`, formData, postOptions)
-                
+
                 // response should include file text 
                 const textFromRTF = responseFromPost.data.content
 
@@ -82,7 +82,7 @@ const UploadRTFControls = ({ parentObject, setParentObject, param, userFriendlyP
                     </Button>
                 }
             </Form>
-            <ConfirmationModal />
+            <ConfirmationModal hideClose={true} />
             {/* {uploadedFile ? <div> File uploaded: {uploadedFile.name}</div>
                 : <div> File uploaded: None New</div>} */}
         </>

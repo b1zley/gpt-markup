@@ -3,13 +3,14 @@ import BASE_API_URL from "../../../../BASE_API_URL"
 import axiosToBackend from '../../../../axiosToBackend'
 
 import Form from 'react-bootstrap/Form'
+import useConfirmation from "../../../hooks/useConfirmation"
 
 const DoubleClickModifyCell = ({ parameterInCell, rubricComponent, setRubricComponent, index }) => {
 
 
 
 
-
+    const [confirm, ConfirmationModal] = useConfirmation()
 
     let rating_range = rubricComponent.rating_ranges[index]
 
@@ -17,15 +18,19 @@ const DoubleClickModifyCell = ({ parameterInCell, rubricComponent, setRubricComp
     const [textPart, setTextPart] = useState(rating_range[parameterInCell])
 
     const handlePutRequest = useCallback(async (paramToUpdate, valueToUpdate) => {
-        const putApiURL = `${BASE_API_URL}module/${rubricComponent.module_id}/exam/${rubricComponent.exam_id}/rubric/${rubricComponent.rubric_component_id}/rating_range/${rating_range.rating_range_id}`
-        const putBody = {
-            [paramToUpdate]: valueToUpdate
-        }
-        const responseFromPutRequest = await axiosToBackend.put(putApiURL, putBody)
-        if (responseFromPutRequest.status === 200) {
-            return true
-        } else {
-            return false
+        try {
+            const putApiURL = `${BASE_API_URL}module/${rubricComponent.module_id}/exam/${rubricComponent.exam_id}/rubric/${rubricComponent.rubric_component_id}/rating_range/${rating_range.rating_range_id}`
+            const putBody = {
+                [paramToUpdate]: valueToUpdate
+            }
+            const responseFromPutRequest = await axiosToBackend.put(putApiURL, putBody)
+            if (responseFromPutRequest.status === 200) {
+                return true
+            } else {
+                return false
+            }
+        } catch (error) {
+            // error here
         }
 
 
@@ -50,10 +55,11 @@ const DoubleClickModifyCell = ({ parameterInCell, rubricComponent, setRubricComp
                 setEditPart(false)
             } else {
                 setEditPart(false)
-                window.alert('Failed to update marking range')
+                setTextPart(rubricComponent.rating_ranges[index][parameter])
+                await confirm('Failed to update marking range')
             }
 
-        }, [handlePutRequest, rubricComponent, textPart, index, setRubricComponent]
+        }, [handlePutRequest, rubricComponent, textPart, index, setRubricComponent, confirm]
     )
 
 
@@ -93,6 +99,7 @@ const DoubleClickModifyCell = ({ parameterInCell, rubricComponent, setRubricComp
         <td style={{ width: '60%' }}
             onDoubleClick={handleDoubleClickPart}
         >
+            <ConfirmationModal />
             {editPart ?
 
                 <Form.Control

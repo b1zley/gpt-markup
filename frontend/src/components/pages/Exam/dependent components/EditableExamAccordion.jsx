@@ -102,7 +102,7 @@ const EditableExamAccordion = ({
                                 <Button variant={'warning'} onClick={handleRevertClicked} className='my-1 text-white' style={{ height: '38px' }}>Revert</Button>
                             </div>
                         </div>
-                        <ConfirmationModal />
+                        <ConfirmationModal hideClose={true}/>
                     </Accordion.Body>
                 </Accordion.Item>
             </Accordion >

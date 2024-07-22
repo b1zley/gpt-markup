@@ -10,6 +10,7 @@ import { useState } from 'react'
 import CustomNoChangeSwitch from "../../../shared/CustomNoChangeSwitch"
 import BASE_API_URL from "../../../../BASE_API_URL"
 import axiosToBackend from "../../../../axiosToBackend"
+import useConfirmation from "../../../hooks/useConfirmation"
 
 const AdvancedAISpecs = ({ examInformation, setExamInformation }) => {
 
@@ -22,6 +23,9 @@ const AdvancedAISpecs = ({ examInformation, setExamInformation }) => {
     }
 
     let displayedTopPValue = examInformation.top_p === null ? '' : examInformation.top_p
+
+
+    const [confirm, ConfirmationModal] = useConfirmation()
 
     async function handleToggleTopP() {
         try {
@@ -40,6 +44,8 @@ const AdvancedAISpecs = ({ examInformation, setExamInformation }) => {
             setExamInformation(newExamInformation)
         } catch (err) {
             console.log(err)
+            await confirm('Failed to toggle temperature/top_p')
+            throw new Error('Failed to toggle temperature/top_p')
         }
     }
     async function handleTemperatureChange(e) {
@@ -58,6 +64,7 @@ const AdvancedAISpecs = ({ examInformation, setExamInformation }) => {
             console.log(newExamInformation)
         } catch (err) {
             console.log(err)
+            await confirm('Failed to update temperature')
         }
 
     }
@@ -74,6 +81,7 @@ const AdvancedAISpecs = ({ examInformation, setExamInformation }) => {
         } catch (err) {
             //
             console.log(err)
+            await confirm('Failed to update top_p')
         }
     }
 
@@ -86,7 +94,7 @@ const AdvancedAISpecs = ({ examInformation, setExamInformation }) => {
 
     return (
         <>
-
+            <ConfirmationModal />
             <Accordion defaultActiveKey='0'>
                 <Accordion.Item eventKey="0">
                     <Accordion.Header>
