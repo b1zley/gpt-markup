@@ -79,7 +79,7 @@ const StudentExamSubmissionsTable = ({ hideControls, examInformation, studentExa
             let newExamSubmissionsArray = studentExamSubmissions.filter((_, index) => index !== i)
             setStudentExamSubmissions(newExamSubmissionsArray)
         } else {
-            window.alert('Failed to remove student')
+            await confirm('Failed to remove student')
         }
 
     }
@@ -102,7 +102,7 @@ const StudentExamSubmissionsTable = ({ hideControls, examInformation, studentExa
             setStudentExamSubmissions(newStudentExamSubmissions)
         } catch (err) {
             console.log(err)
-            window.alert('Failed to mark for training')
+            await confirm('Failed to mark for training')
         }
     }
 
@@ -126,7 +126,7 @@ const StudentExamSubmissionsTable = ({ hideControls, examInformation, studentExa
             setStudentExamSubmissions(newStudentExamSubmissions)
 
         } catch (err) {
-            window.alert('Failed to unmark for training')
+            await confirm('Failed to unmark for training')
         }
 
     }

@@ -7,6 +7,7 @@ import axiosToBackend from '../../../../axiosToBackend'
 
 import BASE_API_URL from '../../../../BASE_API_URL';
 import Button from 'react-bootstrap/Button';
+import useConfirmation from '../../../hooks/useConfirmation';
 
 const AddStudentExamSubmission = ({ examInformation, studentExamSubmissions, setStudentExamSubmissions }) => {
 
@@ -21,6 +22,8 @@ const AddStudentExamSubmission = ({ examInformation, studentExamSubmissions, set
     // students matching search criteria that do not already appear in student exam submissions
     const [studentsToShow, setStudentsToShow] = useState([])
 
+
+    const [confirm, ConfirmationModal] = useConfirmation()
 
     async function handleStudentNumberSearchChange(event) {
         const newValue = event.target.value
@@ -54,31 +57,33 @@ const AddStudentExamSubmission = ({ examInformation, studentExamSubmissions, set
     }
 
     async function handleAddStudentClick(student) {
-        // post request with student_number
-        const postAddStudentToExamSubmissionsApiURL = `${BASE_API_URL}module/${examInformation.module_id}/exam/${examInformation.exam_id}/student_exam_submission`
-        const postBody = {
-            student_id: student.student_id
-        }
-        const responseFromPostCreateExamSubmission = await axiosToBackend.post(postAddStudentToExamSubmissionsApiURL, postBody)
-
-        if (responseFromPostCreateExamSubmission.status === 201) {
-            const new_student_exam_submission_id = responseFromPostCreateExamSubmission.data.student_exam_submission_id
-            // create new studentExamSubmissionObject
-            const newStudentExamSubmissionObject = {
-                ai_critique_id: null,
-                exam_id: examInformation.exam_id,
-                exam_submission: null,
-                marker_critique: null,
-                student_exam_submission_id: new_student_exam_submission_id,
-                student_id: student.student_id,
-                student_name: student.student_name,
-                student_number: student.student_number
+        try {
+            // post request with student_number
+            const postAddStudentToExamSubmissionsApiURL = `${BASE_API_URL}module/${examInformation.module_id}/exam/${examInformation.exam_id}/student_exam_submission`
+            const postBody = {
+                student_id: student.student_id
             }
-            let newStudentExamSubmissions = studentExamSubmissions.slice(0, studentExamSubmissions.length)
-            newStudentExamSubmissions.push(newStudentExamSubmissionObject)
-            setStudentExamSubmissions(newStudentExamSubmissions)
-        } else {
-            window.alert('Failed to add student to exam')
+            const responseFromPostCreateExamSubmission = await axiosToBackend.post(postAddStudentToExamSubmissionsApiURL, postBody)
+    
+            if (responseFromPostCreateExamSubmission.status === 201) {
+                const new_student_exam_submission_id = responseFromPostCreateExamSubmission.data.student_exam_submission_id
+                // create new studentExamSubmissionObject
+                const newStudentExamSubmissionObject = {
+                    ai_critique_id: null,
+                    exam_id: examInformation.exam_id,
+                    exam_submission: null,
+                    marker_critique: null,
+                    student_exam_submission_id: new_student_exam_submission_id,
+                    student_id: student.student_id,
+                    student_name: student.student_name,
+                    student_number: student.student_number
+                }
+                let newStudentExamSubmissions = studentExamSubmissions.slice(0, studentExamSubmissions.length)
+                newStudentExamSubmissions.push(newStudentExamSubmissionObject)
+                setStudentExamSubmissions(newStudentExamSubmissions)
+            } 
+        } catch (error) {
+            await confirm('Failed to add student to exam')
         }
     }
 
@@ -135,7 +140,7 @@ const AddStudentExamSubmission = ({ examInformation, studentExamSubmissions, set
 
 
 
-
+            <ConfirmationModal />
         </Fragment>
 
 
