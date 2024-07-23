@@ -18,7 +18,6 @@ describe('File System Suite', () => {
 
 
     describe('POST /file_system/upload', () => {
-
         it('zip attached < 50 MB, upload type valid, should return 201 with file system id ', async () => {
             const filePathToUpload = path.join(mockFolderPath, 'file_system_mocks/EXAM_MODEL_ANSWER-asd.zip')
             const response = await agent
@@ -41,8 +40,6 @@ describe('File System Suite', () => {
                 .attach('file', filePathToUpload)
             expect(response.statusCode).toBe(500)
         })
-
-
     })
 
 
@@ -60,7 +57,6 @@ describe('File System Suite', () => {
         })
 
         it('unlinked file system id should return status 200 with empty array', async () => {
-
             const invalidFileSystemId = -1
             const response = await agent.get(`/file_system/${invalidFileSystemId}`)
             const data = response.body
