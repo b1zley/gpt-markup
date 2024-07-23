@@ -12,3 +12,4 @@ backend/.env
 
 # Ignore folders named upload
 backend/uploads/
+backend/testUploads/

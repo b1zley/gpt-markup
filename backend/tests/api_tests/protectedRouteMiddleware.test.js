@@ -9,7 +9,7 @@ const app = createApp()
 /**
  * test suite for testing protected routes correctly return unauthorized when user is not logged in
  */
-describe('Protected Routes: ', () => {
+describe('Protected Routes Suite: ', () => {
     let agent;
 
     beforeAll(async () => {

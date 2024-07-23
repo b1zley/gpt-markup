@@ -38,7 +38,12 @@ function writeMessageResponseToCSV(student_exam_submission_id, responseFromApiCa
 
     // console.log(csvString)
 
-    const filePath = `${backendRoot}/recordOfInputs.csv`
+    const environment = process.env.NODE_ENV;
+    let filePath
+
+    environment === 'test' ? filePath = `${backendRoot}/recordOfInputsTest.csv` :  filePath = `${backendRoot}/recordOfInputs.csv`
+
+     
 
     fs.appendFile(filePath, csvString + '\n', function (err) {
         if (err) {

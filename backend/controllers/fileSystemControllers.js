@@ -3,7 +3,7 @@ const fs = require('fs');                    // Import File System module for fi
 const unzipper = require('unzipper');        // Import Unzipper module for extracting zip files
 const yauzl = require('yauzl');
 const { performance } = require('perf_hooks');
-const { db, axios, backendRoot, storageDirectory } = require('../routesCommonDependencies'); // Common dependencies
+const { db, axios, backendRoot, storageDirectory} = require('../routesCommonDependencies'); // Common dependencies
 
 
 
@@ -21,7 +21,8 @@ async function uploadFile(req, res) {
     if (!req.file) {
         return res.status(400).send('No file uploaded');
     }
-    const tempFilePath = path.join(__dirname, '../uploads', 'STAGING', req.file.filename);
+    console.log(storageDirectory)
+    const tempFilePath = path.join(storageDirectory, 'STAGING', req.file.filename);
 
     const MAX_UNCOMPRESSED_SIZE = 50 * 1024 * 1024; // 50 MB
 
@@ -76,7 +77,7 @@ async function handleUpload(uploadType, tempFilePath) {
     const insertId = insertResponse.insertId;
 
     try {
-        const storageDirectory = path.join(__dirname, '../uploads');
+        
         const renamedFilePath = path.join(storageDirectory, uploadSubDirectory, 'zips', `${insertId}`);
         await fs.promises.rename(tempFilePath, renamedFilePath);
 

@@ -4,7 +4,7 @@ const path = require('path') // file and directory paths
 const fs = require('fs').promises // used to delete and read files
 const createReadStream = require('fs').createReadStream;
 const unzipper = require('unzipper') // used to unzip zip files
-const { db, PORT, axios } = require('./routesCommonDependencies')
+const { db, PORT, axios, storageDirectory } = require('./routesCommonDependencies')
 const cors = require('cors')
 
 
@@ -62,7 +62,7 @@ const createApp = () => {
     app.get('/files/:path?',verifyJwt, async (req, res) => {
 
         try {
-            const basePath = path.join(__dirname, 'uploads');
+            const basePath = path.join(storageDirectory);
 
             let pathParam = req.params.path
 
