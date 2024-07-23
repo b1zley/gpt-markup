@@ -7,6 +7,6 @@ module.exports = {
     testMatch: ['**/**/*.test.js'],
     verbose: true,
     forceExit: true,
-    detectOpenHandles: true,
+    // detectOpenHandles: true,
     // globalTeardown: './tests/utils/globalTeardown'
 }

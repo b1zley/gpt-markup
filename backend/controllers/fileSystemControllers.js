@@ -23,6 +23,7 @@ async function uploadFile(req, res) {
     }
     console.log(storageDirectory)
     const tempFilePath = path.join(storageDirectory, 'STAGING', req.file.filename);
+    console.log(tempFilePath)
 
     const MAX_UNCOMPRESSED_SIZE = 50 * 1024 * 1024; // 50 MB
 
@@ -77,7 +78,7 @@ async function handleUpload(uploadType, tempFilePath) {
     const insertId = insertResponse.insertId;
 
     try {
-        
+
         const renamedFilePath = path.join(storageDirectory, uploadSubDirectory, 'zips', `${insertId}`);
         await fs.promises.rename(tempFilePath, renamedFilePath);
 
