@@ -111,7 +111,7 @@ async function handleDeleteRatingRange(req, res) {
 // query functions
 
 async function queryCreateNewRubric(exam_id, rubric_component_name) {
-    const sqlQuery = "INSERT INTO `rubric_component` (`rubric_component_id`, `name`, `rubric_component_desc`, `maximum`, `exam_id`, `component_order`) VALUES (NULL, ?, NULL, NULL, ?, NULL);"
+    const sqlQuery = "INSERT INTO `rubric_component` (`rubric_component_id`, `name`, `rubric_component_desc`, `maximum`, `exam_id`) VALUES (NULL, ?, NULL, NULL, ?);"
     const bindingParams = [rubric_component_name, exam_id]
     const [responseFromInsert] = await db.query(sqlQuery, bindingParams)
     const rubric_component_id = responseFromInsert.insertId
@@ -304,7 +304,7 @@ async function queryCreateNewRubricFromRCArray(rubricComponentArray, exam_id) {
     for (const rubricComponent of rubricComponentArray) {
         const { rcName, rcDesc, maxPoints } = rubricComponent
         // create rubric component
-        const rcSqlQuery = "INSERT INTO `rubric_component` (`rubric_component_id`, `name`, `rubric_component_desc`, `maximum`, `exam_id`, `component_order`) VALUES (NULL, ?, ?, ?, ?, NULL);"
+        const rcSqlQuery = "INSERT INTO `rubric_component` (`rubric_component_id`, `name`, `rubric_component_desc`, `maximum`, `exam_id`) VALUES (NULL, ?, ?, ?, ?);"
         const rcBindingParams = [rcName, rcDesc, maxPoints, exam_id]
         const [response] = await db.query(rcSqlQuery, rcBindingParams)
         // console.log(response)

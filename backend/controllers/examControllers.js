@@ -367,7 +367,7 @@ async function queryGetStudentExamSubmissionsInfoForCSV(exam_id) {
     // console.log('rcid', rubricComponentIds)
 
     let selectClause = `SELECT ses.student_exam_submission_id, ses.marked_for_training, 
-    ses.exam_id, ses.student_id, ses.exam_submission,
+    ses.exam_id, ses.student_id, 
     student.student_name, student.student_number`
 
     let groupByClause = `GROUP BY ses.student_exam_submission_id, ses.student_id, ses.exam_id`

@@ -107,7 +107,7 @@ async function handlePutUpdateStudentExamSubmission(req, res) {
 // query functions
 
 async function queryGetExamSubmissionExamSubmissionId(student_exam_submission_id) {
-    const sqlQuery = "SELECT ses.student_exam_submission_id, e.exam_id, e.is_locked, s.student_id, ses.exam_submission, ses.file_system_id, m.module_id, e.exam_name, e.exam_question, e.prompt_specifications, e.chosen_ai_model_id, m.module_name, s.student_name, s.student_number FROM student_exam_submission ses LEFT JOIN exam e ON ses.exam_id = e.exam_id LEFT JOIN module m ON e.module_id = m.module_id LEFT JOIN student s ON ses.student_id = s.student_id WHERE ses.student_exam_submission_id = ?"
+    const sqlQuery = "SELECT ses.student_exam_submission_id, e.exam_id, e.is_locked, s.student_id, ses.file_system_id, m.module_id, e.exam_name, e.exam_question, e.prompt_specifications, e.chosen_ai_model_id, m.module_name, s.student_name, s.student_number FROM student_exam_submission ses LEFT JOIN exam e ON ses.exam_id = e.exam_id LEFT JOIN module m ON e.module_id = m.module_id LEFT JOIN student s ON ses.student_id = s.student_id WHERE ses.student_exam_submission_id = ?"
     const bindingParams = [student_exam_submission_id]
     const [responseFromQuery] = await db.query(sqlQuery, bindingParams)
     const examSubmission = responseFromQuery[0]
@@ -137,7 +137,7 @@ async function queryGetExamSubmissionExamSubmissionId(student_exam_submission_id
 // async function queryGetRubricInformationByExamSubmissionId
 
 async function queryCreateNewExamSubmission(exam_id, student_id) {
-    const sqlQuery = "INSERT INTO `student_exam_submission` (`student_exam_submission_id`, `exam_id`, `student_id`, `exam_submission`, `file_system_id`) VALUES (NULL, ?, ?, NULL,  NULL);"
+    const sqlQuery = "INSERT INTO `student_exam_submission` (`student_exam_submission_id`, `exam_id`, `student_id`,  `file_system_id`) VALUES (NULL, ?, ?,  NULL);"
     const bindingParams = [exam_id, student_id]
     const [responseFromInsert] = await db.query(sqlQuery, bindingParams)
     const student_exam_submission_id = responseFromInsert.insertId
@@ -174,7 +174,6 @@ async function queryGetExamSubmissionByExamId(exam_id) {
                 ses.marked_for_training, 
                 ses.exam_id, 
                 ses.student_id, 
-                ses.exam_submission, 
                 COALESCE(SUM(rcsm.rubric_component_mark), NULL) AS marker_mark, 
                 ses.file_system_id, 
                 student.student_name, 
