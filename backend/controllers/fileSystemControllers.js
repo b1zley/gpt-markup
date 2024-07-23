@@ -17,13 +17,13 @@ async function getFilePathsById(req, res) {
 
 async function uploadFile(req, res) {
     const uploadType = req.body.uploadType;
-    console.log('hello from upload file');
+    // console.log('hello from upload file');
     if (!req.file) {
         return res.status(400).send('No file uploaded');
     }
-    console.log(storageDirectory)
+    // console.log(storageDirectory)
     const tempFilePath = path.join(storageDirectory, 'STAGING', req.file.filename);
-    console.log(tempFilePath)
+    // console.log(tempFilePath)
 
     const MAX_UNCOMPRESSED_SIZE = 50 * 1024 * 1024; // 50 MB
 
@@ -34,14 +34,14 @@ async function uploadFile(req, res) {
                 resolve(size);
             });
         });
-        console.log(`Uncompressed size of the uploaded zip: ${tempZipFileSize} bytes`);
+        // console.log(`Uncompressed size of the uploaded zip: ${tempZipFileSize} bytes`);
 
         // await logZipContents(tempFilePath); // Log the contents of the zip file
 
         const file_system_id = await handleUpload(uploadType, tempFilePath);
         return res.status(201).json(file_system_id);
     } catch (err) {
-        console.error('Error during upload:', err);
+        // console.error('Error during upload:', err);
 
         if (err.message === 'Uncompressed size exceeds the maximum allowed limit') {
             return res.status(400).json({ message: 'File size too large' });
@@ -92,7 +92,7 @@ async function handleUpload(uploadType, tempFilePath) {
         await db.query(sqlUpdateQuery, [zipPathToStore, unzippedPathToStore, insertId]);
         return { file_system_id: insertId };
     } catch (err) {
-        console.error('Error during file handling:', err);
+        // console.error('Error during file handling:', err);
         await db.query('DELETE FROM `file_system` WHERE `file_system`.`file_system_id` = ?', [insertId]);
         throw new Error('Error during file handling');
     }
@@ -103,7 +103,7 @@ async function processFile(filePath, parentExtractPath, insertId) {
         const extractPath = path.join(parentExtractPath, `${insertId}`);
         await fs.promises.mkdir(extractPath, { recursive: true });
 
-        console.log(`Extracting ${filePath} to ${extractPath}`);
+        // console.log(`Extracting ${filePath} to ${extractPath}`);
 
         const directory = await unzipper.Open.file(filePath)
         await directory.extract({path:extractPath})
@@ -111,35 +111,35 @@ async function processFile(filePath, parentExtractPath, insertId) {
         //     .pipe(unzipper.Extract({ path: extractPath }))
         //     .promise();
 
-        console.log(`Extracted files to: ${extractPath}`);
+        // console.log(`Extracted files to: ${extractPath}`);
         // await logDirectoryStructure(extractPath); // Log the structure of the extracted files
 
         return extractPath;
     } catch (err) {
-        console.error('Error during file extraction:', err);
+        // console.error('Error during file extraction:', err);
         return null;
     }
 }
 
 async function logZipContents(zipFilePath) {
     try {
-        console.log(`Contents of zip file ${zipFilePath}:`);
+        // console.log(`Contents of zip file ${zipFilePath}:`);
         const directory = await unzipper.Open.file(zipFilePath);
         directory.files.forEach(file => {
-            console.log(file.path);
+            // console.log(file.path);
         });
     } catch (err) {
-        console.error('Error reading zip file contents:', err);
+        // console.error('Error reading zip file contents:', err);
     }
 }
 
 async function logDirectoryStructure(directoryPath) {
-    console.log(`Directory structure for ${directoryPath}:`);
+    // console.log(`Directory structure for ${directoryPath}:`);
     async function logStructure(dir, indent = '') {
         const files = await fs.promises.readdir(dir, { withFileTypes: true });
         for (const file of files) {
             const filePath = path.join(dir, file.name);
-            console.log(`${indent}${file.name} (${filePath.length} characters)`);
+            // console.log(`${indent}${file.name} (${filePath.length} characters)`);
             if (file.isDirectory()) {
                 await logStructure(filePath, indent + '  ');
             }
