@@ -12,8 +12,8 @@ async function createNewExam(req, res) {
     const initialTopP = 0
     const initialTemp = 0
 
-    console.log(req.params)
-    console.log(req.body)
+    // console.log(req.params)
+    // console.log(req.body)
     const module_id = req.params.module_id
     const exam_name = req.body.exam_name
 
@@ -83,6 +83,11 @@ async function getExamById(req, res) {
         const exam_id = req.params.exam_id
         return res.status(200).json(await queryGetExamById(exam_id))
     } catch (err) {
+        // console.log('error: ',err)
+        if(err.message === 'NOT FOUND'){
+            return res.status(404).send()
+        }
+
         return res.status(500).send()
     }
 }
@@ -94,9 +99,9 @@ async function queryGetExamById(exam_id) {
     const [responseFromSqlQuery] = await db.query(sqlQuery, [exam_id])
 
     let examObject = responseFromSqlQuery[0]
-
-    // find rubric components which match exam_id
-    queryGetRubricComponentsByExamId(exam_id)
+    if(!examObject){
+        throw new Error('NOT FOUND')
+    }
 
     examObject = {
         ...examObject,
@@ -251,7 +256,7 @@ async function handleQueryExamsByModuleId(moduleId) {
 
 async function deleteExamController(req, res) {
     try {
-        deleteExam(req.params.exam_id)
+        await deleteExam(req.params.exam_id)
         return res.status(204).send()
     } catch (err) {
         return res.status(500).send()
@@ -267,13 +272,14 @@ async function deleteExam(exam_id) {
 
 async function requestHandlerDeleteSuperUserInExam(req, res) {
     try {
-        console.log('hello from del req handler')
+        // console.log('hello from del req handler')
         const super_user_id = req.params.super_user_id
         const module_id = req.params.module_id
         const exam_id = req.params.exam_id
         await queryDeleteExamSuperUser(super_user_id, exam_id)
         return res.status(204).send()
     } catch (err) {
+        console.log(err)
         return res.status(500).send()
     }
 }
@@ -292,6 +298,7 @@ async function requestHandlerPostSuperUserInExam(req, res) {
         await queryInsertExamSuperUser(super_user_id, exam_id)
         return res.status(201).send()
     } catch (err) {
+        console.log(err)
         return res.status(500).send()
     }
 }

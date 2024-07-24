@@ -4,6 +4,8 @@ const { getAuthenticatedAgent } = require('../..//utils/loggedInUserAgent'); // 
 const { db } = require('../../../routesCommonDependencies'); // Ensure this path is correct
 const mockFolderPath = path.join(__dirname, '../../__mocks__/')
 
+const { createModule, addSuperUserToModule, deleteModule } = require('../../utils/moduleFunctions'); // Adjust the path as needed
+
 
 describe('Module Suite', () => {
     let agent;
@@ -139,47 +141,27 @@ describe('Module Suite', () => {
 
         it('should return status code 200 with information on super_users assigned to module', async () => {
             const newModuleName = 'test module'
-            const createdModuleId = await createModule(newModuleName)
+            const createdModuleId = await createModule(agent,newModuleName)
 
             const exampleLecturerId = 3
-            await addSuperUserToModule(createdModuleId, exampleLecturerId)
+            await addSuperUserToModule(agent, createdModuleId, exampleLecturerId)
 
             // check if lecturer has access
             const response = await agent.get(`/module/${createdModuleId}/super_user_id/${exampleLecturerId}`)
             expect(response.body.length > 0).toBe(true)
             expect(response.statusCode).toBe(200)
             // tear down
-            // await deleteModule(createdModuleId)
+            await deleteModule(agent, createdModuleId)
         })
     })
 
 
-    async function createModule(module_name) {
-        const modulePostUrl = '/module'
-        const modulePostBody = { module_name }
-        const moduleCreateResponse = await agent.post(modulePostUrl)
-            .send(modulePostBody)
-        const createdModuleId = moduleCreateResponse.body.module_id
-        return createdModuleId
-    }
-
-    async function addSuperUserToModule(module_id, super_user_id) {
-        const postBody = {
-            super_user_id
-        }
-        const postUrl = `/super_user/module/${module_id}/lecturer`
-        const response = await agent.post(postUrl).send(postBody)
-        return true
-    }
-
-
-
-    async function deleteModule(module_id) {
-        await agent.delete(`/module/${module_id}`)
-    }
+    
 
 
 })
+
+
 
 
 

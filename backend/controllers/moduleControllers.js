@@ -56,9 +56,9 @@ async function getModulesBySuperUserId(req, res) {
             bindingParams = [super_user_id, module_id]
         }
 
-        console.log(sqlSearchAndJoin)
+        // console.log(sqlSearchAndJoin)
         const [responseFromSearchByModuleIdAndSuperUserId] = await db.query(sqlSearchAndJoin, bindingParams)
-        console.log(responseFromSearchByModuleIdAndSuperUserId)
+        // console.log(responseFromSearchByModuleIdAndSuperUserId)
         return res.status(200).json(responseFromSearchByModuleIdAndSuperUserId)
     } catch (err) {
         console.log(err)
