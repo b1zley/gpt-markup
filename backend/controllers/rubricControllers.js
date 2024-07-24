@@ -232,7 +232,7 @@ async function queryUpdateRatingRange(rating_range_id, updateArray) {
 }
 
 async function queryDeleteRatingRange(rating_range_id) {
-    console.log(rating_range_id)
+    // console.log(rating_range_id)
     const sqlQuery = "DELETE FROM `rating_range` WHERE `rating_range`.`rating_range_id` = ?"
     const bindingParams = [rating_range_id]
 
@@ -300,7 +300,7 @@ async function handleRequestCSVUploadRubricComponents(req, res) {
 
 
 async function queryCreateNewRubricFromRCArray(rubricComponentArray, exam_id) {
-    console.log(rubricComponentArray)
+    // console.log(rubricComponentArray)
     for (const rubricComponent of rubricComponentArray) {
         const { rcName, rcDesc, maxPoints } = rubricComponent
         // create rubric component
@@ -311,7 +311,7 @@ async function queryCreateNewRubricFromRCArray(rubricComponentArray, exam_id) {
         const newRcID = response.insertId
         // create rating ranges using rubric component id
         for (const ratingRange of rubricComponent.rating_ranges) {
-            console.log(ratingRange)
+            // console.log(ratingRange)
             const rrSqlQuery = "INSERT INTO `rating_range` (`rating_range_id`, `rating_min_incl`, `rating_max_incl`, `rating_desc`, `rubric_component_id`) VALUES (NULL, ?, ?, ?, ?);"
             const rrBindingParams = [ratingRange.rangeMin, ratingRange.rangeMax, ratingRange.rangeDesc, newRcID]
             const [responseFromRR] = await db.query(rrSqlQuery, rrBindingParams)
