@@ -34,17 +34,17 @@ async function handlePostCreateNewUserCodeValidate(req, res) {
         const jwtToReturn = await createJwt(createdUser)
         return res.status(201).json({ token: jwtToReturn, user: createdUser })
     } catch (err) {
-        return res.status(401).json({error: err.message})
+        return res.status(401).json({ error: err.message })
     }
 
 }
 
-async function validateAccountCreationCode(accountCreationCode){
+async function validateAccountCreationCode(accountCreationCode) {
     console.log(accountCreationCode)
     const sqlQuery = 'SELECT * FROM super_user_type WHERE creation_code = ?'
     const bindingParams = [accountCreationCode]
     const [response] = await db.query(sqlQuery, bindingParams)
-    if(response.length === 0 ){
+    if (response.length === 0) {
         throw new Error('BAD CODE')
     }
     return response.map((row) => row.super_user_type_id)[0]
@@ -153,7 +153,35 @@ async function queryGetUserByEmail(email) {
 }
 
 
+async function handleDeleteSuperUserRequest(req, res) {
+    try {
+        // check super user type
+        if(await getSuperUserType(req.user.super_user_id) !== 1){
+            return res.status(401).send()
+        }
+        const { super_user_id } = req.params
+        await queryDeleteUser(super_user_id)
+        return res.status(204).send()
+    } catch (err) {
+        return res.status(500).send()
+    }
+}
 
+async function queryDeleteUser(super_user_id) {
+    const sqlQuery = "DELETE FROM super_user WHERE `super_user`.`super_user_id` = ?"
+    const bindingParams = [super_user_id]
+    const [deleteResponse] = await db.query(sqlQuery, bindingParams)
+}
+
+
+
+async function getSuperUserType(super_user_id){
+    const sqlQuery = "SELECT * FROM super_user WHERE super_user_id = ?"
+    const bindingParams = [super_user_id]
+    const [response] = await db.query(sqlQuery, bindingParams)
+    // console.log(response)
+    return response[0].super_user_type_id
+}
 
 
 
@@ -162,5 +190,6 @@ module.exports = {
     handlePostCreateNewUser,
     handlePostLogin,
     verifyJwt,
-    handlePostCreateNewUserCodeValidate
+    handlePostCreateNewUserCodeValidate,
+    handleDeleteSuperUserRequest
 }

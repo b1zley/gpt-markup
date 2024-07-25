@@ -7,4 +7,6 @@ router.post('/create', authenticationControllers.handlePostCreateNewUserCodeVali
 
 router.post('/login', authenticationControllers.handlePostLogin)
 
+router.delete('/delete/:super_user_id', authenticationControllers.verifyJwt, authenticationControllers.handleDeleteSuperUserRequest)
+
 module.exports = router
