@@ -6,7 +6,7 @@ module.exports = {
     testEnvironment: 'node',
     testMatch: ['**/**/*.test.js'],
     verbose: true,
-    forceExit: true,
+    // forceExit: true,
     // collectCoverage: true,
     // coverageDirectory: 'coverage',
     // coverageReporters: ['text', 'lcov'],
