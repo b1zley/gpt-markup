@@ -65,6 +65,12 @@ async function removeFileTypeFromExam(agent, module_id, exam_id, file_type_id){
 }
 
 
+async function getResultsCSV(agent, module_id, exam_id){
+    const getUrl = `/module/${module_id}/exam/${exam_id}/results_csv`
+    return await agent.get(getUrl)
+}
+
+
 module.exports = {
     createNewExam,
     getExam,
@@ -74,5 +80,6 @@ module.exports = {
     addSuperUserToExam,
     removeSuperUserFromExam,
     addFileTypeToExam,
-    removeFileTypeFromExam
+    removeFileTypeFromExam,
+    getResultsCSV,
 }

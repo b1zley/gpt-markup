@@ -311,10 +311,6 @@ describe('Rubric Suite', () => {
                 describe('given csv in correct format, mid,eid correct', () => {
                     it('should return status code 201 with newly added rubric component array', async () => {
                         const addRubricByCSVUploadResponse = await addRubricByCSVUpload(agent, createdModuleId, createdExamId, csv_path)
-
-
-
-
                         expect(addRubricByCSVUploadResponse.body).toEqual(
                             expect.arrayContaining([
                                 expect.objectContaining(expectedRubricArray[0]),

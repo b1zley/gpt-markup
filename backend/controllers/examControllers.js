@@ -353,10 +353,13 @@ async function queryGenerateResultsAsCSV(exam_id) {
         let csvRow = `${sesRow.student_name},${sesRow.student_number}`
         // console.log(Object.keys(sesRow))
         const objectKeys = Object.keys(sesRow)
-        for (let i = 7; i < objectKeys.length; i++) {
+        for (let i = 6; i < objectKeys.length; i++) {
             const keyName = objectKeys[i]
-            const value = sesRow[objectKeys[i]]
+            let value = sesRow[objectKeys[i]]
             // console.log(`${keyName}: ${value}`)
+            if(value === ''){
+                value = null
+            }
             csvRow += `,"${value}"`
         }
         csvRow += `\n`
