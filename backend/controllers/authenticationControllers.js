@@ -25,7 +25,7 @@ async function handlePostCreateNewUser(req, res) {
 async function handlePostCreateNewUserCodeValidate(req, res) {
 
     try {
-        console.log(req.body)
+        // console.log(req.body)
         const { email, name, password, accountCreationCode } = req.body
 
         const super_user_type_id = await validateAccountCreationCode(accountCreationCode)
@@ -40,7 +40,7 @@ async function handlePostCreateNewUserCodeValidate(req, res) {
 }
 
 async function validateAccountCreationCode(accountCreationCode) {
-    console.log(accountCreationCode)
+    // console.log(accountCreationCode)
     const sqlQuery = 'SELECT * FROM super_user_type WHERE creation_code = ?'
     const bindingParams = [accountCreationCode]
     const [response] = await db.query(sqlQuery, bindingParams)
@@ -96,7 +96,7 @@ function verifyJwt(req, res, next) {
 async function queryCreateUser(email, name, password, super_user_type_id) {
     // validate email not present
     if (await queryIsEmailPresent(email)) {
-        console.log('hello what?')
+        // console.log('hello what?')
         throw new Error('Email already in use')
     }
     const saltRounds = 10
