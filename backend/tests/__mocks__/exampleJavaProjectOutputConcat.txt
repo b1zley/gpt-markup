@@ -1,0 +1,269 @@
+-----------------
+BoardingStatus.java:
+package p3; /**
+ * 40100099 joshua ohagan
+ * Enum representing the fixed different kinds of enum which are possible
+ */ public enum BoardingStatus { CLOSED, BOARDING, NOT_STARTED, CANCELLED, DELAYED; /**
+	 * helper method designed to convert a string to a BoardingStatus
+	 * separation of concern here - BoardingStatus enum should manage what string constitutes
+	 * which boarding status
+	 * @param boardingStatusString - String - determines which BoardingStatus should be returned
+	 * @return - BoardingStatus - selected boardingStatus to return
+	 */ public static BoardingStatus getBoardingStatusFromString(String boardingStatusString) { // override toString() later if i have time
+// for now hard code
+if (boardingStatusString.equalsIgnoreCase(CANCELLED.toString())) { return CANCELLED; } else if (boardingStatusString.equalsIgnoreCase("NOT STARTED")) { return NOT_STARTED; } else if (boardingStatusString.equalsIgnoreCase(BOARDING.toString())) { return BOARDING; }else if (boardingStatusString.equalsIgnoreCase(CLOSED.toString())) { return CLOSED; } else { return null; } } /**
+	 * helper method which converts a BoardingStatus into a user friendly coloured string
+	 * @return - userfriendly coloured String representation of the BoardingStatus
+	 */ public String getColouredStatus() { final String RED_UNICODE = "\033[0;31m"; final String BLACK_UNICODE = "\033[0;30m"; final String GREEN_UNICODE = "\033[0;32m"; final String ORANGE_UNICODE = "\033[0;33m"; switch (this) { case CANCELLED: return "CANCELLED"; case NOT_STARTED: return "NOT_STARTED"; case BOARDING: StringBuilder sb1 = new StringBuilder(); sb1.append(GREEN_UNICODE); sb1.append("BOARDING"); sb1.append(BLACK_UNICODE); return sb1.toString(); case CLOSED: StringBuilder sb11 = new StringBuilder(); sb11.append(RED_UNICODE); sb11.append("CLOSED"); sb11.append(BLACK_UNICODE); return sb11.toString(); case DELAYED: StringBuilder sb111 = new StringBuilder(); sb111.append(ORANGE_UNICODE); sb111.append("DELAYED"); sb111.append(BLACK_UNICODE); return sb111.toString(); default: return null; } } } 
+----------------------------------
+CommercialFlight.java:
+package p3; import java.time.LocalTime; /**
+ * 40100099 joshua ohagan
+ * Concrete class which extends abstract class flight - represents a commercial flight - stores all variables assocaited with commercial flight and gives speciifc methods for modification and 
+ * data access
+ */ public class CommercialFlight extends Flight { /**
+	 * the destination for this commercialflight object
+	 */ private String destination; /**
+	 * the country for this commercialflight object
+	 */ private String country; /**
+	 * the gate for this commercialflight object
+	 */ private String gate; /**
+	 * the airport code for this commercialflight object
+	 */ private String airportCode; /**
+	 * the boarding status for this commercialflight object
+	 */ private BoardingStatus boardingStatus; /**
+	 * the number of passengers on the flight for this commercialflight object
+	 */ private int passengerNumber; // getters and setters - inherited from superclass - overidden
+/**
+	 * overridden getter from superclass Flight - returns the flightNumber for this 
+	 * CommercialFlight object
+	 * @return - String - this flightNumber 
+	 */ @Override public String getFlightNumber() { // TODO Auto-generated method stub
+return super.getFlightNumber(); } /**
+	 * sets the flightNumber for this
+	 * @param - flightNumber - String - flightNumber to be set
+	 */ @Override public void setFlightNumber(String flightNumber) { // TODO Auto-generated method stub
+super.setFlightNumber(flightNumber); } /**
+	 * gets the airline for this
+	 * @return - String - this objects airline
+	 */ @Override public String getAirline() { // TODO Auto-generated method stub
+return super.getAirline(); } /**
+	 * sets the airline for this
+	 * @param - airline - String - the airline to be set
+	 */ @Override public void setAirline(String airline) { // TODO Auto-generated method stub
+super.setAirline(airline); } /**
+	 * gets the departureTime for this
+	 * @return - LocalTime - this objects localtime
+	 */ @Override public LocalTime getDepartureTime() { // TODO Auto-generated method stub
+return super.getDepartureTime(); } /**
+	 * sets the departuretime for this
+	 * @param - LocalTime - departureTime - departureTime to be set
+	 */ @Override public void setDepartureTime(LocalTime departureTime) { // TODO Auto-generated method stub
+super.setDepartureTime(departureTime); } // getters and setters - just from subclass
+/**
+	 * gets the airport code for this
+	 *
+	 * @return - String - the airport code for this object
+	 */ public String getAirportCode() { return airportCode; } /**
+	 * sets the airport code for this
+	 * @param airportCode - String - airportCode to be set
+	 */ public void setAirportCode(String airportCode) { this.airportCode = airportCode; } /**
+	 * gets the destination for this
+	 * 
+	 * @return - String - this CommercialFlights destination
+	 */ public String getDestination() { return destination; } /**
+	 * sets the destination for this
+	 * 
+	 * @param destination - String - destination to be set
+	 */ public void setDestination(String destination) { this.destination = destination; } /**
+	 * gets the country for this 
+	 * @return - String - this CommercialFlights country
+	 */ public String getCountry() { return country; } /**
+	 * sets the country for this
+	 * @param country - String - country to be set
+	 */ public void setCountry(String country) { this.country = country; } /**
+	 * gets the gate for this
+	 * @return - String - gate for this commercialFlight
+	 */ public String getGate() { return gate; } /**
+	 * sets the gate for this
+	 * @param gate - String - the gate to be set
+	 */ public void setGate(String gate) { this.gate = gate; } /**
+	 * gets the boardingStatus for this 
+	 * @return - BoardingStatus - the boarding status for this object
+	 */ public BoardingStatus getBoardingStatus() { return boardingStatus; } /**
+	 * sets the boarding status for this
+	 * @param boardingStatus - BoardingStatus - boardingStatus to be set
+	 */ public void setBoardingStatus(BoardingStatus boardingStatus) { this.boardingStatus = boardingStatus; } /**
+	 * gets the passenger number for this
+	 * @return - int -  the passenger number for this
+	 */ public int getPassengerNumber() { return passengerNumber; } /**
+	 * sets the passengerNumber for this
+	 * @param passengerNumber - int - the passenger number to be set
+	 */ public void setPassengerNumber(int passengerNumber) { this.passengerNumber = passengerNumber; } // combined constructor
+/**
+	 * default constructor - initialize a CommercialFlight object with all values set as defaults 
+	 */ public CommercialFlight() { super(); } /**
+	 * constructor with args - initialize a CommercialFlight object with all values set acccording to arguments
+	 * @param flightNumber - flightNumber to be set - String
+	 * @param airline - airline to be set - String
+	 * @param departureTime - departureTime to be set - LocalTime
+	 * @param destination - destination to be set - String
+	 * @param country - country to be set - String
+	 * @param gate - gate to be set - String
+	 * @param airportCode -airportCode to be set - String
+	 * @param boardingStatus - boardingStatus to be set - BoardingStatus
+	 * @param passengerNumber - passengerNumber to be set - int
+	 */ public CommercialFlight(String flightNumber, String airline, LocalTime departureTime, String destination, String country, String gate, String airportCode, BoardingStatus boardingStatus, int passengerNumber) { super(flightNumber, airline, departureTime); this.destination = destination; this.country = country; this.gate = gate; this.airportCode = airportCode; this.boardingStatus = boardingStatus; this.passengerNumber = passengerNumber; } /**
+	 * overridden to string method
+	 */ @Override public String toString() { StringBuilder sb = new StringBuilder(); String newLine = "\n"; sb.append("________________________________________________________"); sb.append(newLine); sb.append("Flight number\t\t: "); sb.append(this.getFlightNumber()); sb.append(newLine); sb.append("Airline (carrier)\t: "); sb.append(this.getAirline()); sb.append(newLine); sb.append("Departure time\t\t: "); sb.append(this.getDepartureTime()); sb.append(newLine); sb.append("Destination\t\t: "); sb.append(this.destination); sb.append(newLine); sb.append("Airport code\t\t: "); sb.append(this.airportCode); sb.append(newLine); sb.append("Country\t\t\t: "); sb.append(this.country); sb.append(newLine); sb.append("Gate\t\t\t: "); sb.append(this.gate); sb.append(newLine); sb.append("Boarding status\t\t: "); if(this.boardingStatus != null) { sb.append(this.boardingStatus.getColouredStatus()); } sb.append(newLine); sb.append("Passenger numbers\t: "); sb.append(this.passengerNumber); sb.append(newLine); sb.append("________________________________________________________"); return sb.toString(); } /**
+	 * cancels the flight of the commercialflight object this method is called on
+	 */ public void cancelFlight() { // probably modify boarding status
+this.boardingStatus = BoardingStatus.CANCELLED; } /**
+	 * delays a flight to the time passed as argument - sets its BoardingStatus to DELAYED
+	 * @param newTime - new time to be set
+	 */ public void delayFlightToTime(LocalTime newTime) { this.setDepartureTime(newTime); this.setBoardingStatus(BoardingStatus.DELAYED); System.out.println("Flight : " + this.getFlightNumber() + " delayed until " + this.getDepartureTime().toString() ); } } 
+----------------------------------
+DeparturesControl.java:
+package p3; import java.io.BufferedReader; import java.io.File; import java.io.FileNotFoundException; import java.io.FileReader; import java.io.IOException; import java.time.LocalTime; import java.util.ArrayList; import java.util.Collections; import java.util.LinkedList; import java.util.List; import java.util.Map; import java.util.Queue; import java.util.Scanner; import java.util.Set; import java.util.TreeMap; /**
+ * class which contains series of methods for handling departure control in an airport
+ */ public class DeparturesControl { /**
+	 * csv file name to read in
+	 */ private static final String FILE_NAME = "Departures.csv"; /**
+	 * entry point for program
+	 * @param args
+	 */ public static void main(String[] args) { // lets accept only commercial flights initially
+List<CommercialFlight> commercialFlightList = new ArrayList<CommercialFlight>(); List<String> flightPrefixesToIgnore = List.of("m"); readData(commercialFlightList, FILE_NAME, flightPrefixesToIgnore); showMenu(commercialFlightList); } /**
+	 * displays a user friendly menu to the user - which provides a series of options
+	 * depending on the users selection - will execute requisite methods which effect/display
+	 * an list of commercialFlights passed as argument
+	 * @param commercialFlightList - List<CommercialFlight> - flightList to be modified/displayed
+	 */ private static void showMenu(List<CommercialFlight> commercialFlightList) { Scanner sc = new Scanner(System.in); String userInput; int userInputInt; do { // output options to screen
+System.out.println("1. Display daily schedule departures (oredered by time) - time relative"); System.out.println("2. Delay flight - STU904 until 22:15"); System.out.println("3. Destination Country Analysis"); System.out.println("4. Add Flight : BAA1234,British Airways,23:30,London,LHR,UK,B12,Not Started, 231"); System.out.println("5. Write to file (all flights with CLOSED boarding status )"); System.out.println("6. Quit"); System.out.println("Enter option..."); userInput = sc.nextLine(); try { // could do this whole thing as a oner but capture and convert i think is more
+// readable
+userInputInt = Integer.valueOf(userInput); } catch (Exception e) { // default value to retstart menu
+userInputInt = -1000; } // switch on userInputInt for option selection
+switch (userInputInt) { case 1: // just going to be lazy and sort the list - may later create a method which returns a sorted list
+// now to override the to string which is called in displayAllFlights
+// will create a comparator on flights rather than commercial flights bc flights and commercial flights 
+// have departure times
+Collections.sort(commercialFlightList, new FlightComparatorTimeAsc()); displayAllFlights(commercialFlightList); break; case 2: String flightNumberToDelay = "STU904"; LocalTime delayTime = LocalTime.of(22,15); delayFlightNumberToTime(commercialFlightList,flightNumberToDelay, delayTime); break; case 3: displayAnalysisByCountry(commercialFlightList); break; case 4: CommercialFlight flightToAdd = new CommercialFlight("BAA1234", "British Airways", LocalTime.of(22, 30), "London", "UK", "B12", "LHR", BoardingStatus.NOT_STARTED, 231); commercialFlightList.add(flightToAdd); System.out.println("Flight added"); System.out.println(flightToAdd.toString()); break; case 5: Thread thread = new Thread(new WriteFlightsToCSVSnapshot(commercialFlightList, BoardingStatus.CLOSED)); thread.start(); break; case 6: System.out.println("Quit selected - exitting"); break; default: System.out.println("Invalid input detected! Please select one of the following choices :"); break; } } while (userInputInt != 6); //close the scanner resource
+sc.close(); } // give protected status for access in runnable write class
+/**
+	 * generates a queue of commercialflights based on all elements of a passed list which match a boarding status search key
+	 * 
+	 * @param commercialFlightList - List<CommercialFlight> to be searched 
+	 * @param boardingStatusSearchKey - BoardingStatus - searchKey for lsit
+	 * @return - queue of commercialflights with matching boardingstatus search key
+	 */ protected static Queue<CommercialFlight> generateQueueByBoardingStatus(List<CommercialFlight> commercialFlightList, BoardingStatus boardingStatusSearchKey) { Queue<CommercialFlight> commercialFlightQueue = new LinkedList<CommercialFlight>(); for(CommercialFlight commercialFlight : commercialFlightList) { BoardingStatus boardingStatus = commercialFlight.getBoardingStatus(); if(boardingStatus == boardingStatusSearchKey) { commercialFlightQueue.add(commercialFlight); } } return commercialFlightQueue; } /**
+	 * analyses a passed list of commercial flights and displays the frequency of each country in the list
+	 * @param commercialFlightList - flight list to be searched and displayed from
+	 */ private static void displayAnalysisByCountry(List<CommercialFlight> commercialFlightList) { Map<String, Integer> countryToCount = new TreeMap<String, Integer>(); for(CommercialFlight commercialFlight : commercialFlightList) { String country = commercialFlight.getCountry(); int countToPut; if(countryToCount.containsKey(country)) { countToPut = countryToCount.get(country) + 1; countryToCount.put(country, countToPut); } else { countToPut = 1; countryToCount.put(country, countToPut); } } Set<String> countryNames = countryToCount.keySet(); // figure out formatting later
+for (String countryName : countryNames) { int count = countryToCount.get(countryName); System.out.println(countryName + "\t: " + count); } } /**
+	 * Method which delays flights matching a flightNumberSearchKey in a List<CommmercialFlight>
+	 * @param commercialFlightList - list to be searched 
+	 * @param flightNumberToDelay - flightnumber search key - flights with this flightnumber should be delayed
+	 * @param delayTime - LocalTime - time to delay flight to
+	 */ private static void delayFlightNumberToTime(List<CommercialFlight> commercialFlightList, String flightNumberToDelay, LocalTime delayTime) { for (CommercialFlight commercialFlight : commercialFlightList) { String flightNumber = commercialFlight.getFlightNumber(); if(flightNumber.equalsIgnoreCase(flightNumberToDelay)) { commercialFlight.delayFlightToTime(delayTime); } } } /**
+	 * helper method which iterates through a list of commercialflights and displays all them,
+	 * calling the toString method
+	 * @param commercialFlightList - list to display
+	 */ private static void displayAllFlights(List<CommercialFlight> commercialFlightList) { for(CommercialFlight commercialFlight : commercialFlightList) { System.out.println(commercialFlight.toString()); } } /**
+	 * Method which reads in at a target file, and populates a passed list with commercial flight
+	 * objects found in that file - selectively ignores flights with prefixes matching the flightPrefixesToIgnore list
+	 * @param commercialFlightList - destination list for population
+	 * @param fileName - file to be parsed's name
+	 * @param flightPrefixesToIgnore - flight prefixes which should be ignored
+	 */ private static void readData(List<CommercialFlight> commercialFlightList, String fileName, List<String> flightPrefixesToIgnore) { System.out.println("Loading data..."); File file = new File(fileName); FileReader fr; try { fr = new FileReader(file); BufferedReader br = new BufferedReader(fr); // skip first line of column names
+br.readLine(); String line = br.readLine(); // counters for line reading stats
+int linesReadOk = 0; int linesReadBad = 0; int linesReadIgnored = 0; while (line != null) { // specification says we must output data as it is read in
+System.out.println(line); // now do stuff with the line
+// wrap this whole thing in a try catch
+// means any wrongly formatted data or data which triggers
+// exception to be thrown in business rules
+// will not prevent the rest of the data being read in
+// - try catch occurs within while loop
+try { String[] splitLine = line.split(","); String flightNumber = splitLine[0]; String airline = splitLine[1]; String departureTimeAsString = splitLine[2]; String destination = splitLine[3]; String airportCode = splitLine[4]; String country = splitLine[5]; String gate = splitLine[6]; String boardingStatusAsString = splitLine[7]; int passengerNumber = Integer.valueOf(splitLine[8]); String[] departureTimeAsStringSplit = departureTimeAsString.split(":"); int departureTimeHours = Integer.valueOf(departureTimeAsStringSplit[0]); int departureTimeMins = Integer.valueOf(departureTimeAsStringSplit[1]); LocalTime departureTime = LocalTime.of(departureTimeHours, departureTimeMins); BoardingStatus boardingStatus = BoardingStatus.getBoardingStatusFromString(boardingStatusAsString); if(boardingStatus == null) { throw new IllegalArgumentException(); } // now need to do logic to determine if this is a military flight - if its
+// prefix is m
+Boolean flightDisallowed = isFlightDisallowed(flightNumber, flightPrefixesToIgnore); if (flightDisallowed) { linesReadIgnored++; } else { CommercialFlight commercialFlight = new CommercialFlight(flightNumber, airline, departureTime, destination, country, gate, airportCode, boardingStatus, passengerNumber); commercialFlightList.add(commercialFlight); linesReadOk++; } } catch (Exception e) { linesReadBad++; } // could do this in a finally but i think its clearer like this
+// move to next line in csv
+line = br.readLine(); } br.close(); System.out.println("Attempted to read flight data : " + (linesReadBad + linesReadIgnored + linesReadOk)); System.out.println("Flight data read successfully : " + linesReadOk); System.out.println("Lines ignored : " + linesReadIgnored); System.out.println("Lines unsuccessfully read : " + linesReadBad); } catch (FileNotFoundException e) { System.out.println("FILE NOT FOUND - " + fileName); e.printStackTrace(); } catch (IOException e) { System.out.println("IO EXCEPTION TRIGGERED WHEN READING FROM - " + fileName); e.printStackTrace(); } } /**
+	 * helper method which determines whether a flight is disallowed
+	 * @param flightNumber - the flightNumber of the flight to detect
+	 * @param flightPrefixesToIgnore - flight prefixes which should be ignored
+	 * @return - return true if the flightNumber has one of the disallowed prefixes - false otherwise
+	 */ private static Boolean isFlightDisallowed(String flightNumber, List<String> flightPrefixesToIgnore) { // use split to keep these all as strings - simpler equals methods
+String[] flightNumberSplit = flightNumber.split(""); String flightPrefix = flightNumberSplit[0]; for (String flightPrefixIgnore : flightPrefixesToIgnore) { if (flightPrefixIgnore.equalsIgnoreCase(flightPrefix)) { return true; } } return false; } } 
+----------------------------------
+Flight.java:
+package p3; import java.time.LocalTime; /**
+ * 40100099 joshua ohagan
+ * Abstract class which represents a flight
+ */ public abstract class Flight { /**
+	 * flight number of given flight
+	 */ private String flightNumber; /**
+	 * airline carrier for given flight
+	 */ private String airline; /**
+	 * scheduled departure time for given flight
+	 */ private LocalTime departureTime; /**
+	 * get this flights flightNumber
+	 * @return - return this flights flightNumber as a String
+	 */ public String getFlightNumber() { return flightNumber; } /**
+	 * set this flights flightNumber
+	 * @param flightNumber - String - the flightnumber to be set to
+	 */ public void setFlightNumber(String flightNumber) { this.flightNumber = flightNumber; } /**
+	 * get this flights airline carrier
+	 * @return - String - the airline carrier for this flight
+	 */ public String getAirline() { return airline; } /**
+	 * set this flights airline
+	 * @param airline - String - the airline to be set to
+	 */ public void setAirline(String airline) { this.airline = airline; } /**
+	 * get this flights departureTime
+	 * @return - LocalTime - this flights departureTime
+	 */ public LocalTime getDepartureTime() { return departureTime; } /**
+	 * set this flights departureTime
+	 * @param departureTime - LocalTime - the time departureTime should be set to
+	 */ public void setDepartureTime(LocalTime departureTime) { this.departureTime = departureTime; } /**
+	 * default constructor for this class - returns a Flight with all values set to null,
+	 * as flight is an abstract class - this cannot be called directly
+	 */ public Flight() { } /**
+	 * constructor with args - returns a flight with values set according to arguments
+	 * as Flight is an abstract class - this cannot be called directly
+	 * @param flightNumber - String - flightNumber to be set
+	 * @param airline - String - airline to be set
+	 * @param departureTime - LocalTime - departureTime to be set
+	 */ public Flight(String flightNumber, String airline, LocalTime departureTime) { super(); this.flightNumber = flightNumber; this.airline = airline; this.departureTime = departureTime; } } 
+----------------------------------
+FlightComparatorTimeAsc.java:
+package p3; import java.util.Comparator; public class FlightComparatorTimeAsc implements Comparator<Flight> { @Override public int compare(Flight o1, Flight o2) { return o1.getDepartureTime().compareTo(o2.getDepartureTime()); } } 
+----------------------------------
+WriteFlightsToCSVSnapshot.java:
+package p3; import java.io.BufferedWriter; import java.io.File; import java.io.FileWriter; import java.io.IOException; import java.time.LocalTime; import java.util.List; import java.util.Queue; /**
+ * class for multithreading a write to csv event
+ * seeks out the current time - and names the csv file according to business rules
+ */ public class WriteFlightsToCSVSnapshot implements Runnable { private List<CommercialFlight> commercialFlightList; private BoardingStatus targetBoardingStatus; @Override public void run() { Queue<CommercialFlight> closedCommercialFlightQueue = DeparturesControl.generateQueueByBoardingStatus(commercialFlightList, targetBoardingStatus); // some localtime logic
+LocalTime now = LocalTime.now(); int hours = now.getHour(); int mins = now.getMinute(); int secs = now.getSecond(); StringBuilder sb = new StringBuilder(); String fileNameSeparator = "_"; sb.append(targetBoardingStatus.toString()); sb.append(fileNameSeparator); sb.append(hours); sb.append(mins); sb.append(secs); sb.append(".csv"); String fileName = sb.toString(); writeQueueToFile(closedCommercialFlightQueue, fileName); } /**
+	 * method which writes to file at target csv - all elements of a commercial flight queue
+	 * @param commercialFlightQueue - queue to be written
+	 * @param fileName - target file name
+	 */ private void writeQueueToFile(Queue<CommercialFlight> commercialFlightQueue, String fileName) { File file = new File(fileName); FileWriter fw; try { fw = new FileWriter(file); BufferedWriter bw = new BufferedWriter(fw); // handle column names
+String separator = ","; String newLine = "\n"; StringBuilder sb = new StringBuilder(); sb.append("Flight Number"); sb.append(separator); sb.append("Destination"); sb.append(separator); sb.append("DepartureTime"); sb.append(newLine); bw.write(sb.toString()); // control queue release of data based on whether queue is empty
+// and whether thread is interrupted
+// if thread is interrupted - exit while loop and close resources
+while(!commercialFlightQueue.isEmpty() && !Thread.currentThread().isInterrupted()) { // reset and reuse stringbuilder object
+sb.setLength(0); CommercialFlight commercialFlight = commercialFlightQueue.poll(); String flightNumber = commercialFlight.getFlightNumber(); String destination = commercialFlight.getDestination(); LocalTime deptTime = commercialFlight.getDepartureTime(); int hours = deptTime.getHour(); int mins = deptTime.getMinute(); sb.append(flightNumber); sb.append(separator); sb.append(destination); sb.append(separator); sb.append(deptTime.toString()); sb.append(newLine); bw.write(sb.toString()); } bw.close(); fw.close(); } catch (IOException e) { // TODO Auto-generated catch block
+e.printStackTrace(); } } /**
+	 * method which writes to target csv a snapshot of the current departure lsit, according to a boarding status
+	 * @param commercialFlightList - flight list to search across and print to csv
+	 * @param targetBoardingStatus - boardingStatusSearchKey - only flight boarding statusses matching this boarding status will be entered into the file
+	 */ public WriteFlightsToCSVSnapshot(List<CommercialFlight> commercialFlightList, BoardingStatus targetBoardingStatus) { this.commercialFlightList = commercialFlightList; this.targetBoardingStatus = targetBoardingStatus; } } 
+----------------------------------
+CommercialFlightTest.java:
+package p3; import static org.junit.jupiter.api.Assertions.*; import java.time.LocalTime; import org.junit.jupiter.api.BeforeEach; import org.junit.jupiter.api.Test; class CommercialFlightTest { // test data declarations
+String validFlightNumber; String validAirline; LocalTime validDepartureTime; String validDestination; // test getters and setters josh!!!
+String validAirportCode; String validCountry; String validGate; BoardingStatus validBoardingStatusOpen; int validPassengerNumber; CommercialFlight testCommercialFlight; @BeforeEach void setUp() throws Exception { validFlightNumber = "ABC130"; validAirline = "Delta Airlines"; validDepartureTime = LocalTime.of(8, 0); validDestination = "London"; validAirportCode = "LHR"; validCountry = "UK"; validGate = "A1"; validBoardingStatusOpen = BoardingStatus.DELAYED; validPassengerNumber = 180; testCommercialFlight = new CommercialFlight(); } @Test void testCommercialFlight() { testCommercialFlight = new CommercialFlight(); assertEquals(CommercialFlight.class, testCommercialFlight.getClass()); } @Test void testGetFlightNumber() { testCommercialFlight.setFlightNumber(validFlightNumber); assertEquals(validFlightNumber, testCommercialFlight.getFlightNumber()); } @Test void testGetAirline() { testCommercialFlight.setAirline(validAirline); assertEquals(validAirline, testCommercialFlight.getAirline()); } @Test void testGetDepartureTime() { testCommercialFlight.setDepartureTime(validDepartureTime); assertEquals(validDepartureTime, testCommercialFlight.getDepartureTime()); } @Test void testGetDestination() { testCommercialFlight.setDestination(validDestination); assertEquals(validDestination, testCommercialFlight.getDestination()); } @Test void testGetCountry() { testCommercialFlight.setCountry(validCountry); assertEquals(validCountry, testCommercialFlight.getCountry()); } @Test void testGetGate() { testCommercialFlight.setGate(validGate); assertEquals(validGate, testCommercialFlight.getGate()); } @Test void testGetBoardingStatus() { testCommercialFlight.setBoardingStatus(validBoardingStatusOpen); assertEquals(validBoardingStatusOpen, testCommercialFlight.getBoardingStatus()); } @Test void testGetPassengerNumber() { testCommercialFlight.setPassengerNumber(validPassengerNumber); assertEquals(validPassengerNumber, testCommercialFlight.getPassengerNumber()); } @Test void testCommercialFlightStringStringLocalTimeStringStringStringBoardingStatusInt() { testCommercialFlight = new CommercialFlight(validFlightNumber, validAirline, validDepartureTime, validDestination, validCountry, validGate, validAirportCode, validBoardingStatusOpen, validPassengerNumber); assertEquals(validFlightNumber, testCommercialFlight.getFlightNumber()); assertEquals(validAirline, testCommercialFlight.getAirline()); assertEquals(validDepartureTime, testCommercialFlight.getDepartureTime()); assertEquals(validDestination, testCommercialFlight.getDestination()); assertEquals(validAirportCode, testCommercialFlight.getAirportCode()); assertEquals(validCountry, testCommercialFlight.getCountry()); assertEquals(validGate, testCommercialFlight.getGate()); assertEquals(validBoardingStatusOpen, testCommercialFlight.getBoardingStatus()); assertEquals(validPassengerNumber, testCommercialFlight.getPassengerNumber()); } @Test void testCancelFlight() { // set boarding status to open!
+testCommercialFlight.setBoardingStatus(validBoardingStatusOpen); // assert!
+assertEquals(validBoardingStatusOpen, testCommercialFlight.getBoardingStatus()); // cancel the flight!
+testCommercialFlight.cancelFlight(); // assert that the change has taken place!
+assertEquals(BoardingStatus.CANCELLED, testCommercialFlight.getBoardingStatus()); } @Test void testToString() { // implement when we know more!
+} } 
+-----------------

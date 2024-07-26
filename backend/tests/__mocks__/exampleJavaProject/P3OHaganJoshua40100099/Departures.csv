@@ -1,0 +1,95 @@
+Flight Number,Airline,Departure Time,Destination,Airport Code,Country,Gate,Boarding Status,Passenger Number
+ABC130,Delta Airlines,08:00,London Heathrow,LHR,UK,A1,Closed,180
+ABC135,British Airways,08:10,Dublin,DUB,IRE,A1,Closed,130
+ABC124,Virgin,08:30,Los Angeles,LAX,USA,A1,Open,180
+ABC131,Delta Airlines,08:30,Los Angeles,LAX,USA,A1,Open,170
+ABC125,Delta Airlines,09:00,Mexico City International,MEX,Mexico,A1,Open,170
+ABC132,Delta Airlines,09:10,Mexico City International,MEX,Mexico,A1,Open,160
+ABC126,Delta Airlines,09:15,Sao Paulo Guarulhos,GRU,Brazil,A1,Open,160
+DEF462,British Airways,09:20,Paris Charles de Gaulle,CDG,France,B3,Boarding,190
+ABC133,Delta Airlines,09:30,Sao Paulo Guarulhos,GRU,Brazil,A1,Boarding,150
+DEF467,British Airways,09:40,Paris Charles de Gaulle,CDG,France,B3,Boarding,140
+DEF457,British Airways,10:00,Paris Orly,ORY,France,B3,Boarding,190
+ABC127,Delta Airlines,10:10,Toronto Pearson,YYZ,Canada,A1,Boarding,150
+JKL021,Emirates,14:45,Seoul Incheon,ICN,South Korea,A4,Not Started,180
+JKL016,Emirates,15:15,Tokyo Haneda,HND,Japan,A4,Not Started,180
+JKL022,Emirates,15:15,Tokyo Haneda,HND,Japan,A4,Not Started,170
+MNO346,Qatar Airways,15:30,Mumbai ,BOM,India,B6,Not Started,220
+PQR684,Qantas Airways,15:30,Sydney Kingsford Smith,SYD,Australia,C8,Not Started,230
+MNO352,Qatar Airways,15:30,Mumbai,BOM,India,B6,Not Started,210
+JKL017,Emirates,15:45,Guangzhou Baiyun International,CAN,China,A4,Not Started,170
+MNO347,Qatar Airways,16:00,Hong Kong International,HKG,Hong Kong,B6,Not Started,210
+MNO353,Qatar Airways,16:00,Hong Kong International,HKG,Hong Kong,B6,Not Started,200
+MNO348,Qatar Airways,16:30,Berlin Brandenburg Airport,BER,Germany,B6,Not Started,200
+MNO354,Qatar Airways,16:30,Berlin Brandenburg Airport,BER,Germany,B6,Not Started,190
+PQR679,Qantas Airways,17:00,Bangkok Suvarnabhumi,BKK,Thailand,C8,Not Started,230
+MNO349,Qatar Airways,17:00,Bangkok Suvarnabhumi,BKK,Thailand,B6,Not Started,190
+PQR685,Qantas Airways,17:00,Bangkok Suvarnabhumi,BKK,Thailand,C8,Not Started,220
+MNO355,Qatar Airways,17:00,Bangkok Suvarnabhumi,BKK,Thailand,B6,Not Started,180
+STU907,Air Canada,17:15,Toronto Pearson,YYZ,Canada,A2,Not Started,240
+DEF463,British Airways,10:20,Paris Orly,ORY,France,B3,Boarding,180
+ABC134,Delta Airlines,10:30,Toronto Pearson,YYZ,Canada,A1,Not Started,140
+ABC128,Delta Airlines,10:40,Los Angeles,LAX,USA,A1,Not Started,140
+GHI795,Lufthansa,10:45,Amsterdam Airport Schiphol,AMS,Netherlands,C2,Not Started,200
+GHI800,Lufthansa,10:50,Amsterdam Airport Schiphol,AMS,Netherlands,C2,Not Started,150
+GHI790,Lufthansa,11:00,Rome Fiumicino,FCO,Italy,C2,Not Started,200
+GHI796,Lufthansa,11:15,Rome Fiumicino,FCO,Italy,C2,Not Started,190
+DEF458,British Airways,11:30,Amsterdam Airport Schiphol,AMS,Netherlands,B3,Not Started,180
+DEF464,British Airways,11:40,Amsterdam Airport Schiphol,AMS,Netherlands,B3,Not Started,170
+DEF459,British Airways,12:00,Zurich Airport,ZRH,Switzerland,B3,Not Started,170
+DEF465,British Airways,12:05,Zurich Airport,ZRH,Switzerland,B3,Not Started,160
+JKL018,Emirates,12:15,New York JFK,JFK,USA,A4,Not Started,210
+JKL023,Emirates,12:25,New York JFK,JFK,USA,A4,Not Started,160
+DEF460,British Airways,12:30,Mumbai Chhatrapati Shivaji International,BOM,India,B3,Not Started,160
+DEF466,British Airways,12:30,Mumbai Chhatrapati Shivaji International,BOM,India,B3,Not Started,150
+GHI791,Lufthansa,12:45,Madrid Barajas ,MAD,Spain,C2,Not Started,190
+GHI797,Lufthansa,12:45,Madrid Barajas,MAD,Spain,C2,Not Started,180
+DEF461,British Airways,13:00,New York JFK,JFK,USA,B3,Not Started,150
+GHI792,Lufthansa,13:15,Beijing Capital,PEK,China,C2,Not Started,180
+VWX237,Singapore Airlines,21:45,Hong Kong International,HKG,Hong Kong,B1,Not Started,230
+VWX243,Singapore Airlines,21:45,Hong Kong International,HKG,Hong Kong,B1,Not Started,220
+YZA569,Cathay Pacific,22:00,Singapore Changi,SIN,Singapore,C4,Not Started,250
+YZA575,Cathay Pacific,22:00,Singapore Changi,SIN,Singapore,C4,Not Started,240
+VWX238,Singapore Airlines,22:15,Beijing Capital,PEK,China,B1,Not Started,220
+VWX244,Singapore Airlines,22:15,Beijing Capital,PEK,China,B1,Not Started,210
+YZA570,Cathay Pacific,22:30,Guangzhou Baiyun International,CAN,China,C4,Not Started,240
+VWX239,Singapore Airlines,22:30,Seoul Incheon,ICN,South Korea,B1,Not Started,210
+YZA576,Cathay Pacific,22:30,Guangzhou Baiyun International,CAN,China,C4,Not Started,230
+YZA571,Cathay Pacific,23:00,Shanghai Pudong,PVG,China,C4,Not Started,230
+YZA577,Cathay Pacific,23:00,Shanghai Pudong,PVG,China,C4,Not Started,220
+GHI798,Lufthansa,13:15,Beijing Capital,PEK,China,C2,Not Started,170
+JKL013,Emirates,13:45,Sydney Kingsford Smith,SYD,Australia,A4,Not Started,210
+GHI793,Lufthansa,13:45,Seoul Incheon,ICN,South Korea,C2,Not Started,170
+JKL019,Emirates,13:45,Sydney Kingsford Smith,SYD,Australia,A4,Not Started,200
+GHI799,Lufthansa,13:45,Seoul Incheon,ICN,South Korea,C2,Not Started,160
+MNO351,Qatar Airways,14:00,Dubai International,DBX,UAE,B6,Not Started,220
+JKL014,Emirates,14:15,Abu Dhabi International,AUH,United Arab Emirates,A4,Not Started,200
+GHI794,Lufthansa,14:15,Hong Kong International,HKG,Hong Kong,C2,Not Started,160
+JKL020,Emirates,14:15,Abu Dhabi International,AUH,United Arab Emirates,A4,Not Started,190
+JKL015,Emirates,14:45,Seoul Incheon,ICN,South Korea,A4,Not Started,190
+MNO350,Qatar Airways,17:30,Singapore Changi,SIN,Singapore,B6,Not Started,180
+PQR680,Qantas Airways,17:45,Melbourne Tullamarine,MEL,Australia,C8,Not Started,220
+PQR686,Qantas Airways,17:45,Melbourne Tullamarine,MEL,Australia,C8,Not Started,210
+PQR681,Qantas Airways,18:15,Sydney Kingsford Smith,SYD,Australia,C8,Not Started,210
+PQR687,Qantas Airways,18:15,Sydney Kingsford Smith,SYD,Australia,C8,Not Started,200
+STU902,Air Canada,18:45,Vancouver International,YVR,Canada,A2,Not Started,240
+PQR682,Qantas Airways,18:45,Perth Airport,PER,Australia,C8,Not Started,200
+STU908,Air Canada,18:45,Vancouver International,YVR,Canada,A2,Not Started,230
+PQR688,Qantas Airways,18:45,Perth Airport,PER,Australia,C8,Not Started,190
+VWX240,Singapore Airlines,19:00,Tokyo Haneda,HND,Japan,B1,Not Started,250
+PQR683,Qantas Airways,19:15,Brisbane Airport,BNE,Australia,C8,Not Started,190
+STU903,Air Canada,19:30,Calgary International,YYC,Canada,A2,Not Started,230
+STU909,Air Canada,19:30,Calgary International,YYC,Canada,A2,Not Started,220
+STU904,Air Canada,20:00,Edmonton International,YEG,Canada,A2,Not Started,220
+STU910,Air Canada,20:00,Edmonton International,YEG,Canada,A2,Not Started,210
+VWX235,Singapore Airlines,20:30,Seoul Incheon,ICN,South Korea,B1,Not Started,250
+STU905,Air Canada,20:30,Ottawa ,YOW,Canada,A2,Not Started,210
+VWX241,Singapore Airlines,20:30,Seoul Incheon,ICN,South Korea,B1,Not Started,240
+STU911,Air Canada,20:30,Ottawa Macdonald-Cartier International,YOW,Canada,A2,Not Started,200
+STU906,Air Canada,20:45,Montral,YUL,Canada,A2,Not Started,200
+YZA573,Cathay Pacific,20:45,Hong Kong International,HKG,Hong Kong,C4,Not Started,260
+YZA568,Cathay Pacific,21:15,Beijing Capital,PEK,China,C4,Not Started,260
+VWX236,Singapore Airlines,21:15,Shanghai Pudong,PVG,China,B1,Not Started,240
+YZA574,Cathay Pacific,21:15,Beijing Capital,PEK,China,C4,Not Started,250
+VWX242,Singapore Airlines,21:15,Shanghai Pudong,PVG,China,B1,Not Started,230
+YZA572,Cathay Pacific,23:15,Tokyo Haneda,HND,Japan,C4,Not Started,229
