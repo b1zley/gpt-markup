@@ -7,9 +7,9 @@ module.exports = {
     testMatch: ['**/**/*.test.js'],
     verbose: true,
     // forceExit: true,
-    // collectCoverage: true,
-    // coverageDirectory: 'coverage',
-    // coverageReporters: ['text', 'lcov'],
+    collectCoverage: true,
+    coverageDirectory: 'coverage',
+    coverageReporters: ['text', 'lcov'],
 
     
     // detectOpenHandles: true,
