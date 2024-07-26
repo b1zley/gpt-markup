@@ -51,11 +51,12 @@ const CreateModule = ({ modules, setModules }) => {
                     <Form.Control
                         type="text"
                         placeholder="Enter module name"
+                        id='createModuleName'
                         value={inputModuleName}
                         onChange={handleInputNameChange}
                     />
                 </Form.Group>
-                <Button type="submit" className='my-1'>
+                <Button type="submit" className='my-1' id='createModuleButton'>
                     Create Module
                 </Button>
             </Form>

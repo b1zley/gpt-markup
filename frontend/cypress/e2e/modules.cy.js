@@ -1,5 +1,5 @@
 import { loginFunction } from "../support/utils/loginUtil"
-import { createModule } from "../support/utils/modulesUtil"
+import { createModule, deleteModuleByName, navigateToModules, navigateToSpecificModule } from "../support/utils/modulesUtil"
 
 describe('Modules', function () {
 
@@ -10,17 +10,29 @@ describe('Modules', function () {
     describe('given user logged in', function () {
 
 
-        it('should allow user to navigate to module page', function () {
+        it('should allow user to navigate to modules page', function () {
             const { email, password } = this.logins.validLogin
             loginFunction(email, password)
-            
-            cy.contains('a', 'Modules').click()
-            cy.contains('h3', 'Modules')
+            navigateToModules()
         })
 
-        // it('should allow creation of new module', function () {
-        //     cy.visit('/module')
-        //     createModule()
-        // })
+        it('should allow creation + deletion of new module', function () {
+            const {email, password} = this.logins.validLogin
+            loginFunction(email, password)
+            navigateToModules()
+            const newlyCreatedModule = createModule()
+            deleteModuleByName(newlyCreatedModule)
+        })
+
+        it('should allow creation + navigation to new module page', function () {
+            const {email, password} = this.logins.validLogin
+            loginFunction(email, password)
+            navigateToModules()
+            const newlyCreatedModule = createModule()
+            navigateToSpecificModule(newlyCreatedModule)
+            // tear down module
+            navigateToModules()
+            deleteModuleByName(newlyCreatedModule)
+        })
     })
 })
