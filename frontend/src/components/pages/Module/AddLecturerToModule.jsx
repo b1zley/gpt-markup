@@ -62,8 +62,9 @@ const AddLecturerToModule = ({ lecturersInModule, setLecturersInModule, allLectu
                     aria-label="Default select example"
                     onChange={(event) => { setLecturerToAdd(event.target.value) }}
                     value={lecturerToAddId}
+                    id='lecturerSelect'
                 >
-                    <option>Select a lecturer</option>
+                    <option >Select a lecturer</option>
                     {lecturersToShow.map((lecturer) =>
                         <option
                             value={lecturer.super_user_id}
@@ -78,7 +79,7 @@ const AddLecturerToModule = ({ lecturersInModule, setLecturersInModule, allLectu
                 </Form.Select>
 
                 {lecturerToAddId ?
-                    <Button className='my-1' type='submit'>
+                    <Button className='my-1' type='submit' id='addLecturerButton'>
                         Add Lecturer
                     </Button>
                     :

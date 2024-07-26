@@ -70,7 +70,7 @@ const EditLecturersInModule = ({ module_id }) => {
                 <h5>
                     Lecturers Assigned
                 </h5>
-                <ListGroup>
+                <ListGroup id='lecturerList'>
                     {lecturersInModule.length === 0 ?
                         <ListGroup.Item>
                             None added yet...
