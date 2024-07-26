@@ -74,7 +74,7 @@ const UploadRTFControls = ({ parentObject, setParentObject, param, userFriendlyP
                 </Form.Group>
 
                 {file ?
-                    <Button variant="primary" type="submit">
+                    <Button variant="primary" type="submit" id='rtfUploadNewButton'>
                         Upload New
                     </Button> :
                     <Button disabled variant="primary" type="submit">

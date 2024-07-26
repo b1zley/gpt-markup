@@ -192,6 +192,7 @@ const EditAssignedMarkersAccordion = ({ lastDisplayed, examInformation }) => {
                                 aria-label="Default select example"
                                 onChange={(e) => setSelectedNewMarker(e.target.value)}
                                 value={selectedNewMarker}
+                                id='assignMarkerSelect'
                             >
                                 <option>Select a new marker</option>
                                 {markersToDisplay.map((markerToDisplay) =>
@@ -204,7 +205,7 @@ const EditAssignedMarkersAccordion = ({ lastDisplayed, examInformation }) => {
 
                                 )}
                             </Form.Select>
-                            <Button variant="primary" type="submit" className='my-1'>
+                            <Button variant="primary" type="submit" className='my-1' id='assignMarkerButton'>
                                 Add New Marker
                             </Button>
                         </Form>

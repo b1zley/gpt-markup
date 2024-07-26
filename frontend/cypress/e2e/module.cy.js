@@ -41,7 +41,7 @@ describe('Module', function () {
             deleteModuleByName(newlyCreatedModule)
         })
 
-        it.only('should allow navigation to specific exam', function () {
+        it('should allow navigation to specific exam', function () {
             const {email, password} = this.logins.validLogin
             loginFunction(email, password)
             navigateToModules()

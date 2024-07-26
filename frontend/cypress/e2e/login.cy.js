@@ -21,7 +21,7 @@ describe('login', () => {
             loginFunction(email, password)
 
             // Add assertions to verify login success
-            cy.contains('a', 'Account').click();
+            cy.contains('a', 'Account')
             cy.contains('a', 'Logout').should('be.visible');
         });
     });
@@ -39,5 +39,4 @@ describe('login', () => {
     })
 
 });
-
 

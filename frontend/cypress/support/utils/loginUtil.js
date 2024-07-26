@@ -12,7 +12,7 @@ function loginFunction(email, password) {
 
 
 function logoutFunction() {
-    cy.contains('a', 'Account').click();
+    cy.contains('a', 'Account')
     cy.contains('a', 'Logout').click()
 }
 

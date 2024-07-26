@@ -71,14 +71,6 @@ function createModuleExamNavigateToExam(validLogin) {
 }
 
 
-function editExamQuestion(text) {
-    cy.contains('button', 'Edit').click()
-    cy.get('textarea[placeholder="Exam Question"]').type(text)
-    cy.contains('button', 'Commit').click()
-    cy.reload()
-    navigateToPanel('Exam Question')
-    cy.contains('pre', text).should('exist')
-}
 
 
 export {
@@ -88,5 +80,4 @@ export {
     removeLecturerFromExam,
     navigateToExam,
     createModuleExamNavigateToExam,
-    editExamQuestion,
 }
