@@ -63,6 +63,7 @@ const Login = () => {
                         <Form.Control
                             type="email"
                             placeholder="Enter email"
+                            id='loginEmail'
                             value={emailInput}
                             onChange={(event) => setEmailInput(event.target.value)}
                         />
@@ -73,11 +74,12 @@ const Login = () => {
                         <Form.Control
                             type="password"
                             placeholder="Password"
+                            id='loginPassword'
                             value={passwordInput}
                             onChange={(event) => setPasswordInput(event.target.value)}
                         />
                     </Form.Group>
-                    <Button type='submit'>
+                    <Button type='submit' id='loginSubmitButton'>
                         Login
                     </Button>
                 </Form>
