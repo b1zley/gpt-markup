@@ -75,6 +75,7 @@ const DoubleClickModifyMarkCell = ({ parameterInCell, examSubmissionInformation,
     return (
         <td style={{ width: '60%' }}
             onDoubleClick={handleDoubleClickPart}
+            id={`doubleClickCell-${parameterInCell}-${index}`}
         >
             {editPart ?
 

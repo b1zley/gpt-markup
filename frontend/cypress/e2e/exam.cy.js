@@ -10,7 +10,14 @@ import {
     editTemperatureValue,
     uploadExamZip,
     addNewMarker,
-    removeTargetMarker
+    removeTargetMarker,
+    addStudentExamSubmission,
+    accessSES,
+    uploadNewSES,
+    addMarksAndCritiqueToRubric,
+    markSESForTraining,
+    lockExamInChecklist,
+    generateAICritique
 } from "../support/utils/examUtil";
 import { loginFunction } from "../support/utils/loginUtil";
 import { navigateToModules, createModule, navigateToSpecificModule, deleteModuleByName } from "../support/utils/modulesUtil";
@@ -42,12 +49,14 @@ describe('Exam', function () {
         describe('given edit clicked, text input, commit clicked', function () {
             it('should correctly update dom with new text', function () {
 
-                navigateToPanel('Exam Question')
+                function addExamQuestionJourney() {
+                    navigateToPanel('Exam Question')
 
-                const editText = `This is updated text: ${Math.random()}`
-                editEditButtonComponent(editText, 'Exam Question')
+                    const editText = `This is updated text: ${Math.random()}`
+                    editEditButtonComponent(editText, 'Exam Question')
+                }
 
-
+                addExamQuestionJourney()
             })
         })
 
@@ -59,6 +68,8 @@ describe('Exam', function () {
                 uploadRtf(editFilePath, 'super mega', 'Exam Question')
 
 
+
+
             })
         })
     })
@@ -67,8 +78,12 @@ describe('Exam', function () {
     describe('File Types', function () {
         describe('given java file type toggled on', function () {
             it('should correctly update dom with java enabled', function () {
-                navigateToPanel('File Types')
-                toggleFileType('java', true)
+                function toggleJavaJourney() {
+                    navigateToPanel('File Types')
+                    toggleFileType('java', true)
+                }
+
+                toggleJavaJourney()
             })
         })
 
@@ -86,23 +101,24 @@ describe('Exam', function () {
     describe('Rubric', function () {
         describe('given upload components as csv clicked, and csv file uploaded', function () {
             it('should correctly update dom with new rubric components', function () {
-                navigateToPanel('Rubric')
-                const expectedArray = [
-                    {
-                        name: 'Program Functionality',
-                        desc: 'This is the description for program functionality',
-                        max: '6.00'
-                    },
-                    {
-                        name: 'ANOTHER COMPONENT',
-                        desc: 'This is another component desc',
-                        max: '1.00'
-                    }
-                ]
-                const csvPath = '../testUploadFiles/testRubricComponent.csv'
-                uploadRubricComponentsAsCSV(csvPath, expectedArray)
-
-
+                function rubricCSVJourney() {
+                    navigateToPanel('Rubric')
+                    const expectedArray = [
+                        {
+                            name: 'Program Functionality',
+                            desc: 'This is the description for program functionality',
+                            max: '6.00'
+                        },
+                        {
+                            name: 'ANOTHER COMPONENT',
+                            desc: 'This is another component desc',
+                            max: '1.00'
+                        }
+                    ]
+                    const csvPath = '../testUploadFiles/testRubricComponent.csv'
+                    uploadRubricComponentsAsCSV(csvPath, expectedArray)
+                }
+                rubricCSVJourney()
             })
         })
 
@@ -121,8 +137,11 @@ describe('Exam', function () {
     describe('AI Options', function () {
         describe('given edit prompt specifications clicked, text added, commit clicked', function () {
             it('should correctly update dom with new prompt specifications', function () {
-                navigateToPanel('AI Options')
-                editEditButtonComponent('this is example text', 'AI Options')
+                function promptSpecificationsJourney() {
+                    navigateToPanel('AI Options')
+                    editEditButtonComponent('this is example text', 'AI Options')
+                }
+                promptSpecificationsJourney()
             })
         })
 
@@ -130,7 +149,6 @@ describe('Exam', function () {
         describe('given upload prompt clicked, correct RTF file uploaded', function () {
             it('should correctly update dom with new prompt specifications from RTF file', function () {
                 navigateToPanel('AI Options')
-
                 const editFilePath = '../testUploadFiles/testRTF.rtf'
                 uploadRtf(editFilePath, 'super mega', 'AI Options')
 
@@ -169,11 +187,12 @@ describe('Exam', function () {
     describe('Model Answer', function () {
         describe('given attempt to upload valid zip file', function () {
             it('should include display project files button', function () {
-                navigateToPanel('Model Answer')
-
-                const zipPath = '../testUploadFiles/EXAM_MODEL_ANSWER-P3 Jan 2024.zip'
-                uploadExamZip(zipPath, 'Model Answer')
-
+                function modelAnswerJourney() {
+                    navigateToPanel('Model Answer')
+                    const zipPath = '../testUploadFiles/EXAM_MODEL_ANSWER-P3 Jan 2024.zip'
+                    uploadExamZip(zipPath, 'Model Answer')
+                }
+                modelAnswerJourney()
             })
         })
     })
@@ -190,10 +209,147 @@ describe('Exam', function () {
         })
     })
 
-    describe.only('Add Student Submissions', function () {
+    describe('Add Student Submissions', function () {
+
+        const studentNumber1 = '40100099'
+        const studentNumber2 = '40100098'
+
+        const exampleUploadPath = '../testUploadFiles/EXAM_MODEL_ANSWER-P3 Jan 2024.zip'
+        const rootFolderName = 'P3OHaganJoshua40100099'
+
+
         describe('given search for student and add', function () {
             it('should correctly update dom with new student submission', function () {
-                
+                navigateToPanel('Student Submissions')
+
+                addStudentExamSubmission(studentNumber1)
+                addStudentExamSubmission(studentNumber2)
+            })
+        })
+
+        describe('given student added, access ses page, upload new submission', function () {
+            it('should correctly update file viewer with exam submission', function () {
+                navigateToPanel('Student Submissions')
+
+                addStudentExamSubmission(studentNumber1)
+
+                accessSES(studentNumber1)
+
+                uploadNewSES(exampleUploadPath, rootFolderName)
+
+            })
+        })
+
+
+        describe('given RCs added, given student added, access SES page, add rubric marks and critique, and mark for training', function () {
+            it('should correctly update DOM with added marks and critique', function () {
+
+                // add rubric components via csv
+                navigateToPanel('Rubric')
+                const expectedArray = [
+                    {
+                        name: 'Program Functionality',
+                        desc: 'This is the description for program functionality',
+                        max: '6.00'
+                    },
+                    {
+                        name: 'ANOTHER COMPONENT',
+                        desc: 'This is another component desc',
+                        max: '1.00'
+                    }
+                ]
+                const csvPath = '../testUploadFiles/testRubricComponent.csv'
+                uploadRubricComponentsAsCSV(csvPath, expectedArray)
+
+                function markForTrainingJourney() {
+                    // update values in rc via ses
+                    navigateToPanel('Student Submissions')
+                    addStudentExamSubmission(studentNumber1)
+                    accessSES(studentNumber1)
+                    uploadNewSES(exampleUploadPath, rootFolderName)
+                    addMarksAndCritiqueToRubric()
+
+                    cy.contains('h4', 'Exam: ').find('a').click()
+                    navigateToPanel('Student Submissions')
+                    markSESForTraining(studentNumber1)
+                }
+
+                markForTrainingJourney()
+            })
+        })
+
+
+    })
+
+
+    describe('Entire Exam Journey - bean to cup - generate AI checklist', function () {
+        describe('given all values correct', function () {
+            it('should generate AI critique', function () {
+                // add exam question
+                navigateToPanel('Exam Question')
+                const editText = `This is updated text: ${Math.random()}`
+                editEditButtonComponent(editText, 'Exam Question')
+
+                // toggle java
+                navigateToPanel('File Types')
+                toggleFileType('java', true)
+
+                // rubric csv upload
+                navigateToPanel('Rubric')
+                const expectedArray = [
+                    {
+                        name: 'Program Functionality',
+                        desc: 'This is the description for program functionality',
+                        max: '6.00'
+                    },
+                    {
+                        name: 'ANOTHER COMPONENT',
+                        desc: 'This is another component desc',
+                        max: '1.00'
+                    }
+                ]
+                const csvPath = '../testUploadFiles/testRubricComponent.csv'
+                uploadRubricComponentsAsCSV(csvPath, expectedArray)
+
+                // upload prompt specifications
+                navigateToPanel('AI Options')
+                editEditButtonComponent('this is example text', 'AI Options')
+
+                // upload model answer
+                navigateToPanel('Model Answer')
+                const zipPath = '../testUploadFiles/EXAM_MODEL_ANSWER-P3 Jan 2024.zip'
+                uploadExamZip(zipPath, 'Model Answer')
+
+                // upload first ses + mark for training
+                const studentNumber1 = '40100099'
+                const studentNumber2 = '40100098'
+
+                const exampleUploadPath = '../testUploadFiles/EXAM_MODEL_ANSWER-P3 Jan 2024.zip'
+                const rootFolderName = 'P3OHaganJoshua40100099'
+
+                navigateToPanel('Student Submissions')
+                addStudentExamSubmission(studentNumber1)
+                addStudentExamSubmission(studentNumber2)
+                accessSES(studentNumber1)
+                uploadNewSES(exampleUploadPath, rootFolderName)
+                addMarksAndCritiqueToRubric()
+
+                cy.contains('h4', 'Exam: ').find('a').click()
+                navigateToPanel('Student Submissions')
+                markSESForTraining(studentNumber1)
+
+
+                // lock exam
+                navigateToPanel('Checklist')
+                lockExamInChecklist()
+
+                // upload second ses + generate ai critique
+                navigateToPanel('Student Submissions')
+                accessSES(studentNumber2)
+                uploadNewSES(exampleUploadPath, rootFolderName)
+
+                generateAICritique()
+
             })
         })
     })

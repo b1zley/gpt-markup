@@ -147,6 +147,85 @@ function removeTargetMarker(markerName) {
     cy.get('div.list-group').contains(markerName).should('not.exist')
 }
 
+function addStudentExamSubmission(studentNumber) {
+    cy.get('input[type="text"]').type(studentNumber)
+    cy.contains('span', studentNumber)
+        .parent()
+        .find('button')
+        .click()
+
+    for (let i = 0; i < studentNumber.length; i++) {
+        cy.get('input[type="text"]').type(`{backspace}`)
+    }
+
+    cy.contains('td', studentNumber).should('exist')
+
+}
+
+function accessSES(studentNumber) {
+    cy.contains('td', studentNumber).click()
+    cy.contains('h5', studentNumber).should('exist')
+}
+
+
+function uploadNewSES(filePath, rootFolderName) {
+    cy.contains('button', 'Submission Upload').click()
+    cy.get('input[name="file"]')
+        .attachFile(filePath)
+    cy.contains('button', 'Upload New').click()
+    cy.contains('button', 'Display').click()
+    cy.contains('button', rootFolderName).should('exist')
+    cy.contains('button', 'Close').click()
+}
+
+function addMarksAndCritiqueToRubric() {
+    cy.contains('button', 'Rubric Marks').click()
+
+    const addedCritique = 'addedCritique'
+
+    const addedNumber = '0.50'
+
+    cy.get('td[id="doubleClickCell-rubric_component_critique-0"]').dblclick()
+    cy.get('td[id="doubleClickCell-rubric_component_critique-0"]').find('textarea').type(addedCritique)
+    cy.get('td[id="doubleClickCell-rubric_component_critique-0"]').find('textarea').type('{enter}')
+
+    cy.contains('td', addedCritique).should('exist')
+
+    cy.get('td[id="doubleClickCell-rubric_component_mark-0"]').dblclick()
+    cy.get('td[id="doubleClickCell-rubric_component_mark-0"]').find('textarea').type(addedNumber)
+    cy.get('td[id="doubleClickCell-rubric_component_mark-0"]').find('textarea').type('{enter}')
+
+    cy.contains('td', addedNumber).should('exist')
+
+
+    cy.get('td[id="doubleClickCell-rubric_component_critique-1"]').dblclick()
+    cy.get('td[id="doubleClickCell-rubric_component_critique-1"]').find('textarea').type(addedCritique)
+    cy.get('td[id="doubleClickCell-rubric_component_critique-1"]').find('textarea').type('{enter}')
+
+    cy.contains('td', addedCritique).should('exist')
+
+    cy.get('td[id="doubleClickCell-rubric_component_mark-1"]').dblclick()
+    cy.get('td[id="doubleClickCell-rubric_component_mark-1"]').find('textarea').type(addedNumber)
+    cy.get('td[id="doubleClickCell-rubric_component_mark-1"]').find('textarea').type('{enter}')
+
+    cy.contains('td', addedNumber).should('exist')
+
+}
+
+function markSESForTraining(studentNumber) {
+    cy.contains('td', studentNumber).parent().contains('button', 'Mark for training').click()
+}
+
+function lockExamInChecklist() {
+    cy.get('input[type="checkbox"]').click()
+}
+
+function generateAICritique(){
+    cy.contains('button', 'Generate AI Critique').click()
+    cy.contains('button', 'Rubric Marks').click()
+    cy.contains('td', 'This is example feedback for Rubric Component').should('exist')
+}
+
 
 
 
@@ -162,5 +241,12 @@ export {
     editTemperatureValue,
     uploadExamZip,
     addNewMarker,
-    removeTargetMarker
+    removeTargetMarker,
+    addStudentExamSubmission,
+    accessSES,
+    uploadNewSES,
+    addMarksAndCritiqueToRubric,
+    markSESForTraining,
+    lockExamInChecklist,
+    generateAICritique
 }
