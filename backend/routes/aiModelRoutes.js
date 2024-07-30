@@ -5,12 +5,21 @@ const aiModelControllers = require('../controllers/aiModelControllers')
 
 /**
  * @swagger
+ * tags:
+ *   - name: AI Model
+ *     description: Operations related to AI Models
+ * 
+ */
+
+
+/**
+ * @swagger
  * /ai_model:
  *   get:
  *     security:
  *       - BearerAuth: []  
  *     tags:
- *       - Trained Model
+ *       - AI Model
  *     summary: Retrieves all trained models from the database
  *     responses:
  *       '200':
