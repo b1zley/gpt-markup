@@ -67,6 +67,7 @@ const StudentExamSubmissionView = () => {
                     </div>
                     <div className='mt-auto'>
                         <GenerateAICrtiqueButton
+                            setActiveAccodrion={setActiveAccodrion}
                             examSubmissionInformation={examSubmissionInformation}
                             setExamSubmissionInformation={setExamSubmissionInformation}
                         />
