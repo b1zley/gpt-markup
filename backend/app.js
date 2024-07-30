@@ -42,7 +42,8 @@ const swaggerOptions = {
             },
         },
     },
-    apis: ['./routes/**/*.js'], // Path to your API files
+    apis: ['./routes/**/*.js', './app.js'],
+
 };
 
 
@@ -103,6 +104,54 @@ const createApp = () => {
 
     // app.use('/files', express.static(path.join(__dirname, 'uploads')));
 
+
+    /**
+     * @swagger
+     * tags:
+     *   - name: Files
+     *     description: Operations related to viewing files and directories within the file system
+     * 
+     */
+
+    /**
+     * @swagger
+     * /files/{path}:
+     *   get:
+     *     security:
+     *       - BearerAuth: []
+     *     tags:
+     *       - Files
+     *     summary: Retrieves a file or lists the contents of a directory
+     *     parameters:
+     *       - name: path
+     *         in: path
+     *         description: The file or directory path (use 'x--x' in place of '/')
+     *         required: false
+     *         schema:
+     *           type: string
+     *     responses:
+     *       '200':
+     *         description: Successful response
+     *         content:
+     *           application/json:
+     *             schema:
+     *               type: object
+     *               oneOf:
+     *                 - type: array
+     *                   items:
+     *                     type: object
+     *                     properties:
+     *                       name:
+     *                         type: string
+     *                         description: Name of the file or directory
+     *                       isDirectory:
+     *                         type: boolean
+     *                         description: Indicates if it is a directory
+     *                 - type: string
+     *                   description: Content of the file
+     *       '500':
+     *         description: Internal server error
+     */
     app.get('/files/:path?', verifyJwt, async (req, res) => {
 
         try {
