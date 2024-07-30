@@ -19,7 +19,10 @@ describe('Folder Concatenator Suite', () => {
                 const actualConcatenatedString = await concatenateAnyFiles(javaProjectDirPath, onlyJavaExtension)
                 const expectedString = await fs.readFile(expectedStringPath, 'utf8');
 
-                expect(actualConcatenatedString).toBe(expectedString.toString())
+                const actualLines = actualConcatenatedString.split('\n')
+                const expectedLines = expectedString.split('\n')
+
+                expect(actualLines).toEqual(expectedLines)
 
             })
         })

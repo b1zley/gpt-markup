@@ -7,7 +7,14 @@
     "dev": "vite",
     "build": "vite build",
     "lint": "eslint . --ext js,jsx --report-unused-disable-directives --max-warnings 0",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "start:backend": "cross-env NODE_ENV=test node ../backend/server.js",
+    "wait:backend": "wait-on http-get://localhost:4000",
+    "start:frontend": "npm run dev",
+    "wait:frontend": "wait-on http-get://localhost:3000",
+    "test:e2e": "npm-run-all --parallel start:backend wait:backend start:frontend wait:frontend cypress:run",
+    "cypress:run": "cypress run",
+    "cypress:open": "cypress open"
   },
   "dependencies": {
     "@iarna/rtf-to-html": "^1.1.0",
@@ -29,6 +36,7 @@
     "@types/react": "^18.2.66",
     "@types/react-dom": "^18.2.22",
     "@vitejs/plugin-react": "^4.2.1",
+    "cross-env": "^7.0.3",
     "cypress": "^13.13.1",
     "cypress-file-upload": "^5.0.8",
     "eslint": "^8.57.0",
@@ -36,7 +44,10 @@
     "eslint-plugin-react": "^7.34.1",
     "eslint-plugin-react-hooks": "^4.6.0",
     "eslint-plugin-react-refresh": "^0.4.6",
+    "npm-run-all": "^4.1.5",
     "sass": "^1.77.4",
-    "vite": "^5.2.0"
+    "start-server-and-test": "^2.0.5",
+    "vite": "^5.2.0",
+    "wait-on": "^7.2.0"
   }
 }

@@ -6,10 +6,11 @@ module.exports = {
     testEnvironment: 'node',
     testMatch: ['**/**/*.test.js'],
     verbose: true,
+    setupFiles: ['dotenv/config']
     // forceExit: true,
-    collectCoverage: true,
-    coverageDirectory: 'coverage',
-    coverageReporters: ['text', 'lcov'],
+    // collectCoverage: true,
+    // coverageDirectory: 'coverage',
+    // coverageReporters: ['text', 'lcov'],
 
     
     // detectOpenHandles: true,

@@ -10,8 +10,8 @@ async function loginUser() {
             "email": "gt@email.com",
             "password": "sekret"
         });
-
-        // console.log('login token: ',response.body.token)
+        // console.log(response)
+        console.log('login token: ',response.body.token)
     return response.body.token; // Adjust this to the actual structure of your response
 }
 

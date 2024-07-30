@@ -6,6 +6,7 @@ const createReadStream = require('fs').createReadStream;
 const unzipper = require('unzipper') // used to unzip zip files
 const { db, PORT, axios, storageDirectory } = require('./routesCommonDependencies')
 const cors = require('cors')
+// require('dotenv').config();
 
 
 const upload = multer({ dest: 'uploads/' }); // destination directory...
@@ -14,6 +15,9 @@ const { verifyJwt } = require('./controllers/authenticationControllers')
 
 
 const createApp = () => {
+
+
+    console.log('DB_NAME: ',process.env.DB_NAME)
     const app = express()
 
 
@@ -48,7 +52,7 @@ const createApp = () => {
     app.use('/convert', verifyJwt, decodeRTFRoutes)
 
 
-
+    
 
 
     // unprotected login route
@@ -105,11 +109,16 @@ const createApp = () => {
     });
 
 
+    app.use('/', (req, res) => {
+        return res.status(200).send()
+    })
     // const examSubmissionRoutes;
 
     return app
 
 }
+
+
 
 
 

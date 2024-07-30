@@ -27,7 +27,7 @@ const Login = () => {
 
     async function handleSubmit(event) {
         event.preventDefault()
-
+        console.log('FUCK FUCK FUCK FUCK FUCK')
         const postBody = {
             email: emailInput,
             password: passwordInput
@@ -35,6 +35,8 @@ const Login = () => {
         const postUrl = `${BASE_API_URL}super_authentication/login`
 
         const responseFromLogin = await axios.post(postUrl, postBody)
+        console.log(responseFromLogin)
+        console.log(responseFromLogin.data)
         const token = responseFromLogin.data.token
         login(token)
     }

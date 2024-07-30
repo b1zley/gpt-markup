@@ -27,6 +27,7 @@ export const AuthProvider = ({ children }) => {
 
     const login = (token) => {
         // setUser(userData)
+        console.log('token: ',token)
         const decodedToken = jwtDecode(token)
         setUser(decodedToken)
         Cookies.set('jwt', token, {expires: 7})

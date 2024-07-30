@@ -2,8 +2,8 @@
 const db = require('./dbConfig')
 const PORT = 4000;
 const axios = require('axios')
-const dotenv = require('dotenv')
-dotenv.config()
+// const dotenv = require('dotenv')
+// dotenv.config()
 
 const backendRoot = __dirname
 

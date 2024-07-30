@@ -52,7 +52,7 @@ async function validateAccountCreationCode(accountCreationCode) {
 
 
 async function handlePostLogin(req, res) {
-
+    // console.log('wasdwasdwasd')
     try {
         const { email, password } = req.body
         const user = await queryLogin(email, password)
