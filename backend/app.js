@@ -13,16 +13,56 @@ const upload = multer({ dest: 'uploads/' }); // destination directory...
 
 const { verifyJwt } = require('./controllers/authenticationControllers')
 
+// swagger configuration
+const swaggerJsdoc = require('swagger-jsdoc');
+const swaggerUi = require('swagger-ui-express');
+
+// Swagger configuration
+const swaggerOptions = {
+    definition: {
+        openapi: '3.0.0',
+        info: {
+            title: 'API Documentation',
+            version: '1.0.0',
+            description: 'API documentation using Swagger',
+        },
+        servers: [
+            {
+                url: `http://localhost:${PORT}`,
+                description: 'Development server',
+            },
+        ],
+        components: {
+            securitySchemes: {
+                BearerAuth: {
+                    type: 'http',
+                    scheme: 'bearer',
+                    bearerFormat: 'JWT',
+                },
+            },
+        },
+    },
+    apis: ['./routes/**/*.js'], // Path to your API files
+};
+
+
+// Initialize Swagger JSDoc
+const swaggerSpec = swaggerJsdoc(swaggerOptions);
+
 
 const createApp = () => {
 
 
-    console.log('DB_NAME: ',process.env.DB_NAME)
+    console.log('DB_NAME: ', process.env.DB_NAME)
     const app = express()
 
 
     app.use(express.json())
     app.use(cors())
+
+    app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+
+
 
     app.get('/test', async (req, res) => {
         // get from student
@@ -52,7 +92,7 @@ const createApp = () => {
     app.use('/convert', verifyJwt, decodeRTFRoutes)
 
 
-    
+
 
 
     // unprotected login route
@@ -63,7 +103,7 @@ const createApp = () => {
 
     // app.use('/files', express.static(path.join(__dirname, 'uploads')));
 
-    app.get('/files/:path?',verifyJwt, async (req, res) => {
+    app.get('/files/:path?', verifyJwt, async (req, res) => {
 
         try {
             const basePath = path.join(storageDirectory);
