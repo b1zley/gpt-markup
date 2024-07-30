@@ -22,9 +22,9 @@ const swaggerOptions = {
     definition: {
         openapi: '3.0.0',
         info: {
-            title: 'API Documentation',
+            title: 'GPT MarkUp Documentation',
             version: '1.0.0',
-            description: 'API documentation using Swagger',
+            description: 'API documentation using Swagger. \n Documentation repository for GPT MarkUp API.\n To Test login functions, use Super Authentication > POST /super_authentication/login with the credentials: {"email": "gt@email.com@", "password": "sekret"}, then use the returned token in Authorize.',
         },
         servers: [
             {

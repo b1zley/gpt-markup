@@ -564,8 +564,7 @@ router.put('/:student_exam_submission_id', studentExamSubmissionControllers.hand
  *                               type: string
  *                               example: "Good"
  *                               description: Description of the rating range.
- *       '400':
- *         description: Bad Request - The exam might not be locked or the request is invalid.
+ *       
  *       '500':
  *         description: Internal Server Error - An error occurred while processing the request.
  */
