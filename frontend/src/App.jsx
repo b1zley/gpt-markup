@@ -8,6 +8,7 @@ import SharedFooter from './components/shared/SharedFooter';
 
 // routes
 import Home from './components/pages/Home';
+import HomePage from './components/pages/HomeAbout/HomePage';
 import AboutRouter from './routers/AboutRouter';
 import CreateExam from './components/shared/CreateExam';
 import ModuleView from './components/pages/Module/ModuleView'
@@ -20,6 +21,7 @@ import { AuthProvider, useAuth } from './contexts/AuthContext';
 
 // fileviewer test
 import MyFileBrowser from './components/pages/MyFileBrowser/MyFileBrowser';
+import UserGuideView from './components/pages/UserGuide/UserGuideView';
 
 
 
@@ -42,20 +44,13 @@ const App = () => {
             <Route path='/login'
               element={<Login />} />
             <Route exact path="/"
-              element={<Home />} />
-            {/* test route */}
-            <Route path="/about/*"
-              element={<AboutRouter />} />
+              element={<HomePage />} />
             {/* protected routes */}
-            <Route path='/create_exam'
-              element={<CreateExam loggedInSuperUser={{ "super_user_id": 1 }} />} />
             <Route path='/module/*'
               element={<ProtectedRoute element={<ModuleRouter />} />} />
+            <Route exact path="/user-guide"
+              element={<UserGuideView />} />
 
-            <Route 
-              path='/fileviewer'
-              element={<MyFileBrowser basePath={'EXAM_SUBMISSIONx--xextractedx--x182'}/>}
-              />
           </Routes>
         </div>
         <SharedFooter />

@@ -66,11 +66,11 @@ function SharedNavBar({ logoImageSrc = logoImage, brandName = 'MarkUp-GPT' }) {
             <LinkContainer to='/'>
               <Nav.Link className='mx-2 '>Home</Nav.Link>
             </LinkContainer>
-            <LinkContainer to='/about'>
-              <Nav.Link className='mx-2 '>About</Nav.Link>
-            </LinkContainer>
             <LinkContainer to='/module'>
               <Nav.Link className='mx-2 '>Modules</Nav.Link>
+            </LinkContainer>
+            <LinkContainer to='/user-guide'>
+              <Nav.Link className='mx-2 '>User Guide</Nav.Link>
             </LinkContainer>
           </Nav>
 
