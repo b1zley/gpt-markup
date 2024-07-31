@@ -7,7 +7,12 @@ import StudentExamSubmissionView from '../components/pages/StudentExamSubmission
 import ModulesView from '../components/pages/Modules/ModulesView'
 
 
-
+/**
+ * `ModuleRouter` is a React component that manages routing for the module-related pages of the application.
+ * It sets up routes for viewing modules, exams, rubric components, and student exam submissions.
+ * 
+ * @returns {React.ReactElement} The `ModuleRouter` component with its defined routes.
+ */
 const ModuleRouter = () =>{
     return (
         <Routes>

@@ -23,7 +23,14 @@ import MyFileBrowser from './components/pages/MyFileBrowser/MyFileBrowser';
 
 
 
-
+/**
+ * `App` is the main component of the application, responsible for setting up the routing,
+ * and providing shared layout components such as the navigation bar and footer. It uses
+ * React Router to handle different routes and ensures protected routes are only accessible
+ * to authenticated users. The component also integrates context providers for user authentication.
+ *
+ * @returns {React.ReactElement} The `App` component with routing, layout, and context providers.
+ */
 const App = () => {
   return (
     <Router>
