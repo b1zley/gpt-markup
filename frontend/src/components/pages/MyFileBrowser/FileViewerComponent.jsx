@@ -8,6 +8,18 @@ import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { dark } from 'react-syntax-highlighter/dist/esm/styles/prism';
 import { coy } from 'react-syntax-highlighter/dist/esm/styles/prism';
 
+
+/**
+ * `FileViewerComponent` is a component that fetches and displays the content of a file.
+ * 
+ * It uses syntax highlighting to display the content of the file in a user-friendly manner.
+ * 
+ * @component
+ * @param {string} fileToViewUrl - The URL of the file to be fetched and displayed.
+ * @example
+ * const fileToViewUrl = 'path/to/file';
+ * return <FileViewerComponent fileToViewUrl={fileToViewUrl} />;
+ */
 const FileViewerComponent = ({ fileToViewUrl }) => {
     const [fileUrl, setFileUrl] = useState('');
     const [error, setError] = useState(null);

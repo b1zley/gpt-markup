@@ -11,6 +11,18 @@ import { Row } from 'react-bootstrap';
 import { Col } from 'react-bootstrap'
 import useConfirmation from '../../hooks/useConfirmation';
 
+
+/**
+ * `MyFileBrowser` is a component that allows users to browse and view files and directories.
+ * 
+ * It displays a list of files and directories in the current path, allows navigation through directories, and shows a file viewer for selected files.
+ * 
+ * @component
+ * @param {string} basePath - The initial base path for the file browser.
+ * @example
+ * const basePath = 'projectFolder';
+ * return <MyFileBrowser basePath={basePath} />;
+ */
 const MyFileBrowser = ({ basePath }) => {
     const [files, setFiles] = useState([]);
     const [currentPath, setCurrentPath] = useState(basePath);
