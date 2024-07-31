@@ -7,6 +7,24 @@ import MarkingRangeTable from './MarkingRangeTable'
 import AddNewMarkingRangeButton from './AddNewMarkingRangeButton'
 import AddNewMarkingRangeModalButton from './AddNewMarkingRangeModalButton'
 
+
+/**
+ * `EditableMarkingRanges` is a React component that provides a section for displaying and managing marking ranges in an accordion format.
+ * 
+ * This component displays marking ranges in a table within an accordion. Users can double-click cells to edit values and use buttons to add new marking ranges.
+ * 
+ * @component
+ * @param {Object} props - Component properties
+ * @param {boolean} props.lastDisplayed - Flag indicating if this is the last item displayed in the accordion
+ * @param {Object} props.rubricComponent - The rubric component containing the marking ranges
+ * @param {Function} props.setRubricComponent - Function to update the rubric component state
+ * @example
+ * <EditableMarkingRanges
+ *   lastDisplayed={true}
+ *   rubricComponent={rubricComponent}
+ *   setRubricComponent={setRubricComponent}
+ * />
+ */
 const EditableMarkingRanges = ({ lastDisplayed, rubricComponent, setRubricComponent }) => {
 
     return (

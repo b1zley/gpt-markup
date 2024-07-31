@@ -17,6 +17,26 @@ import useConfirmation from '../../../hooks/useConfirmation'
 
 import isValidNumber from '../../../../helperFunctions'
 
+
+/**
+ * `AddNewMarkingRangeModalDialogBox` is a modal dialog box component that allows users to add a new marking range to a rubric component.
+ * 
+ * This component provides a form with fields for a range description, minimum inclusive value, and maximum inclusive value.
+ * It validates the input values, makes a POST request to add the new marking range, and updates the rubric component state.
+ * 
+ * @component
+ * @param {Object} props - Component properties
+ * @param {Object} props.rubricComponent - The rubric component object containing current rating ranges
+ * @param {Function} props.setRubricComponent - Function to update the rubric component state
+ * @param {Function} props.setShowModal - Function to control the visibility of the modal
+ * 
+ * @example
+ * <AddNewMarkingRangeModalDialogBox
+ *   rubricComponent={rubricComponent}
+ *   setRubricComponent={setRubricComponent}
+ *   setShowModal={setShowModal}
+ * />
+ */
 const AddNewMarkingRangeModalDialogBox = ({ rubricComponent, setRubricComponent, setShowModal }) => {
 
 

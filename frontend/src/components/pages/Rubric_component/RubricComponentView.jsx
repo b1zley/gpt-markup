@@ -12,6 +12,17 @@ import LoadingSpinner from '../../shared/LoadingSpinner';
 import EditableExamAccordion from '../Exam/dependent components/EditableExamAccordion';
 import EditableMarkingRanges from './dependencies/EditableMarkingRanges';
 
+
+/**
+ * `RubricComponentView` is a React component that displays details of a rubric component.
+ * 
+ * It fetches rubric component details based on `module_id`, `exam_id`, and `rubric_component_id` from the URL parameters.
+ * It displays the module name, exam name, and rubric component name along with editable fields for the rubric component's description and maximum points.
+ * 
+ * @component
+ * @example
+ * <RubricComponentView />
+ */
 const RubricComponentView = () => {
     let { module_id, exam_id, rubric_component_id } = useParams();
     const [rubricComponent, setRubricComponent] = useState(null)

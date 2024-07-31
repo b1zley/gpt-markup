@@ -9,6 +9,24 @@ import axiosToBackend from '../../../../axiosToBackend'
 import DoubleClickModifyCell from './DoubleClickModifyCell'
 import useConfirmation from '../../../hooks/useConfirmation'
 
+
+/**
+ * `MarkingRangeTableRow` is a React component that renders a row in a table displaying rating ranges for a rubric component.
+ * 
+ * This component allows users to view and edit rating range details such as description, minimum, and maximum values. It also provides an option to delete the rating range.
+ * 
+ * @component
+ * @param {Object} props - Component properties
+ * @param {Object} props.rubricComponent - The rubric component containing the rating ranges
+ * @param {Function} props.setRubricComponent - Function to update the rubric component state
+ * @param {number} props.index - The index of the current rating range in the `rating_ranges` array
+ * @example
+ * <MarkingRangeTableRow
+ *   rubricComponent={rubricComponent}
+ *   setRubricComponent={setRubricComponent}
+ *   index={0}
+ * />
+ */
 const MarkingRangeTableRow = ({ rubricComponent, setRubricComponent, index }) => {
 
     const [confirm, ConfirmationModal] = useConfirmation()

@@ -5,6 +5,22 @@ import BASE_API_URL from '../../../../BASE_API_URL'
 import axiosToBackend from '../../../../axiosToBackend'
 
 
+/**
+ * `AddNewMarkingRangeButton` is a button component that triggers the addition of a new marking range to a rubric component.
+ * 
+ * This component renders a button that, when clicked, sends a POST request to add a new marking range to the rubric component. If the request is successful, it updates the rubric component state with the newly created marking range.
+ * 
+ * @component
+ * @param {Object} props - Component properties
+ * @param {Object} props.rubricComponent - The rubric component object containing current rating ranges
+ * @param {Function} props.setRubricComponent - Function to update the rubric component state
+ * 
+ * @example
+ * <AddNewMarkingRangeButton
+ *   rubricComponent={rubricComponent}
+ *   setRubricComponent={setRubricComponent}
+ * />
+ */
 const AddNewMarkingRangeButton = ({rubricComponent, setRubricComponent}) => {
     
 

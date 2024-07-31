@@ -5,6 +5,30 @@ import axiosToBackend from '../../../../axiosToBackend'
 import Form from 'react-bootstrap/Form'
 import useConfirmation from "../../../hooks/useConfirmation"
 
+
+/**
+ * `DoubleClickModifyCell` is a React component that allows users to double-click on a cell to edit its value.
+ * 
+ * This component supports both text and decimal input types, and updates the cell value in the backend when modified.
+ * It also displays a confirmation modal in case of errors during updates.
+ * 
+ * @component
+ * @param {Object} props - Component properties
+ * @param {string} props.parameterInCell - The key in the rubric component to be modified (e.g., 'rating_desc', 'rating_min_incl')
+ * @param {Object} props.rubricComponent - The rubric component object containing the rating ranges
+ * @param {Function} props.setRubricComponent - Function to update the rubric component state
+ * @param {number} props.index - The index of the rating range in the `rubricComponent`
+ * @param {string} props.dataType - Type of data in the cell ('text' or 'decimal')
+ * 
+ * @example
+ * <DoubleClickModifyCell
+ *   parameterInCell="rating_desc"
+ *   rubricComponent={rubricComponent}
+ *   setRubricComponent={setRubricComponent}
+ *   index={0}
+ *   dataType="text"
+ * />
+ */
 const DoubleClickModifyCell = ({ parameterInCell, rubricComponent, setRubricComponent, index, dataType }) => {
 
 
