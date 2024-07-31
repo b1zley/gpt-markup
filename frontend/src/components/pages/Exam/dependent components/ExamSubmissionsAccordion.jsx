@@ -18,7 +18,22 @@ import DownloadSEScsv from './DownloadSEScsv'
 
 
 
-
+/**
+ * A component that displays an accordion panel for managing student exam submissions.
+ * It includes functionality to fetch, display, and manage student submissions, as well as download submissions in CSV format.
+ * 
+ * @component
+ * @example
+ * 
+ * <StudentsInExamAccordion lastDisplayed={true} examInformation={examInformation} />
+ * ```
+ * 
+ * @param {Object} props - The component props.
+ * @param {boolean} props.lastDisplayed - A flag to determine if this is the last displayed accordion item.
+ * @param {Object} props.examInformation - Contains information about the exam, including module ID and exam ID.
+ * 
+ * @returns {React.Element} The rendered accordion component.
+ */
 const StudentsInExamAccordion = ({ lastDisplayed, examInformation }) => {
 
     const [studentExamSubmissions, setStudentExamSubmissions] = useState([])

@@ -12,6 +12,29 @@ import BASE_API_URL from "../../../../BASE_API_URL"
 import axiosToBackend from "../../../../axiosToBackend"
 import useConfirmation from "../../../hooks/useConfirmation"
 
+
+/**
+ * A component that allows users to configure advanced AI options such as temperature and top_p values.
+ * 
+ * This component displays an accordion with options to adjust the temperature and top_p parameters for AI models. It also provides a toggle to switch between temperature and top_p modes.
+ * 
+ * @component
+ * @example
+ * ```jsx
+ * <AdvancedAISpecs examInformation={examInformation} setExamInformation={setExamInformation} />
+ * ```
+ * 
+ * @param {Object} props - The component props.
+ * @param {Object} props.examInformation - An object containing the current AI parameters and exam details.
+ * @param {number|null} props.examInformation.temperature - The current temperature setting.
+ * @param {number|null} props.examInformation.top_p - The current top_p setting.
+ * @param {boolean} props.examInformation.top_p_mode - Indicates if top_p mode is active.
+ * @param {number} props.examInformation.module_id - The ID of the module.
+ * @param {number} props.examInformation.exam_id - The ID of the exam.
+ * @param {Function} props.setExamInformation - Function to update the exam information state.
+ * 
+ * @returns {React.Element} The rendered accordion component with advanced AI options.
+ */
 const AdvancedAISpecs = ({ examInformation, setExamInformation }) => {
 
 

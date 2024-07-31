@@ -5,7 +5,37 @@ import Modal from 'react-bootstrap/Modal'
 
 import UploadRTFControls from './UploadRTFControls'
 
-
+/**
+ * A React component that provides a modal dialog for uploading text as an RTF file.
+ * 
+ * This component displays a button that, when clicked, opens a modal dialog. The modal allows users
+ * to upload RTF formatted text related to a specific parameter of a parent object.
+ *
+ * @component
+ * @example
+ * ```jsx
+ * <UploadTextAsRTF 
+ *   parentObject={parentObject}
+ *   setParentObject={setParentObject}
+ *   param="textParam"
+ *   userFriendlyParam="Text"
+ *   editText={editText}
+ *   setEditText={setEditText}
+ *   handleCommitClicked={handleCommitClicked}
+ * />
+ * ```
+ *
+ * @param {Object} props - The component props.
+ * @param {Object} props.parentObject - The parent object that will be modified.
+ * @param {Function} props.setParentObject - Function to update the parent object.
+ * @param {string} props.param - The specific parameter of the parent object to be modified.
+ * @param {string} props.userFriendlyParam - A user-friendly name for the parameter, used in the UI.
+ * @param {string} props.editText - The current text content being edited.
+ * @param {Function} props.setEditText - Function to update the edited text content.
+ * @param {Function} props.handleCommitClicked - Function to handle the commit action after the RTF file is uploaded.
+ *
+ * @returns {React.Element} The rendered component.
+ */
 const UploadTextAsRTF = ({ parentObject,
     setParentObject,
     param,

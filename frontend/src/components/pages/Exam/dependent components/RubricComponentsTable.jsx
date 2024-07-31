@@ -11,6 +11,27 @@ import axiosToBackend from '../../../../axiosToBackend'
 
 import useConfirmation from '../../../hooks/useConfirmation'
 
+
+/**
+ * Displays a table of rubric components for an exam. Allows for editing and deletion of components, provided the exam is not locked.
+ * 
+ * @component
+ * @example
+ * ```jsx
+ * <RubricComponentsTable
+ *   examInformation={examInformation}
+ *   setExamInformation={setExamInformation}
+ *   hideControls={false}
+ * />
+ * ```
+ *
+ * @param {Object} props - The component props.
+ * @param {Object} props.examInformation - Object containing information about the exam, including rubric details.
+ * @param {Function} props.setExamInformation - Function to update the exam information.
+ * @param {boolean} [props.hideControls=false] - If true, hides the controls for editing and removing rubric components.
+ *
+ * @returns {React.Element} The rendered component.
+ */
 const RubricComponentsTable = ({ examInformation, setExamInformation, hideControls }) => {
 
     const [confirm, ConfirmationModal] = useConfirmation()

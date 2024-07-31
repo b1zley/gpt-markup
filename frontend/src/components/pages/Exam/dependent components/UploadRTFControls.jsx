@@ -10,6 +10,38 @@ import axiosToBackend from '../../../../axiosToBackend'
 import BASE_API_URL from '../../../../BASE_API_URL'
 import useConfirmation from '../../../hooks/useConfirmation'
 
+
+/**
+ * A React component that provides controls for uploading an RTF file and converting its content to plain text.
+ * 
+ * This component allows users to select an RTF file, upload it to a backend service for conversion to plain text, 
+ * and then update a parent object's text field with the converted content.
+ *
+ * @component
+ * @example
+ * ```jsx
+ * <UploadRTFControls 
+ *   parentObject={parentObject}
+ *   setParentObject={setParentObject}
+ *   param="textParam"
+ *   userFriendlyParam="Text"
+ *   editText={editText}
+ *   setEditText={setEditText}
+ *   handleCommitClicked={handleCommitClicked}
+ * />
+ * ```
+ *
+ * @param {Object} props - The component props.
+ * @param {Object} props.parentObject - The parent object that will be updated with the converted text.
+ * @param {Function} props.setParentObject - Function to update the parent object.
+ * @param {string} props.param - The specific parameter of the parent object to be modified.
+ * @param {string} props.userFriendlyParam - A user-friendly name for the parameter, used in the UI.
+ * @param {string} props.editText - The current text content being edited.
+ * @param {Function} props.setEditText - Function to update the edited text content.
+ * @param {Function} props.handleCommitClicked - Function to handle the commit action after the RTF file is uploaded and converted.
+ *
+ * @returns {React.Element} The rendered component.
+ */
 const UploadRTFControls = ({ parentObject, setParentObject, param, userFriendlyParam, editText, setEditText, handleCommitClicked }) => {
 
     //chosen file

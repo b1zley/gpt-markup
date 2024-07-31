@@ -9,6 +9,31 @@ import BASE_API_URL from '../../../../BASE_API_URL'
 
 import axiosToBackend from '../../../../axiosToBackend'
 
+
+
+/**
+ * A component for adding a new rubric component to an exam.
+ * 
+ * This component provides a form for users to add a new rubric component to an exam. Upon form submission, it sends a POST request to create the new component and updates the exam information.
+ * 
+ * @component
+ * @example
+ * ```jsx
+ * <AddNewRubricComponent
+ *   examInformation={examInformation}
+ *   setExamInformation={setExamInformation}
+ * />
+ * ```
+ * 
+ * @param {Object} props - The component props.
+ * @param {Object} props.examInformation - An object containing the exam details.
+ * @param {number} props.examInformation.module_id - The ID of the module.
+ * @param {number} props.examInformation.exam_id - The ID of the exam.
+ * @param {Array} props.examInformation.rubric - The current list of rubric components for the exam.
+ * @param {Function} props.setExamInformation - Function to update the exam information.
+ * 
+ * @returns {React.Element} The rendered component for adding a new rubric component.
+ */
 const AddNewRubricComponent = ({ examInformation, setExamInformation }) => {
 
     const [newRubricComponentName, setNewRubricComponentName] = useState('')

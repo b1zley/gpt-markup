@@ -9,6 +9,33 @@ import axiosToBackend from '../../../../axiosToBackend'
 
 import useConfirmation from '../../../hooks/useConfirmation'
 
+
+/**
+ * A React component that displays a table of student exam submissions.
+ * 
+ * This component provides controls for managing student submissions, including 
+ * marking submissions for training, and removing submissions. It also handles 
+ * routing to detailed views of each student's submission.
+ *
+ * @component
+ * @example
+ * ```jsx
+ * <StudentExamSubmissionsTable
+ *   hideControls={false}
+ *   examInformation={examInformation}
+ *   studentExamSubmissions={studentExamSubmissions}
+ *   setStudentExamSubmissions={setStudentExamSubmissions}
+ * />
+ * ```
+ *
+ * @param {Object} props - The component props.
+ * @param {boolean} props.hideControls - Flag to determine whether control buttons (remove, mark/unmark for training) are hidden.
+ * @param {Object} props.examInformation - Object containing information about the exam, including rubric details.
+ * @param {Array} props.studentExamSubmissions - Array of student exam submissions to be displayed in the table.
+ * @param {Function} props.setStudentExamSubmissions - Function to update the list of student exam submissions.
+ *
+ * @returns {React.Element} The rendered component.
+ */
 const StudentExamSubmissionsTable = ({ hideControls, examInformation, studentExamSubmissions, setStudentExamSubmissions }) => {
 
     const [confirm, ConfirmationModal] = useConfirmation()

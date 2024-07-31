@@ -22,6 +22,23 @@ import EditableFileTypesAccordion from "./dependent components/EditableFileTypes
 import LockExamAccordion from "./dependent components/LockExamAccordion";
 import AdvancedAISpecs from "./dependent components/AdvancedAISpecs";
 
+
+/**
+ * Overarching exam page component
+ * responsible for: 
+ *      'Exam Question',
+        'File Types',
+        'Rubric',
+        'AI Options',
+        'Model Answer',
+        'Engaged SuperUsers',
+        'Checklist',
+        'Student Submissions'
+
+    Component allows dynamic switching between these panels.
+    Component fetches exam information via useEffect(), then uses panel components
+ * @returns {ReactNode} A react element which renders exam information.
+ */
 const ExamView = () => {
     let { module_id, exam_id } = useParams();
 

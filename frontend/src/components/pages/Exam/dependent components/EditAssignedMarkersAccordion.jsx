@@ -12,6 +12,25 @@ import LoadingSpinner from '../../../shared/LoadingSpinner'
 import { Col, Row } from 'react-bootstrap'
 import BASE_API_URL from '../../../../BASE_API_URL'
 import useConfirmation from '../../../hooks/useConfirmation'
+
+
+
+/**
+ * A component that displays an accordion panel for managing assigned markers (super users) for an exam.
+ * It includes functionality to fetch, display, remove, and add markers, with a loading spinner shown while data is being fetched.
+ * 
+ * @component
+ * @example
+ * ```jsx
+ * <EditAssignedMarkersAccordion lastDisplayed={true} examInformation={examInformation} />
+ * ```
+ * 
+ * @param {Object} props - The component props.
+ * @param {boolean} props.lastDisplayed - A flag to determine if this is the last displayed accordion item.
+ * @param {Object} props.examInformation - Contains information about the exam, including module ID and exam ID.
+ * 
+ * @returns {React.Element} The rendered accordion component.
+ */
 const EditAssignedMarkersAccordion = ({ lastDisplayed, examInformation }) => {
 
     // fetch assigned markers from api

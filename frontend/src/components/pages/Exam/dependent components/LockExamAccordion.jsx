@@ -12,6 +12,37 @@ import axiosToBackend from "../../../../axiosToBackend"
 import StudentExamSubmissionsTable from "./StudentExamSubmissionsTable"
 import useConfirmation from "../../../hooks/useConfirmation"
 
+
+
+/**
+ * A component that displays an accordion for locking/unlocking an exam and verifying its readiness.
+ * The component checks the status of various exam parameters and allows for locking the exam if all criteria are met.
+ * 
+ * @component
+ * @example
+ * ```jsx
+ * const examInformation = {
+ *   exam_question: "Develop a software system to solve some problem.",
+ *   fileTypes: [{ allowed: true, name: "java" }],
+ *   rubric: [{ rubric_component_id: 1, name: "Introduction", rating_ranges: [], maximum: 10 }],
+ *   prompt_specifications: "You are a marker in a university level examination.",
+ *   file_system_id: 12345,
+ *   is_locked: false,
+ *   module_id: 1,
+ *   exam_id: 1
+ * };
+ * 
+ * const setExamInformation = (info) => { console.log(info) };
+ * 
+ * <LockExamAccordion examInformation={examInformation} setExamInformation={setExamInformation} />
+ * ```
+ * 
+ * @param {Object} props - The component props.
+ * @param {Object} props.examInformation - The current information about the exam, including its question, file types, rubric, prompt specifications, and other relevant data.
+ * @param {Function} props.setExamInformation - A function to update the exam information state.
+ * 
+ * @returns {React.Element} The rendered accordion component.
+ */
 const LockExamAccordion = ({ examInformation, setExamInformation }) => {
     console.log('this is some exam information')
     console.log(examInformation)

@@ -7,6 +7,29 @@ import BASE_API_URL from '../../../../BASE_API_URL'
 import axiosToBackend from '../../../../axiosToBackend'
 import useConfirmation from '../../../hooks/useConfirmation'
 
+
+
+/**
+ * A component that displays an accordion panel for managing file types associated with an exam.
+ * It allows users to select which file types should be parsed by the LLM (Language Learning Model) during evaluation.
+ * 
+ * @component
+ * @example
+ * ```jsx
+ * <EditableFileTypesAccordion
+ *   lastDisplayed={true}
+ *   examInformation={examInformation}
+ *   setExamInformation={setExamInformation}
+ * />
+ * ```
+ * 
+ * @param {Object} props - The component props.
+ * @param {boolean} props.lastDisplayed - A flag indicating if this is the last displayed accordion item.
+ * @param {Object} props.examInformation - Contains information about the exam, including file types and lock status.
+ * @param {Function} props.setExamInformation - Function to update the exam information state in the parent component.
+ * 
+ * @returns {React.Element} The rendered accordion component.
+ */
 const EditableFileTypesAccordion = ({ lastDisplayed, examInformation, setExamInformation }) => {
 
     const { fileTypes } = examInformation

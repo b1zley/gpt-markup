@@ -3,7 +3,31 @@ import { Accordion, Button, Row, Col, Container } from "react-bootstrap"
 
 
 
-
+/**
+ * A component that provides button controls to activate specific accordions.
+ * 
+ * This component renders a set of buttons where each button corresponds to an accordion section. Clicking a button activates the associated accordion by updating the `activeAccordion` state. Only one accordion can be active at a time.
+ * 
+ * @component
+ * @example
+ * ```jsx
+ * const [activeAccordion, setActiveAccordion] = useState([1, 0, 0]);
+ * const nameArray = ["Section 1", "Section 2", "Section 3"];
+ * 
+ * <ActiveAccordionControl
+ *   activeAccordion={activeAccordion}
+ *   setActiveAccordion={setActiveAccordion}
+ *   nameArray={nameArray}
+ * />
+ * ```
+ * 
+ * @param {Object} props - The component props.
+ * @param {number[]} props.activeAccordion - An array indicating the active state of each accordion section.
+ * @param {Function} props.setActiveAccordion - Function to update the state of active accordions.
+ * @param {string[]} props.nameArray - An array of names for each accordion section.
+ * 
+ * @returns {React.Element} The rendered component with button controls for activating accordions.
+ */
 const ActiveAccordionControl = ({ activeAccordion, setActiveAccordion, nameArray }) => {
 
 

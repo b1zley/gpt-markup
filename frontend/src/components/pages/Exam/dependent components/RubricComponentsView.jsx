@@ -1,20 +1,33 @@
 
-import Table from 'react-bootstrap/Table'
 import Accordion from 'react-bootstrap/Accordion'
-import ListGroup from 'react-bootstrap/ListGroup'
-import Button from 'react-bootstrap/Button'
-
-import { useEffect } from 'react'
-
-import RatingRangeGroupDisplay from './RatingRangeGroupDisplay'
-import { LinkContainer } from 'react-router-bootstrap'
 import { useLocation } from 'react-router-dom'
 import RubricComponentsTable from './RubricComponentsTable'
 import AddNewRubricComponent from './AddNewRubricComponent'
 import UploadRubricComponentsModal from './UploadRubricComponentsModal'
 
 
-
+/**
+ * A React component that displays an accordion for managing rubric components within an exam.
+ * 
+ * The component allows users to view, add, and upload rubric components, provided the exam is not locked.
+ * 
+ * @component
+ * @example
+ * ```jsx
+ * <RubricComponentsView
+ *   lastDisplayed={true}
+ *   examInformation={examInformation}
+ *   setExamInformation={setExamInformation}
+ * />
+ * ```
+ *
+ * @param {Object} props - The component props.
+ * @param {boolean} props.lastDisplayed - Determines if the accordion item should have the border-bottom removed.
+ * @param {Object} props.examInformation - Object containing information about the exam, including rubric details.
+ * @param {Function} props.setExamInformation - Function to update the exam information.
+ *
+ * @returns {React.Element} The rendered component.
+ */
 const RubricComponentsView = ({ lastDisplayed, examInformation, setExamInformation }) => {
     console.log(examInformation.rubric)
     const location = useLocation()

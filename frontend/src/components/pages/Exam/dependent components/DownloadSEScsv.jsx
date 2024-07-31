@@ -4,7 +4,22 @@ import BASE_API_URL from "../../../../BASE_API_URL"
 
 
 
-
+/**
+ * A component that provides a button to download a CSV file containing student exam submission results.
+ * 
+ * @component
+ * @example
+ * ```jsx
+ * <DownloadSEScsv examInformation={examInformation} />
+ * ```
+ * 
+ * @param {Object} props - The component props.
+ * @param {Object} props.examInformation - An object containing exam details.
+ * @param {number} props.examInformation.module_id - The ID of the module.
+ * @param {number} props.examInformation.exam_id - The ID of the exam.
+ * 
+ * @returns {React.Element} The rendered button component for downloading the CSV file.
+ */
 const DownloadSEScsv = ({ examInformation }) => {
 
 

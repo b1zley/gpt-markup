@@ -8,6 +8,23 @@ import BASE_API_URL from "../../../../BASE_API_URL"
 import axiosToBackend from '../../../../axiosToBackend'
 
 
+
+/**
+ * A component that displays an accordion panel for managing the AI model associated with an exam.
+ * It includes functionality to select an AI model from a dropdown menu and update the selected model for the exam.
+ * 
+ * @component
+ * @example
+ * ```jsx
+ * <EditAiModelAccordion setExamInformation={setExamInformation} examInformation={examInformation} />
+ * ```
+ * 
+ * @param {Object} props - The component props.
+ * @param {Function} props.setExamInformation - Function to update the exam information state in the parent component.
+ * @param {Object} props.examInformation - Contains information about the exam, including module ID, exam ID, and currently selected AI model name.
+ * 
+ * @returns {React.Element} The rendered accordion component.
+ */
 const EditAiModelAccordion = ({ setExamInformation, examInformation }) => {
 
     const [aiModelsToChoose, setAiModelsToChoose] = useState([])

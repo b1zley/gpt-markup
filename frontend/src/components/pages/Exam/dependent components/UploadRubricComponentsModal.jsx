@@ -5,7 +5,28 @@ import Modal from 'react-bootstrap/Modal';
 import Table from 'react-bootstrap/Table'
 import UploadRubricComponents from './UploadRubricComponents';
 
-
+/**
+ * A React component that provides a modal dialog for uploading rubric components as a CSV file.
+ * 
+ * This component displays a button that, when clicked, opens a modal dialog. The modal provides
+ * instructions and a template example for uploading rubric components in CSV format. It also
+ * includes a table to show an example of the expected CSV structure.
+ *
+ * @component
+ * @example
+ * ```jsx
+ * <UploadRubricComponentsModal 
+ *   examInformation={examInformation}
+ *   setExamInformation={setExamInformation}
+ * />
+ * ```
+ *
+ * @param {Object} props - The component props.
+ * @param {Object} props.examInformation - The exam information object that contains rubric details.
+ * @param {Function} props.setExamInformation - Function to update the exam information object.
+ *
+ * @returns {React.Element} The rendered component.
+ */
 const UploadRubricComponentsModal = ({ examInformation, setExamInformation }) => {
     const [show, setShow] = useState(false);
     const handleClose = () => setShow(false);

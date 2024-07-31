@@ -11,6 +11,43 @@ import BASE_API_URL from '../../../../BASE_API_URL'
 import UploadTextAsRTF from './UploadTextAsRTF'
 import useConfirmation from '../../../hooks/useConfirmation'
 
+
+/**
+ * A component that provides an editable accordion panel for displaying and updating a specific field of an exam object.
+ * The field can be edited in a text area and committed to the backend, or reverted to its original value.
+ * It also includes functionality for uploading RTF files if specified.
+ * 
+ * @component
+ * @example
+ * ```jsx
+ * <EditableExamAccordion
+ *   parentObject={examObject}
+ *   setParentObject={setExamObject}
+ *   param="exam_description"
+ *   lastDisplayed={true}
+ *   userFriendlyParam="Exam Description"
+ *   putUrl={`${BASE_API_URL}exam/update`}
+ *   inputType="text"
+ *   textBoxHeight="200px"
+ *   uploadFunctionality={true}
+ *   description="The description of the exam."
+ * />
+ * ```
+ * 
+ * @param {Object} props - The component props.
+ * @param {Object} props.parentObject - The object containing the field to be edited.
+ * @param {Function} props.setParentObject - Function to update the `parentObject` state in the parent component.
+ * @param {string} props.param - The key of the field in `parentObject` that is being edited.
+ * @param {boolean} props.lastDisplayed - A flag indicating if this is the last displayed accordion item.
+ * @param {string} props.userFriendlyParam - A user-friendly name for the field being edited.
+ * @param {string} props.putUrl - The URL to which the PUT request should be sent.
+ * @param {string} props.inputType - The type of input expected (e.g., 'text', 'decimal'). Used for validation.
+ * @param {string} props.textBoxHeight - The height of the text box for the field being edited.
+ * @param {boolean} props.uploadFunctionality - A flag indicating if file upload functionality is enabled.
+ * @param {string} props.description - A description for the field being edited.
+ * 
+ * @returns {React.Element} The rendered accordion component.
+ */
 const EditableExamAccordion = ({
     parentObject, setParentObject,
     param, lastDisplayed,

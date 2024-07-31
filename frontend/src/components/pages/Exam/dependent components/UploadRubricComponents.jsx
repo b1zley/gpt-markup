@@ -6,6 +6,27 @@ import Container from 'react-bootstrap/Container'
 import BASE_API_URL from '../../../../BASE_API_URL'
 import axiosToBackend from '../../../../axiosToBackend'
 
+/**
+ * A React component that handles the upload of rubric components via a CSV file.
+ * 
+ * This component allows users to upload a CSV file that contains rubric components. 
+ * Upon successful upload, the rubric data is updated in the parent `examInformation` object.
+ *
+ * @component
+ * @example
+ * ```jsx
+ * <UploadRubricComponents 
+ *   examInformation={examInformation}
+ *   setExamInformation={setExamInformation}
+ * />
+ * ```
+ *
+ * @param {Object} props - The component props.
+ * @param {Object} props.examInformation - The exam information object that contains details like module ID and exam ID.
+ * @param {Function} props.setExamInformation - Function to update the exam information object, specifically with the uploaded rubric data.
+ *
+ * @returns {React.Element} The rendered component.
+ */
 const UploadRubricComponents = ({ examInformation, setExamInformation }) => {
 
 
@@ -13,6 +34,12 @@ const UploadRubricComponents = ({ examInformation, setExamInformation }) => {
     const [file, setFile] = useState(null)
     const [fileUploadSuccess, setFileUploadSuccess] = useState(false)
 
+    /**
+     * Handles the form submission to upload the CSV file.
+     * 
+     * @async
+     * @param {React.FormEvent<HTMLFormElement>} e - The form submission event.
+     */
     async function handleSubmit(e) {
         e.preventDefault()
 
@@ -45,6 +72,11 @@ const UploadRubricComponents = ({ examInformation, setExamInformation }) => {
 
     }
 
+    /**
+     * Handles file selection and validates the file type.
+     * 
+     * @param {React.ChangeEvent<HTMLInputElement>} e - The file input change event.
+     */
     async function handleFileChange(e) {
         const selectedFile = e.target.files[0]
         if (selectedFile) {
