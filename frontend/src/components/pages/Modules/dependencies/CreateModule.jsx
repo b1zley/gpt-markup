@@ -7,6 +7,19 @@ import BASE_API_URL from '../../../../BASE_API_URL'
 import axiosToBackend from '../../../../axiosToBackend'
 import useConfirmation from '../../../hooks/useConfirmation'
 
+
+/**
+ * `CreateModule` is a component that provides a form for creating new modules.
+ * 
+ * Users can enter the name of a new module in the form. Upon submission, the module is sent to the backend for creation, and if successful, the new module is added to the list displayed in the parent component.
+ * 
+ * @component
+ * @param {Object[]} modules - Array of existing module objects.
+ * @param {Function} setModules - Function to update the list of modules.
+ * @example
+ * const [modules, setModules] = useState([]);
+ * return <CreateModule modules={modules} setModules={setModules} />;
+ */
 const CreateModule = ({ modules, setModules }) => {
     const [inputModuleName, setInputModuleName] = useState('')
 

@@ -10,6 +10,16 @@ import { Link } from 'react-router-dom'
 import EditableModuleDisplay from "./dependencies/EditableModuleDisplay"
 import CreateModule from "./dependencies/CreateModule"
 
+
+/**
+ * `ModulesView` is a component that displays a list of modules and provides options to create or edit modules.
+ * It fetches the list of modules from an API and displays them using `EditableModuleDisplay`.
+ * Additionally, it provides a `CreateModule` component to add new modules.
+ * 
+ * @component
+ * @example
+ * return <ModulesView />;
+ */
 const ModulesView = () => {
 
     const [modules, setModules] = useState([])

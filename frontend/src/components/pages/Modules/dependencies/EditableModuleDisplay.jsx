@@ -7,6 +7,21 @@ import BASE_API_URL from '../../../../BASE_API_URL'
 import axiosToBackend from '../../../../axiosToBackend'
 import useConfirmation from '../../../hooks/useConfirmation'
 
+
+
+/**
+ * `EditableModuleDisplay` is a component that displays a list of modules with options to view and delete each module.
+ * 
+ * Each module is displayed in a list with its name and associated exams. Users can click on the module name or exam names to view their details. 
+ * Additionally, each module has a "Delete" button that prompts for confirmation before performing the delete action.
+ * 
+ * @component
+ * @param {Object[]} modules - Array of module objects to be displayed.
+ * @param {Function} setModules - Function to update the list of modules.
+ * @example
+ * const [modules, setModules] = useState([]);
+ * return <EditableModuleDisplay modules={modules} setModules={setModules} />;
+ */
 const EditableModuleDisplay = ({ modules, setModules }) => {
 
     const [confirm, ConfirmationModal] = useConfirmation()
