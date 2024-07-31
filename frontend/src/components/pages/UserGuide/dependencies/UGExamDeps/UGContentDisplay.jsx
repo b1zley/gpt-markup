@@ -3,20 +3,20 @@ import { Row, Col } from "react-bootstrap"
 
 
 
-const UGContentDisplay = ({ contentList, innerHTMLisActive }) => {
+const UGContentDisplay = ({ contentList }) => {
 
 
 
     return (
         <>
             {contentList.map((content, i) =>
-                <Row key={i}>
+                <Row key={i} className="my-2">
                     <Col>
                         <h3>
                             {content.title}
                         </h3>
-                        {innerHTMLisActive ? <div dangerouslySetInnerHTML={{ __html: content.body }} /> 
-                        : <p> {content.body} </p> }
+                        {content.innerHTMLisActive ? <div>{content.body}</div> 
+                        : <div> {content.body} </div> }
 
                     </Col>
                 </Row>

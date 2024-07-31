@@ -20,16 +20,15 @@ const UGExamControls = () => {
         },
         {
             title: `Viewing an Exam`,
-            body: `Exams exist within Modules, so first, navigate to the Module you wish to delete this Exam from.
-                            Find the Exam you wish to delete in the 'Exams' list, and click on the corresponding 'Delete' button.
-                            A dialog box will appear asking you to confirm your decision, click 'Confirm' to delete the Exam, and 'Cancel' to cancel.`
+            body: `Exams exist within Modules, so first, navigate to the Module you wish to view this Exam in.
+                            Find the Exam you wish to view in the 'Exams' list, and click on the corresponding Exam name.`
         }
     ]
 
     return (
         <>
             <Container className="my-3">
-                <UGContentDisplay 
+                <UGContentDisplay
                     contentList={contentList}
                 />
             </Container>
