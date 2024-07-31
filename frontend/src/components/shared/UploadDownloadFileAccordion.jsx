@@ -15,6 +15,32 @@ import MyFileBrowser from "../pages/MyFileBrowser/MyFileBrowser"
 import ContentDisplayModal from "./ContentDisplayModal"
 import useConfirmation from "../hooks/useConfirmation"
 
+
+/**
+ * `UploadDownloadFileAccordion` is a component that provides an accordion interface for uploading and downloading files.
+ * It includes options to upload new files, download existing files, and display content from uploaded files.
+ *
+ * @component
+ * @param {Object} parentObject - The object containing information about the parent entity.
+ * @param {Function} setParentObject - Function to update the parentObject state.
+ * @param {string} submissionType - The type of file being handled. Possible values include 'EXAM_RUBRIC', 'EXAM_SUBMISSION', 'TRAINING_DATA', 'TRAINING_EXAM', and 'EXAM_MODEL_ANSWER'.
+ * @param {string} accordionName - The name to be displayed on the accordion header.
+ * @param {boolean} lastDisplayed - A flag indicating whether this is the last displayed item in the accordion.
+ * @param {boolean} activeDisplay - A flag indicating whether the accordion should be active by default.
+ * @param {boolean} hideControls - A flag to hide or show the upload controls.
+ * @returns {JSX.Element} The `UploadDownloadFileAccordion` component.
+ *
+ * @example
+ * <UploadDownloadFileAccordion
+ *   parentObject={parentObject}
+ *   setParentObject={setParentObject}
+ *   submissionType="EXAM_SUBMISSION"
+ *   accordionName="Submission Upload"
+ *   lastDisplayed={false}
+ *   activeDisplay={true}
+ *   hideControls={false}
+ * />
+ */
 const UploadDownloadFileAccordion = ({ parentObject, setParentObject, submissionType, accordionName, lastDisplayed, activeDisplay, hideControls }) => {
 
     const [confirm, ConfirmationModal] = useConfirmation()

@@ -8,10 +8,21 @@ import BASE_API_URL from "../../BASE_API_URL"
 import useConfirmation from "../hooks/useConfirmation"
 
 /**
- * 
- * @param {*} submissionType - allowable values = 'EXAM_RUBRIC', 'EXAM_SUBMISSION', 'TRAINING_DATA', 'TRAINING_EXAM'
- * @param {*} setResponseReturn - useState function to adjust response return externally - ie in parent component
- * @returns
+ * `UploadExamInfo` is a component that provides a form for uploading files. 
+ * It supports uploading various types of files based on the `submissionType` prop.
+ * The component handles file selection, validation, and submission to the backend.
+ *
+ * @component
+ * @param {string} submissionType - The type of file being uploaded. 
+ *   Allowable values include 'EXAM_RUBRIC', 'EXAM_SUBMISSION', 'TRAINING_DATA', 'TRAINING_EXAM', and 'EXAM_MODEL_ANSWER'.
+ * @param {Function} handleExamUpload - Callback function to handle the response from the upload request.
+ * @returns {JSX.Element} The `UploadExamInfo` component.
+ *
+ * @example
+ * <UploadExamInfo
+ *   submissionType="EXAM_SUBMISSION"
+ *   handleExamUpload={response => console.log(response)}
+ * />
  */
 function UploadExamInfo({ submissionType, handleExamUpload }) {
     //chosen file

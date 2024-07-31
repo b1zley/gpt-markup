@@ -9,6 +9,22 @@ import { useAuth } from '../../contexts/AuthContext';
 
 import { useNavigate } from 'react-router-dom'
 
+
+/**
+ * `SharedNavBar` is a responsive navigation bar component that displays a brand logo, navigation links, and user account options.
+ * It includes functionality for user authentication and navigation control.
+ *
+ * @component
+ * @param {string} [logoImageSrc=logoImage] - The source URL of the logo image to display in the navbar. Defaults to a predefined logo image.
+ * @param {string} [brandName='MarkUp-GPT'] - The name of the brand to display next to the logo. Defaults to 'MarkUp-GPT'.
+ * @returns {JSX.Element} The `SharedNavBar` component.
+ *
+ * @example
+ * <SharedNavBar
+ *   logoImageSrc="/path/to/logo.png"
+ *   brandName="My Brand"
+ * />
+ */
 function SharedNavBar({ logoImageSrc = logoImage, brandName = 'MarkUp-GPT' }) {
 
 

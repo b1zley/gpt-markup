@@ -4,6 +4,28 @@ import axios from 'axios'
 
 import BASE_API_URL from '../../BASE_API_URL';
 
+
+/**
+ * `CreateExam` is a React component that allows users to create a new exam by selecting a module and providing an exam name. 
+ * It fetches accessible modules for the logged-in super user and handles the submission of the new exam creation.
+ *
+ * @component
+ * @param {Object} props - The component's props.
+ * @param {Object} props.loggedInSuperUser - The logged-in super user's information, including their ID.
+ * @param {Function} props.createdExam - A function to handle the created exam's response or state.
+ * @returns {JSX.Element} The `CreateExam` component.
+ *
+ * @example
+ * // Usage of the CreateExam component
+ * const handleCreatedExam = (exam) => {
+ *   console.log('Exam Created:', exam);
+ * };
+ *
+ * <CreateExam 
+ *   loggedInSuperUser={{ super_user_id: '123' }} 
+ *   createdExam={handleCreatedExam}
+ * />
+ */
 const CreateExam = ({ loggedInSuperUser, createdExam }) => {
     const [accessibleModules, setAccessibleModules] = useState([]);
 
