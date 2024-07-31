@@ -5,7 +5,25 @@ import BASE_API_URL from '../../../BASE_API_URL'
 import axiosToBackend from '../../../axiosToBackend'
 import useConfirmation from '../../hooks/useConfirmation'
 
-
+/**
+ * `CreateExamWithinModule` is a component that allows users to create a new exam within a specific module.
+ * It provides a form to enter the exam name and handles the creation of the exam via an API request.
+ *
+ * @component
+ * @param {Object} props - The component props.
+ * @param {string} props.module_id - The ID of the module in which the exam is being created.
+ * @param {Array} props.examsWithinModule - The current list of exams within the module.
+ * @param {Function} props.setExamsWithinModule - The function to update the list of exams within the module.
+ * 
+ * @example
+ * return (
+ *   <CreateExamWithinModule 
+ *     module_id="123" 
+ *     examsWithinModule={exams} 
+ *     setExamsWithinModule={setExams} 
+ *   />
+ * );
+ */
 const CreateExamWithinModule = ({ module_id, examsWithinModule, setExamsWithinModule }) => {
 
     const [selectedExamName, setSelectedExamName] = useState(null)

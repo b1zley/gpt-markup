@@ -6,6 +6,27 @@ import axiosToBackend from '../../../axiosToBackend'
 
 import useConfirmation from "../../hooks/useConfirmation"
 
+
+/**
+ * `ExamsWithinModule` is a component that displays a list of exams within a specific module.
+ * It allows users to view exam details and delete exams with a confirmation prompt.
+ *
+ * @component
+ * @param {Object} props - The component props.
+ * @param {string} props.module_id - The ID of the module containing the exams.
+ * @param {Array} props.examsWithinModule - The list of exams within the module.
+ * @param {Function} props.setExamsWithinModule - Function to update the list of exams within the module.
+ * 
+ * @example
+ * const [exams, setExams] = useState([]);
+ * return (
+ *   <ExamsWithinModule 
+ *     module_id="123" 
+ *     examsWithinModule={exams} 
+ *     setExamsWithinModule={setExams} 
+ *   />
+ * );
+ */
 const ExamsWithinModule = ({ module_id, examsWithinModule, setExamsWithinModule }) => {
     const [confirm, ConfirmationModal] = useConfirmation()
 

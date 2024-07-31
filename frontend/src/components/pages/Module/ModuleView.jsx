@@ -16,8 +16,14 @@ import Placeholder from 'react-bootstrap/Placeholder'
 import EditLecturersInModule from './EditLecturersInModule'
 
 /**
- * view a single module
- * @returns 
+ * `ModuleView` is a component that displays the details of a single module,
+ * including its name, associated exams, and options to create exams and edit lecturers.
+ * 
+ * @component
+ * @example
+ * return (
+ *   <ModuleView />
+ * )
  */
 const ModuleView = () => {
     const { module_id } = useParams()

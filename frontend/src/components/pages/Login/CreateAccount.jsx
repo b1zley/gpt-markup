@@ -8,6 +8,17 @@ import BASE_API_URL from '../../../BASE_API_URL'
 import axiosToBackend from '../../../axiosToBackend'
 import { useAuth } from '../../../contexts/AuthContext'
 
+
+/**
+ * The `CreateAccount` component provides a form for creating a new user account.
+ * It includes fields for email, name, password, and an account creation code.
+ * 
+ * @component
+ * @example
+ * return (
+ *   <CreateAccount />
+ * )
+ */
 const CreateAccount = () => {
 
 

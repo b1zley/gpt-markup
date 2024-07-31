@@ -16,6 +16,18 @@ import axios from 'axios'
 import { useAuth } from '../../../contexts/AuthContext'
 import CreateAccount from './CreateAccount'
 
+
+
+/**
+ * The `Login` component handles user authentication.
+ * It provides a form for users to log in and displays a message if the user is already logged in.
+ * 
+ * @component
+ * @example
+ * return (
+ *   <Login />
+ * )
+ */
 const Login = () => {
 
 
@@ -27,7 +39,6 @@ const Login = () => {
 
     async function handleSubmit(event) {
         event.preventDefault()
-        console.log('FUCK FUCK FUCK FUCK FUCK')
         const postBody = {
             email: emailInput,
             password: passwordInput

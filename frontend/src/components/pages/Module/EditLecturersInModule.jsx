@@ -11,7 +11,20 @@ import axiosToBackend from '../../../axiosToBackend'
 import AddLecturerToModule from './AddLecturerToModule'
 import useConfirmation from '../../hooks/useConfirmation'
 
-
+/**
+ * `EditLecturersInModule` is a component for managing lecturers assigned to a specific module.
+ * It allows viewing the list of current lecturers, removing lecturers from the module,
+ * and adding new lecturers.
+ *
+ * @component
+ * @param {Object} props - The component props.
+ * @param {string} props.module_id - The ID of the module for which lecturers are being managed.
+ * 
+ * @example
+ * return (
+ *   <EditLecturersInModule module_id="123" />
+ * );
+ */
 const EditLecturersInModule = ({ module_id }) => {
 
     const [lecturersInModule, setLecturersInModule] = useState([])

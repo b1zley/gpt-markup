@@ -8,6 +8,29 @@ import BASE_API_URL from '../../../BASE_API_URL'
 import axiosToBackend from '../../../axiosToBackend'
 import useConfirmation from '../../hooks/useConfirmation'
 
+
+/**
+ * `AddLecturerToModule` is a component that allows users to assign a lecturer to a specific module.
+ * It provides a dropdown to select from available lecturers who are not yet assigned to the module and 
+ * handles the addition of a selected lecturer via an API request.
+ *
+ * @component
+ * @param {Object} props - The component props.
+ * @param {Array} props.lecturersInModule - The current list of lecturers assigned to the module.
+ * @param {Function} props.setLecturersInModule - The function to update the list of lecturers assigned to the module.
+ * @param {Array} props.allLecturers - The complete list of lecturers.
+ * @param {string} props.module_id - The ID of the module to which the lecturer will be added.
+ * 
+ * @example
+ * return (
+ *   <AddLecturerToModule 
+ *     lecturersInModule={lecturersInModule}
+ *     setLecturersInModule={setLecturersInModule}
+ *     allLecturers={allLecturers}
+ *     module_id="123" 
+ *   />
+ * );
+ */
 const AddLecturerToModule = ({ lecturersInModule, setLecturersInModule, allLecturers, module_id }) => {
 
     const [lecturersToShow, setLecturersToShow] = useState([])
