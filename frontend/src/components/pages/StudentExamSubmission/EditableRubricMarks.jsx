@@ -5,6 +5,34 @@ import RatingRangeGroupDisplay from '../Exam/dependent components/RatingRangeGro
 import DoubleClickModifyMarkCell from './DoubleClickModifyMarkCell'
 import ViewRatingsModal from './ViewRatingsModal'
 
+
+/**
+ * `EditableRubricMarks` is a component that displays rubric marks in a table format within an accordion.
+ * It allows users to view and edit rubric components, including criteria, maximum points, AI critique, and agreed marks.
+ * The table also includes modals for viewing rating guidelines.
+ *
+ * The component displays:
+ * - Criteria and descriptions
+ * - Maximum points for each criterion
+ * - AI critique and AI marks
+ * - Agreed critique and agreed marks
+ *
+ * @component
+ * @param {Object} props - The component props.
+ * @param {boolean} props.lastDisplayed - Indicates whether the item is the last displayed in the accordion.
+ * @param {Object} props.examSubmissionInformation - Information about the exam submission, including rubric components.
+ * @param {Function} props.setExamSubmissionInformation - Function to update the exam submission information.
+ * @param {boolean} props.activeDisplay - Controls the initial open state of the accordion.
+ * @returns {JSX.Element} The `EditableRubricMarks` component.
+ *
+ * @example
+ * <EditableRubricMarks
+ *   lastDisplayed={true}
+ *   examSubmissionInformation={examInfo}
+ *   setExamSubmissionInformation={setExamInfo}
+ *   activeDisplay={true}
+ * />
+ */
 const EditableRubricMarks = ({ lastDisplayed, examSubmissionInformation, setExamSubmissionInformation, activeDisplay }) => {
 
     return (

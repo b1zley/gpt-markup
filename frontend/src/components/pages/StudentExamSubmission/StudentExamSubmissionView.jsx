@@ -14,6 +14,16 @@ import EditableRubricMarks from './EditableRubricMarks'
 import GenerateAICrtiqueButton from './GenerateAICritiqueButton'
 import ActiveAccordionControl from '../Exam/dependent components/ActiveAccordionControl'
 
+
+/**
+ * `StudentExamSubmissionView` is a component that displays detailed information about a student's exam submission.
+ * It fetches and renders the student's exam submission details, provides options to view the file submission,
+ * and allows editing of rubric marks. It also includes a button to generate an AI critique.
+ * 
+ * @component
+ * @example
+ * <StudentExamSubmissionView />
+ */
 const StudentExamSubmissionView = () => {
 
     const { module_id, exam_id, student_exam_submission_id } = useParams()

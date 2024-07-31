@@ -6,7 +6,26 @@ import axiosToBackend from '../../../axiosToBackend'
 import useConfirmation from '../../hooks/useConfirmation'
 import isValidNumber from '../../../helperFunctions'
 
-
+/**
+ * `DoubleClickModifyMarkCell` is a component that renders a table cell which can be double-clicked to enable editing.
+ * It allows users to update specific properties of a rubric component and validates the input for decimal values.
+ * The updated values are sent to the backend API and reflected in the component's state.
+ *
+ * @component
+ * @param {string} parameterInCell - The property name to be edited in the rubric component (e.g., 'rubric_component_mark').
+ * @param {Object} examSubmissionInformation - The information about the exam submission including rubric details.
+ * @param {Function} setExamSubmissionInformation - Function to update the exam submission information in state.
+ * @param {number} index - The index of the rubric component in the rubric array to be edited.
+ * @returns {JSX.Element} The `DoubleClickModifyMarkCell` component.
+ *
+ * @example
+ * <DoubleClickModifyMarkCell
+ *   parameterInCell={'rubric_component_mark'}
+ *   examSubmissionInformation={examInfo}
+ *   setExamSubmissionInformation={setExamInfo}
+ *   index={0}
+ * />
+ */
 const DoubleClickModifyMarkCell = ({ parameterInCell, examSubmissionInformation, setExamSubmissionInformation, index }) => {
 
     const [editPart, setEditPart] = useState(false)

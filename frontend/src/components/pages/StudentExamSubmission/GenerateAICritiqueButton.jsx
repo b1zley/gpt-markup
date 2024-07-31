@@ -7,6 +7,30 @@ import axiosToBackend from '../../../axiosToBackend'
 
 import { useState } from 'react'
 
+
+/**
+ * `GenerateAICrtiqueButton` is a component that triggers the generation of an AI critique for an exam submission.
+ * It displays a button which, when clicked, makes a request to generate the critique. The button's state
+ * changes based on the loading status and the state of the exam submission.
+ *
+ * The component also handles different states, such as:
+ * - Loading state, showing a spinner.
+ * - Disabled state if the exam is not locked or if no submission is uploaded.
+ *
+ * @component
+ * @param {Object} props - The component props.
+ * @param {Function} props.setActiveAccodrion - Function to update the active accordion state.
+ * @param {Object} props.examSubmissionInformation - Information about the student exam submission.
+ * @param {Function} props.setExamSubmissionInformation - Function to update the exam submission information.
+ * @returns {JSX.Element} The `GenerateAICrtiqueButton` component.
+ *
+ * @example
+ * <GenerateAICrtiqueButton
+ *   setActiveAccodrion={setAccordion}
+ *   examSubmissionInformation={examSubmissionInfo}
+ *   setExamSubmissionInformation={setSubmissionInfo}
+ * />
+ */
 const GenerateAICrtiqueButton = ({ setActiveAccodrion, examSubmissionInformation, setExamSubmissionInformation }) => {
 
     console.log(examSubmissionInformation)
