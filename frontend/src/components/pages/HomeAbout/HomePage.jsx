@@ -4,6 +4,7 @@ import loremIpsumMarketingImage from '../../../assets/img/marketingloremipsum.pn
 import ImageContentPair from '../../home/ImageContentPair';
 
 import { Link } from 'react-router-dom';
+import BASE_API_URL from '../../../BASE_API_URL';
 
 /**
  * HomePage Component
@@ -89,6 +90,20 @@ const HomePage = () => {
                             View our User Guide
                         </Button>
                     </Link>
+                </Col>
+            </Row>
+
+            <hr className='divider' />
+            {/* API Documentation Section */}
+            <Row className="text-center mt-4">
+                <Col>
+                    <h2>Want to Integrate with Us?</h2>
+                    <p>Explore our API documentation to learn how you can seamlessly integrate with our platform and leverage our powerful features.</p>
+                    <a href={`${BASE_API_URL}api-docs`}>
+                        <Button variant="success" className="my-3">
+                            View API Documentation
+                        </Button>
+                    </a>
                 </Col>
             </Row>
         </Container>
