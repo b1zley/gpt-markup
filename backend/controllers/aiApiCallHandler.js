@@ -31,8 +31,6 @@ Your feedback should be concise, clear, and informative while adhering to these 
 `
 
 // 4o adjustments
-// please do not include any demarcation at the start or end of your JSON repsonse
-
 
 const TEMPERATURE = 0
 const TOP_P = 0.00000000000001
@@ -42,23 +40,25 @@ const MODEL = "gpt-3.5-turbo-0125"
 
 const testParameters = { TEMPERATURE, TOP_P, SEED, MODEL }
 
-async function handleAiApiCall(informationForLLM, student_exam_submission_id) {
 
+/**
+ * Handles the AI API call based on the selected AI mode.
+ * 
+ * @param {Object} informationForLLM - Information needed for the LLM to generate feedback and marks.
+ * @param {string} student_exam_submission_id - The ID of the student exam submission.
+ * @returns {Object} The response object containing AI-generated feedback and marks.
+ */
+async function handleAiApiCall(informationForLLM, student_exam_submission_id) {
     if (MODE === 'dev') {
         console.log('this is dev mode')
 
         return await generateAICritiqueMethodStub(informationForLLM, student_exam_submission_id)
 
     }
-
-
     if (AI_MODE === "claude") {
         return await handleApiCallClaude(informationForLLM, student_exam_submission_id)
     }
-
     const { examInformation, submissionText } = informationForLLM
-
-
 
     const examString = examInformationParseOneRubricComponent(examInformation)
     const systemMessage = exampleSystemMessageString + examString
@@ -67,12 +67,7 @@ async function handleAiApiCall(informationForLLM, student_exam_submission_id) {
     { role: "user", content: submissionText }
     ]
     const response = await openAiApiCall(messages)
-    // console.log(submissionText)
-
-    // going to attach my parameters to response for ease of recording
     response.testParameters = { ...response.testParameters, ...testParameters }
-
-
     writeMessageResponseToCSV(student_exam_submission_id, response)
     return response
 
@@ -80,8 +75,13 @@ async function handleAiApiCall(informationForLLM, student_exam_submission_id) {
 
 }
 
+/**
+ * Calls the OpenAI API to generate feedback and marks.
+ * 
+ * @param {Array} messages - Array of message objects for the API call.
+ * @returns {Object} The response object containing AI-generated feedback and marks.
+ */
 async function openAiApiCall(messages) {
-    // console.log(messages)
     const completion = await openai.chat.completions.create({
         messages,
         model: MODEL,
@@ -89,9 +89,6 @@ async function openAiApiCall(messages) {
         top_p: TOP_P,
         temperature: TEMPERATURE
     });
-    // console.log('this is a completion')
-    // console.log(completion.system_fingerprint)
-    // console.log(completion.choices[0].message.content)
     return {
         content: JSON.parse(completion.choices[0].message.content), testParameters: {
             system_fingerprint: completion.system_fingerprint
@@ -99,6 +96,12 @@ async function openAiApiCall(messages) {
     }
 }
 
+/**
+ * Parses exam information and returns a string representation.
+ * 
+ * @param {Object} examInformation - Information about the exam.
+ * @returns {string} A string representation of the exam information.
+ */
 function examInformationParse(examInformation) {
     let examString = ''
     examString += `Exam Name: ${examInformation.exam_name}`
@@ -108,6 +111,13 @@ function examInformationParse(examInformation) {
     return examString
 }
 
+/**
+ * Parses exam information for a single rubric component.
+ * 
+ * @param {Object} examInformation - Information about the exam.
+ * @param {number} rubricIndex - Index of the rubric component to parse.
+ * @returns {string} A string representation of the exam information for the specified rubric component.
+ */
 function examInformationParseOneRubricComponent(examInformation, rubricIndex) {
     let examString = ''
     examString += `Exam Name: ${examInformation.exam_name}`
@@ -117,12 +127,16 @@ function examInformationParseOneRubricComponent(examInformation, rubricIndex) {
     return examString
 }
 
-
+/**
+ * Parses the entire rubric and returns a string representation.
+ * 
+ * @param {Array} rubric - The rubric array containing all rubric components.
+ * @returns {string} A string representation of the rubric.
+ */
 function rubricParse(rubric) {
     let rCString = ''
     for (let i = 0; i < rubric.length; i++) {
         const rubricComponent = rubric[i]
-        // in loop
         rCString += `Rubric Component ${i + 1}.`
         rCString += `Name: ${rubricComponent.name}.`
         rCString += `MaxMarks: ${rubricComponent.maximum}.`
@@ -138,12 +152,17 @@ function rubricParse(rubric) {
     return rCString
 }
 
-
+/**
+ * Parses a single rubric component and returns a string representation.
+ * 
+ * @param {Array} rubric - The rubric array containing all rubric components.
+ * @param {number} i - Index of the rubric component to parse.
+ * @returns {string} A string representation of the specified rubric component.
+ */
 function rubricParseSingleComponent(rubric, i) {
     let rCString = ''
 
     const rubricComponent = rubric[i]
-    // in loop
     rCString += `Rubric Component ${i + 1}.`
     rCString += `Name: ${rubricComponent.name}.`
     rCString += `MaxMarks: ${rubricComponent.maximum}.`
@@ -158,26 +177,17 @@ function rubricParseSingleComponent(rubric, i) {
     return rCString
 }
 
-
+/**
+ * Handles the API call to Claude for generating feedback and marks.
+ * 
+ * @param {Object} informationForLLM - Information needed for the LLM to generate feedback and marks.
+ * @param {string} student_exam_submission_id - The ID of the student exam submission.
+ * @returns {Object} The response object containing AI-generated feedback and marks.
+ */
 async function handleApiCallClaude(informationForLLM, student_exam_submission_id) {
-    // eliminate api call for testing!
-
-    // console.log(informationForLLM.markedSubmissions)
 
     const { markedSubmissions } = informationForLLM
-
-
-
-    // console.log(markedSubmissionMessageArray)
-
     const { examInformation, submissionText } = informationForLLM
-
-    // console.log(examInformation.rubric.length)
-
-
-
-    // console.log(submissionText)
-
     let claudeTemp = examInformation.temperature
     let claude_top_p = examInformation.top_p 
     let claude_seed = undefined
@@ -195,7 +205,6 @@ async function handleApiCallClaude(informationForLLM, student_exam_submission_id
         const { prompt_specifications, prompt_engineering } = informationForLLM.examInformation
 
         const dynamicSystemMessage = prompt_specifications + prompt_engineering + examString
-        // console.log(dynamicSystemMessage)
 
         const markedSubmissionMessageArray = createMarkedSubmissionMessageArrayOneRubricComponent(markedSubmissions, rubricComponentCounter)
 
@@ -206,7 +215,6 @@ async function handleApiCallClaude(informationForLLM, student_exam_submission_id
             system: dynamicSystemMessage,
             messages: [...markedSubmissionMessageArray, { role: "user", content: submissionText }],
         }
-
         if (!examInformation.top_p_mode) {
             claudeObject = {
                 ...claudeObject,
@@ -218,15 +226,9 @@ async function handleApiCallClaude(informationForLLM, student_exam_submission_id
                 top_p: claude_top_p
             }
         }
-
-
-        // console.log(claudeObject)
         console.log(`fetching from claude... ${rubricComponentCounter}`)
-        // console.log(claudeObject.messages[2])
-        // continue
-        // console.log('stopping here')
-        // return
-        throw new Error('STOP')
+        // continue;
+
         const aiResponse = await anthropic.messages.create(claudeObject)
 
         const parameterizedAiMessage = JSON.parse(aiResponse.content[0].text)
@@ -252,17 +254,29 @@ async function handleApiCallClaude(informationForLLM, student_exam_submission_id
     return responseObject
 }
 
+/**
+ * Delays the execution for a specified amount of time.
+ * 
+ * @param {number} ms - The delay time in milliseconds.
+ * @returns {Promise} A promise that resolves after the delay.
+ */
 function delay(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
 
+
+
+/**
+ * Generates a stub for AI critique and feedback, used for testing.
+ * 
+ * @param {Object} informationForLLM - Information needed for the LLM to generate feedback and marks.
+ * @param {string} student_exam_submission_id - The ID of the student exam submission.
+ * @returns {Object} The response object containing dummy AI-generated feedback and marks.
+ */
 async function generateAICritiqueMethodStub(informationForLLM, student_exam_submission_id) {
 
 
     const { markedSubmissions, examInformation, submissionText } = informationForLLM
-    // console.log('keys')
-    // console.log(Object.keys(informationForLLM.examInformation))
-    // console.log(informationForLLM.examInformation.prompt_specifications)
     await delay(2000)
 
     let responsesContentArray = []
@@ -274,9 +288,6 @@ async function generateAICritiqueMethodStub(informationForLLM, student_exam_subm
         const responseObject = { aiMarkToParse, aiFeedbackToParse }
         responsesContentArray.push(responseObject)
     }
-
-    // console.log(responsesContentArray)
-
     const dummyTestParameters = {
         TEMPERATURE: 'testTemp',
         TOP_P: 'testTOP_P',
@@ -296,18 +307,19 @@ async function generateAICritiqueMethodStub(informationForLLM, student_exam_subm
 }
 
 
-
+/**
+ * Creates a message array for marked submissions, containing feedback and marks for all rubric components.
+ * 
+ * @param {Array} markedSubmissions - Array of marked submissions with feedback and marks.
+ * @returns {Array} A message array for use in the API call.
+ */
 function createMarkedSubmissionMessageArray(markedSubmissions) {
-    // console.log(markedSubmissions)
 
     let markedSubmissionMessageArray = []
-
-    // {"user": submissionText, "assistant": "{aiMarkToParse: 1, aiCritiqueToParse: 'wasdwasd'}"}
 
     for (const markedSubmission of markedSubmissions) {
         const { submissionText, rubricMarkArray } = markedSubmission
         const aiReadyRubricMarkArray = rubricMarkArray.map((rubricMark) => {
-            // {"aiFeedbackToParse": "example feedback for Part 2", "aiMarkToParse": 28.0}
             return {
                 "aiFeedbackToParse": rubricMark.critique,
                 "aiMarkToParse": rubricMark.mark
@@ -323,28 +335,23 @@ function createMarkedSubmissionMessageArray(markedSubmissions) {
         }]
         markedSubmissionMessageArray = markedSubmissionMessageArray.concat(messageArrayPart)
     }
-
-    // console.log(markedSubmissionMessageArray)
     return markedSubmissionMessageArray
 }
 
 /**
- * one rubric component
- * @param {} markedSubmissions 
- * @param {*} i 
- * @returns 
+ * Creates a message array for marked submissions, containing feedback and marks for a single rubric component.
+ * 
+ * @param {Array} markedSubmissions - Array of marked submissions with feedback and marks.
+ * @param {number} i - Index of the rubric component to include in the messages.
+ * @returns {Array} A message array for use in the API call.
  */
 function createMarkedSubmissionMessageArrayOneRubricComponent(markedSubmissions, i) {
-    // console.log(markedSubmissions)
 
     let markedSubmissionMessageArray = []
-
-    // {"user": submissionText, "assistant": "{aiMarkToParse: 1, aiCritiqueToParse: 'wasdwasd'}"}
-
     for (const markedSubmission of markedSubmissions) {
         const { submissionText, rubricMarkArray } = markedSubmission
         const aiReadyRubricMarkArray = rubricMarkArray.filter((rubricComponent, index) => index === i).map((rubricMark) => {
-            // {"aiFeedbackToParse": "example feedback for Part 2", "aiMarkToParse": 28.0}
+           
             return {
                 "aiFeedbackToParse": rubricMark.critique,
                 "aiMarkToParse": rubricMark.mark
@@ -360,8 +367,6 @@ function createMarkedSubmissionMessageArrayOneRubricComponent(markedSubmissions,
         }]
         markedSubmissionMessageArray = markedSubmissionMessageArray.concat(messageArrayPart)
     }
-
-    // console.log(markedSubmissionMessageArray)
     return markedSubmissionMessageArray
 }
 
