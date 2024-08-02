@@ -189,25 +189,23 @@ async function handleApiCallClaude(informationForLLM, student_exam_submission_id
     const { markedSubmissions } = informationForLLM
     const { examInformation, submissionText } = informationForLLM
     let claudeTemp = examInformation.temperature
-    let claude_top_p = examInformation.top_p 
+    let claude_top_p = examInformation.top_p
     let claude_seed = undefined
     let claude_model = "claude-3-5-sonnet-20240620"
 
     let responsesContentArray = []
 
     let claude_fingerprint = ''
+
+    let promises = []
+
     for (let rubricComponentCounter = 0; rubricComponentCounter < examInformation.rubric.length; rubricComponentCounter++) {
 
         const examString = examInformationParseOneRubricComponent(examInformation, rubricComponentCounter)
         const systemMessage = exampleSystemMessageString + examString
-
-
         const { prompt_specifications, prompt_engineering } = informationForLLM.examInformation
-
         const dynamicSystemMessage = prompt_specifications + prompt_engineering + examString
-
         const markedSubmissionMessageArray = createMarkedSubmissionMessageArrayOneRubricComponent(markedSubmissions, rubricComponentCounter)
-
 
         let claudeObject = {
             model: claude_model,
@@ -228,13 +226,17 @@ async function handleApiCallClaude(informationForLLM, student_exam_submission_id
         }
         console.log(`fetching from claude... ${rubricComponentCounter}`)
         // continue;
-
-        const aiResponse = await anthropic.messages.create(claudeObject)
-
-        const parameterizedAiMessage = JSON.parse(aiResponse.content[0].text)
-        responsesContentArray.push(...parameterizedAiMessage)
-        claude_fingerprint = aiResponse.system_fingerprint
+        const aiResponse = anthropic.messages.create(claudeObject)
+        promises.push(aiResponse)
     }
+    const resolvedPromiseArray = await Promise.all(promises);
+    for (let i = 0; i < resolvedPromiseArray.length; i++) {
+        const parameterizedAiMessage = JSON.parse(resolvedPromiseArray[i].content[0].text)
+        responsesContentArray.push(...parameterizedAiMessage)
+        claude_fingerprint = resolvedPromiseArray[i].system_fingerprint
+    }
+
+
 
 
     const claudeTestParameters = {
@@ -351,7 +353,7 @@ function createMarkedSubmissionMessageArrayOneRubricComponent(markedSubmissions,
     for (const markedSubmission of markedSubmissions) {
         const { submissionText, rubricMarkArray } = markedSubmission
         const aiReadyRubricMarkArray = rubricMarkArray.filter((rubricComponent, index) => index === i).map((rubricMark) => {
-           
+
             return {
                 "aiFeedbackToParse": rubricMark.critique,
                 "aiMarkToParse": rubricMark.mark
