@@ -86,8 +86,8 @@ function addMarkingRange() {
     cy.contains('button', 'Add new marking range').click()
 
     const rangeDesc = Math.random()
-    const minIncl = Math.random()
-    const maxIncl = Math.random()
+    const minIncl = 0.01
+    const maxIncl = 0.02
 
     cy.get('textarea[placeholder="Input range description here"]').type(`${rangeDesc}`)
     cy.contains('label', 'Minimum Inclusive').parent().find('input').type(`${minIncl}`)
