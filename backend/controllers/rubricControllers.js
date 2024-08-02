@@ -285,6 +285,9 @@ async function handleRequestCSVUploadRubricComponents(req, res) {
 
         // console.log(rubricComponents)
 
+        // validate rc array
+        validateRCArray(rubricComponents)
+
         await queryCreateNewRubricFromRCArray(rubricComponents, exam_id)
         // might have to send something more complicated so the frontend knows what to render
         // this is fine for now
@@ -292,10 +295,53 @@ async function handleRequestCSVUploadRubricComponents(req, res) {
         return res.status(201).json(await examControllers.queryGetRubricComponentsByExamId(exam_id))
     } catch (err) {
         console.log(err)
+        if(err.message === 'Range Max > Max Points'){
+            return res.status(400).send(err.message)
+        }
+        if(err.message === 'Range Overlap'){
+            return res.status(400).send(err.message)
+        }
+
         return res.status(500).send()
     }
 
 
+}
+
+function validateRCArray(rubricComponents){
+    for (const rubricComponent of rubricComponents){
+        for (let i = 0 ; i < rubricComponent.rating_ranges.length; i++){
+            // handle max points check
+            const rating_range = rubricComponent.rating_ranges[i]
+            if(rating_range.rangeMax > rubricComponent.maxPoints){
+                throw new Error('Range Max > Max Points')
+            }
+
+            // handle overlap check
+            // nested loop :D
+            for (let i2 = 0; i2 < rubricComponent.rating_ranges.length; i2++){
+                if(i === i2){
+                    console.log('continuing...')
+                    continue
+                }
+
+                const comparison_rating_range = rubricComponent.rating_ranges[i2]
+                console.log('rating_range: ', rating_range)
+                console.log('comparison_rating_range: ', comparison_rating_range)
+                if(rating_range.rangeMin <= comparison_rating_range.rangeMax && rating_range.rangeMin >= comparison_rating_range.rangeMin){
+                    throw new Error('Range Overlap')
+                }
+
+                if(rating_range.rangeMax <= comparison_rating_range.rangeMax && rating_range.rangeMax >= comparison_rating_range.rangeMin){
+                    throw new Error('Range Overlap')
+                }
+
+            }
+
+
+        }
+        console.log(rubricComponent)
+    }
 }
 
 

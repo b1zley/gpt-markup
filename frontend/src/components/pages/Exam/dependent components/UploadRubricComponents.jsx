@@ -1,10 +1,11 @@
 
-import { useState } from 'react'
+import { useState, useRef } from 'react'
 import Form from 'react-bootstrap/Form'
 import Button from 'react-bootstrap/Button'
 import Container from 'react-bootstrap/Container'
 import BASE_API_URL from '../../../../BASE_API_URL'
 import axiosToBackend from '../../../../axiosToBackend'
+import useConfirmation from '../../../hooks/useConfirmation'
 
 /**
  * A React component that handles the upload of rubric components via a CSV file.
@@ -29,10 +30,13 @@ import axiosToBackend from '../../../../axiosToBackend'
  */
 const UploadRubricComponents = ({ examInformation, setExamInformation }) => {
 
-
+    const [confirm, ConfirmationModal] = useConfirmation()
 
     const [file, setFile] = useState(null)
     const [fileUploadSuccess, setFileUploadSuccess] = useState(false)
+
+    const fileInputRef = useRef(null); // Create a ref for the file input
+
 
     /**
      * Handles the form submission to upload the CSV file.
@@ -63,7 +67,28 @@ const UploadRubricComponents = ({ examInformation, setExamInformation }) => {
                 setFileUploadSuccess(true)
             } catch (err) {
                 console.log(err)
+                setFile(null)
+                if (fileInputRef.current) {
+                    fileInputRef.current.value = ''; // Reset the file input
+                }
+                if(err.response){
+                    const responseData = err.response.data
+
+                    // handle range check
+                    if(responseData === 'Range Max > Max Points'){
+                        // need confirm
+                        return await confirm('Could not parse CSV file, a rubric component has Range Max > Max Points')
+                    } else if(responseData === 'Range Overlap'){
+                        // need confirm
+                        return await confirm('Could not parse CSV file, a rubric component contains a Range Overlap')
+                    }
+
+                    // handle max check
+
+                }
+
             }
+            
 
         } else {
             window.alert('Please upload a csv file')
@@ -85,6 +110,9 @@ const UploadRubricComponents = ({ examInformation, setExamInformation }) => {
             } else {
                 setFile(null)
                 window.alert('Please upload a csv file')
+                if (fileInputRef.current) {
+                    fileInputRef.current.value = ''; // Reset the file input
+                }
             }
         }
 
@@ -100,6 +128,7 @@ const UploadRubricComponents = ({ examInformation, setExamInformation }) => {
                         type="file"
                         name="file"
                         onChange={handleFileChange}
+                        ref={fileInputRef}
                     />
                 </Form.Group>
 
@@ -115,6 +144,8 @@ const UploadRubricComponents = ({ examInformation, setExamInformation }) => {
 
                 <div className='text-success'>{fileUploadSuccess ? 'Successfully uploaded CSV' : null}</div>
             </Form>
+
+            <ConfirmationModal />
         </Container>
     )
 
