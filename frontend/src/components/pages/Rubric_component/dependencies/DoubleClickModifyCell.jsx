@@ -34,6 +34,11 @@ const DoubleClickModifyCell = ({ parameterInCell, rubricComponent, setRubricComp
 
 
 
+
+    // console.log('parameterInCell: ', parameterInCell)
+    // console.log('rubricComponent:', rubricComponent)
+
+
     const [confirm, ConfirmationModal] = useConfirmation()
 
     let rating_range = rubricComponent.rating_ranges[index]
@@ -74,6 +79,9 @@ const DoubleClickModifyCell = ({ parameterInCell, rubricComponent, setRubricComp
     }
 
 
+    function revertChange(){
+        setTextPart(rubricComponent.rating_ranges[index].parameterInCell)
+    }
 
     const handlePartSubmit = useCallback(
         async (parameter) => {
@@ -88,12 +96,54 @@ const DoubleClickModifyCell = ({ parameterInCell, rubricComponent, setRubricComp
                 return regex.test(input)
             }
 
+            
 
             if (dataType === 'decimal' && !isValidNumber(textPart)) {
                 //
                 return await failToUpdate(parameter, '- decimal values only!')
 
             }
+
+            if(parameter === 'rating_max_incl'){
+                if(Number.parseFloat(textPart) <= Number.parseFloat(rubricComponent.rating_ranges[index].rating_min_incl)){
+                    return await failToUpdate(parameter, '- max must be greater than min!')
+                }
+                // overlap check
+
+                for (let i = 0; i < rubricComponent.rating_ranges.length; i++){
+                    // check if min between rating_range min and max
+                    const rating_range = rubricComponent.rating_ranges[i]
+                    if(i === index){
+                        continue
+                    }
+                    if(Number.parseFloat(textPart) >= rating_range.rating_min_incl && Number.parseFloat(textPart) <= rating_range.rating_max_incl){
+                        revertChange()
+                        return await confirm ('Failed to add new marking range - overlapping current range!')
+                    }
+                }
+            }
+
+            if(parameter === 'rating_min_incl'){
+                if(Number.parseFloat(textPart) >= Number.parseFloat(rubricComponent.rating_ranges[index].rating_max_incl)){
+                    return await failToUpdate(parameter, '- max must be greater than min!')
+                }
+                // overlap check
+                for (let i = 0; i < rubricComponent.rating_ranges.length; i++){
+                    // check if min between rating_range min and max
+                    const rating_range = rubricComponent.rating_ranges[i]
+                    if(i === index){
+                        continue
+                    }
+
+                    if(Number.parseFloat(textPart) >= rating_range.rating_min_incl && Number.parseFloat(textPart) <= rating_range.rating_max_incl){
+                        revertChange()
+                        return await confirm('Failed to add new marking range - overlapping current range!')
+                    }
+                }
+            }
+
+            
+
 
 
 

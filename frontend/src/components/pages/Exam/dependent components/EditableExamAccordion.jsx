@@ -77,6 +77,17 @@ const EditableExamAccordion = ({
             }
         }
 
+        // check for overlaps in rubric
+        if(userFriendlyParam === 'Maximum Points'){
+            for(let i = 0; i < parentObject.rating_ranges.length; i++){
+                const rating_range = parentObject.rating_ranges[i]
+                if(Number.parseFloat(editText) < Number.parseFloat(rating_range.rating_max_incl)){
+                    return await confirm('Maximum cannot overlap with Marking Range maximum!')
+                }
+
+            }
+        }
+
         console.log(param)
         console.log(editText)
 

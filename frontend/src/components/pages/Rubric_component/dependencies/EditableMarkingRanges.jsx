@@ -27,6 +27,8 @@ import AddNewMarkingRangeModalButton from './AddNewMarkingRangeModalButton'
  */
 const EditableMarkingRanges = ({ lastDisplayed, rubricComponent, setRubricComponent }) => {
 
+    
+
     return (
         <>
 

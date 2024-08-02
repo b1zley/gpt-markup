@@ -59,6 +59,30 @@ const AddNewMarkingRangeModalDialogBox = ({ rubricComponent, setRubricComponent,
                 //
                 return await confirm('Failed to add new marking range - decimal values only for min and max inclusive!')
             }
+
+            if(maxInclusive > Number.parseFloat(rubricComponent.maximum)){
+                return await confirm('Failed to add new marking range - max must be less than rubric component maximum!')
+            }
+            if(minInclusive >= maxInclusive){
+                return await confirm('Failed to add new marking range - min must be less than max!')
+            }
+
+            // check for overlap
+            for (const rating_range of rubricComponent.rating_ranges){
+
+                // check if min between rating_range min and max
+                if(minInclusive >= rating_range.rating_min_incl && minInclusive <= rating_range.rating_max_incl){
+                    return await confirm ('Failed to add new marking range - overlapping current range!')
+                }
+                // check if max between rating_range min and max
+
+                if(maxInclusive >= rating_range.rating_min_incl && maxInclusive <= rating_range.rating_max_incl){
+                    return await confirm ('Failed to add new marking range - overlapping current range!')
+                }
+            }
+
+
+
             // handle post request!
             let postBody = {
                 rating_desc: descriptionInput,
