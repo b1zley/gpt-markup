@@ -77,11 +77,11 @@ const EditableModuleDisplay = ({ modules, setModules }) => {
                 >
                     <div className="ms-2 me-auto">
                         <div className="fw-bold">
-                            <Link to={`/module/${module.module_id}`}>{module.module_name}</Link>
+                            <Link to={`/module/${module.module_id}`} className="text-dark" style={{ textDecoration: 'none' }}>{module.module_name}</Link>
                         </div>
                         {module.exams.map((exam) =>
                             <li key={exam.exam_id}>
-                                <Link to={`/module/${module.module_id}/exam/${exam.exam_id}`}>{exam.exam_name}</Link>
+                                <Link to={`/module/${module.module_id}/exam/${exam.exam_id}`} className="text-dark" style={{ textDecoration: 'none' }}>{exam.exam_name}</Link>
                             </li>
 
                         )}
