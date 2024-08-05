@@ -63,8 +63,10 @@ async function handleDeleteExamSubmissionEntryByStudentExamSubmissionId(req, res
 
 async function handlePutUpdateRubricComponentMark(req, res) {
     // rubric_component_id, student_exam_submission_id, rubric_component_mark
+    console.log('hello from put')
     try {
         const { rubric_component_id, student_exam_submission_id } = req.params
+        console.log(rubric_component_id, student_exam_submission_id)
         const { rubric_component_mark } = req.body
         let updateArray = []
 
@@ -220,6 +222,7 @@ async function queryUpdateRubricComponentMark(rubric_component_id, student_exam_
     const sqlQueryFindCurrent = 'SELECT * FROM rubric_component rc INNER JOIN rubric_component_submission_mark rcsm ON rc.rubric_component_id = rcsm.rubric_component_id WHERE rc.rubric_component_id = ? AND rcsm.student_exam_submission_id = ?'
     const bindingParams = [rubric_component_id, student_exam_submission_id]
     const [responseFromFindCurrent] = await db.query(sqlQueryFindCurrent, bindingParams)
+
 
     if (responseFromFindCurrent.length === 0) {
         // create new

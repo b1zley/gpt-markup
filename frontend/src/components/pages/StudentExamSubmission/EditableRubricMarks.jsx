@@ -4,6 +4,7 @@ import Table from 'react-bootstrap/Table'
 import RatingRangeGroupDisplay from '../Exam/dependent components/RatingRangeGroupDisplay'
 import DoubleClickModifyMarkCell from './DoubleClickModifyMarkCell'
 import ViewRatingsModal from './ViewRatingsModal'
+import PushCritiqueButton from './PushCritiqueButton'
 
 
 /**
@@ -61,6 +62,9 @@ const EditableRubricMarks = ({ lastDisplayed, examSubmissionInformation, setExam
                                     AI Mark
                                 </th>
                                 <th>
+                                    Push Critique
+                                </th>
+                                <th>
                                     Agreed Critique
                                 </th>
                                 <th>
@@ -91,6 +95,15 @@ const EditableRubricMarks = ({ lastDisplayed, examSubmissionInformation, setExam
                                     <td>
                                         {rubric_component.ai_mark}
                                     </td>
+                                    <td>
+                                        <PushCritiqueButton
+                                            index={i}
+                                            rubric_component={rubric_component}
+                                            examSubmissionInformation={examSubmissionInformation}
+                                            setExamSubmissionInformation={setExamSubmissionInformation}
+                                        />
+                                    </td>
+
                                     <DoubleClickModifyMarkCell
                                         parameterInCell={'rubric_component_critique'}
                                         examSubmissionInformation={examSubmissionInformation}
