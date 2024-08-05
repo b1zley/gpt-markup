@@ -17,7 +17,8 @@ import {
     addMarksAndCritiqueToRubric,
     markSESForTraining,
     lockExamInChecklist,
-    generateAICritique
+    generateAICritique,
+    pushAICritique
 } from "../support/utils/examUtil";
 import { loginFunction } from "../support/utils/loginUtil";
 import { navigateToModules, createModule, navigateToSpecificModule, deleteModuleByName } from "../support/utils/modulesUtil";
@@ -349,6 +350,7 @@ describe('Exam', function () {
                 uploadNewSES(exampleUploadPath, rootFolderName)
 
                 generateAICritique()
+                pushAICritique()
 
             })
         })

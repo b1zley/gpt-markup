@@ -226,6 +226,12 @@ function generateAICritique(){
     cy.contains('td', 'This is example feedback for Rubric Component').should('exist')
 }
 
+function pushAICritique(){
+    cy.contains('button', 'Push AI Critique').click()
+    cy.get('td').filter(':contains("This is example feedback for Rubric Component")')
+        .should('have.length', 2)
+}
+
 
 
 
@@ -248,5 +254,6 @@ export {
     addMarksAndCritiqueToRubric,
     markSESForTraining,
     lockExamInChecklist,
-    generateAICritique
+    generateAICritique,
+    pushAICritique
 }
