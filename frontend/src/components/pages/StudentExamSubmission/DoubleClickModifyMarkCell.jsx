@@ -1,5 +1,5 @@
 
-import { useState } from 'react'
+import { useState, useRef, useEffect, useCallback } from 'react'
 import Form from 'react-bootstrap/Form'
 import BASE_API_URL from '../../../BASE_API_URL'
 import axiosToBackend from '../../../axiosToBackend'
@@ -32,6 +32,9 @@ const DoubleClickModifyMarkCell = ({ parameterInCell, examSubmissionInformation,
     const [textPart, setTextPart] = useState(examSubmissionInformation.rubric[index][parameterInCell] ? examSubmissionInformation.rubric[index][parameterInCell] : '')
 
     const [confirm, ConfirmationModal] = useConfirmation()
+
+    const textareaRef = useRef(null); // Ref for the textarea
+
     async function handleDoubleClickPart() {
         setEditPart(true)
     }
@@ -40,7 +43,25 @@ const DoubleClickModifyMarkCell = ({ parameterInCell, examSubmissionInformation,
         setTextPart(event.target.value)
     }
 
-    async function handlePartSubmit() {
+    const handlePutRequest = useCallback( async () => {
+        const putApiURL = `${BASE_API_URL}module/${examSubmissionInformation.module_id}/exam/${examSubmissionInformation.exam_id}/student_exam_submission/${examSubmissionInformation.student_exam_submission_id}/rubric_component/${examSubmissionInformation.rubric[index].rubric_component_id}`
+        console.log('put api url', putApiURL)
+        const putBody = {
+            [parameterInCell]: textPart
+        }
+
+        console.log(putBody)
+        console.log(putApiURL)
+
+        const responseFromPut = await axiosToBackend.put(putApiURL, putBody)
+        console.log(responseFromPut)
+        return responseFromPut.status === 200
+
+    }, [examSubmissionInformation.exam_id, examSubmissionInformation.module_id, examSubmissionInformation.rubric, examSubmissionInformation.student_exam_submission_id, index, parameterInCell, textPart])
+
+
+
+    const handlePartSubmit = useCallback( async () => {
         try {
             console.log('parameterInCell:', parameterInCell)
 
@@ -67,7 +88,9 @@ const DoubleClickModifyMarkCell = ({ parameterInCell, examSubmissionInformation,
             await confirm('Failed to update marking range')
             setTextPart(examSubmissionInformation.rubric[index][parameterInCell])
         }
-    }
+
+
+    }, [parameterInCell, confirm, examSubmissionInformation, handlePutRequest, index, setExamSubmissionInformation, textPart])
 
     async function handlePartKeyDown(event) {
         if (event.key === 'Enter') {
@@ -75,21 +98,28 @@ const DoubleClickModifyMarkCell = ({ parameterInCell, examSubmissionInformation,
         }
     }
 
-    async function handlePutRequest() {
 
-        const putApiURL = `${BASE_API_URL}module/${examSubmissionInformation.module_id}/exam/${examSubmissionInformation.exam_id}/student_exam_submission/${examSubmissionInformation.student_exam_submission_id}/rubric_component/${examSubmissionInformation.rubric[index].rubric_component_id}`
-        console.log('put api url', putApiURL)
-        const putBody = {
-            [parameterInCell]: textPart
+    
+    useEffect(() => {
+        // Function to handle clicks outside of the textarea
+        const handleClickOutside = (event) => {
+            if (textareaRef.current && !textareaRef.current.contains(event.target)) {
+                handlePartSubmit(parameterInCell); // Submit on click outside
+            }
+        };
+
+        if (editPart) {
+            document.addEventListener('mousedown', handleClickOutside);
+        } else {
+            document.removeEventListener('mousedown', handleClickOutside);
         }
 
-        console.log(putBody)
-        console.log(putApiURL)
+        return () => {
+            document.removeEventListener('mousedown', handleClickOutside);
+        };
+    }, [editPart, parameterInCell, textPart, handlePartSubmit]); // Dependencies to update the effect when these change
 
-        const responseFromPut = await axiosToBackend.put(putApiURL, putBody)
-        console.log(responseFromPut)
-        return responseFromPut.status === 200
-    }
+
 
     return (
         <td style={{ width: '60%' }}
@@ -103,6 +133,7 @@ const DoubleClickModifyMarkCell = ({ parameterInCell, examSubmissionInformation,
                     value={textPart}
                     onChange={handlePartChange}
                     onKeyDown={handlePartKeyDown}
+                    ref={textareaRef}
                 /> :
                 examSubmissionInformation.rubric[index][parameterInCell] ? examSubmissionInformation.rubric[index][parameterInCell] : 'Double click to add...'}
             <ConfirmationModal />
