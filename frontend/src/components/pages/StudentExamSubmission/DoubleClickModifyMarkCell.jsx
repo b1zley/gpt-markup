@@ -68,6 +68,8 @@ const DoubleClickModifyMarkCell = ({ parameterInCell, examSubmissionInformation,
             if (parameterInCell === 'rubric_component_mark') {
                 if (!isValidNumber(textPart)) {
                     // handle bad input
+                    setTextPart(examSubmissionInformation.rubric[index].parameterInCell)
+                    setEditPart(false)
                     return await confirm('Decimal values only!')
                 }
                 if (textPart.includes('.') && textPart.split('.')[1].length > 2) {
