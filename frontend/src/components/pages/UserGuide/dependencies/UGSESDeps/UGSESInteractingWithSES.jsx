@@ -16,9 +16,9 @@ const UGSESInteractingWithSES = () => {
                 </>
             )
         },
-        { 
+        {
             title: 'Uploading an answer for a Student Exam Submission',
-            body:(
+            body: (
                 <>
                     <div>To upload an individual Student Exam Submission:</div>
                     <li>Navigate to the specific student submission page of interest.</li>
@@ -30,9 +30,9 @@ const UGSESInteractingWithSES = () => {
                 </>
             )
         },
-        { 
+        {
             title: 'Examining an uploaded Submission Answer using the in-built File Browser',
-            body:(
+            body: (
                 <>
                     <div>To view an uploaded Submission Answer:</div>
                     <li>Navigate to the specific student submission page of interest.</li>
@@ -51,9 +51,9 @@ const UGSESInteractingWithSES = () => {
                 </>
             )
         },
-        { 
+        {
             title: 'Downloading an uploaded Submission Answer',
-            body:(
+            body: (
                 <>
                     <div>To download an uploaded Submission Answer:</div>
                     <li>Navigate to the specific student submission page of interest.</li>
@@ -63,9 +63,9 @@ const UGSESInteractingWithSES = () => {
                 </>
             )
         },
-        { 
+        {
             title: 'Generating AI Critique',
-            body:(
+            body: (
                 <>
                     <div>To generate AI Critique:</div>
                     <li>Navigate to the specific student submission page of interest.</li>
@@ -79,9 +79,9 @@ const UGSESInteractingWithSES = () => {
                 </>
             )
         },
-        { 
+        {
             title: 'Adding/Modifying Critique and Marks',
-            body:(
+            body: (
                 <>
                     <div>To add/modify Critique and Marks</div>
                     <li>Navigate to the specific student submission page of interest.</li>
@@ -93,6 +93,19 @@ const UGSESInteractingWithSES = () => {
                 </>
             )
         },
+        {
+            title: 'Pushing AI Critique',
+            body: (
+                <>
+                    <div>If the LLM has generated critique that the Examiner finds satisfactory, it can be easily pushed to Agreed Critique using the Push AI Critique button.</div>
+                    <li>Navigate to the specific student submission page of interest.</li>
+                    <li>Click on the 'Rubric Marks' navigation button.</li>
+                    <li>After Generating AI Critique (refer to 'Generating AI Critique'), navigate to the rubric component you wish to push critique from AI to Agreed for.</li>
+                    <li>Click the 'Push AI Critique' button.</li>
+                    <li>AI Critique will be succesfully updated in the Agreed Critique columns.</li>
+                </>
+            )
+        }
     ]
 
     return (
