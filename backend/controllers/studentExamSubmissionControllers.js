@@ -367,83 +367,42 @@ async function getExtensionsArrayExamId(exam_id) {
 }
 
 async function getNewAICritique(student_exam_submission_id) {
-
+    // get generic exam information
     let examInformation = await getExamInformationForAiParse(student_exam_submission_id)
-
     const { exam_id } = examInformation
-    // console.log('exam_id', exam_id)
-
-
+    // get previously human marked submission which should be used by LLM for marking
     const markedSubmissions = await queryGetStudentExamSubmissionsMarkedForTraining(exam_id)
-    // console.log(markedSubmissions)
-
-    // parse model answer as well
+    // get the model answer
     const modelAnswerPath = path.join(storageDirectory, examInformation.unzip)
-    // console.log('start concat any...')
     const parsedModelAnswer = await concatenateAnyFiles(modelAnswerPath, examInformation.fileTypes)
-    // console.log('end concat any')
     examInformation.model_answer = parsedModelAnswer
-
-    // console.log(examInformation.fileTypes)
+    // get the students exam submission
     parsedSubmissionAnswer = await getParsedSubmissionAnswerBySESId(student_exam_submission_id, examInformation.fileTypes)
-
-    // console.log(parsedSubmissionAnswer)
-
-    // console.log(countTokens(parsedSubmissionAnswer))
-
-    // get path to submission data
-    // and fake parsing file
-    /**
-     * simulate for now!!!
-     */
-    // send all this shit to the api
-
     const informationToSendToLLM = {
         examInformation,
         submissionText: parsedSubmissionAnswer,
         markedSubmissions
     }
-
-    // console.log(Object.keys(examInformation))
-
-    // console.log(examInformation.model_answer)
-    // console.log(informationToSendToLLM.submissionText)
-    // console.log(markedSubmissions[0].submissionText)
-
+    // handle the response from the api call, digesting into responseArray
     const responseFromApiCall = await handleAiApiCall(informationToSendToLLM, student_exam_submission_id)
-
-    // const parameterizedAiMessage = JSON.parse(responseFromApiCall.choices[0].message.content)
     const parameterizedAiMessage = responseFromApiCall.content
-
-    // writeMessageResponseToCSV(student_exam_submission_id, responseFromApiCall)
-    // simulate response
-    // should respond with mark and critique for each rubric component id
-
     let responseArray = []
     informationToSendToLLM.examInformation.rubric.forEach((rubricComponent, i) => {
-
-
         const aiObject = {
             rubric_component_id: rubricComponent.rubric_component_id,
             model_id_used: examInformation.trained_model_id,
             ai_critique: parameterizedAiMessage[i].aiFeedbackToParse,
             ai_mark: parameterizedAiMessage[i].aiMarkToParse
         }
-        // console.log(`this is aiobject ${i}`)
-        // console.log(aiObject)
         responseArray.push(aiObject)
     })
-
-
     // insert response into appropriate db tables
     // rubric component submission ai mark
     for (const responseElement of responseArray) {
         const { rubric_component_id, model_id_used, ai_critique, ai_mark } = responseElement
         await queryInsertOrUpdateAiMark(student_exam_submission_id, rubric_component_id, model_id_used, ai_critique, ai_mark)
     }
-
     return responseArray
-
 }
 
 
@@ -491,26 +450,24 @@ async function getParsedSubmissionAnswerBySESId(student_exam_submission_id, exte
 
 
 async function queryGetStudentExamSubmissionsMarkedForTraining(exam_id) {
-
-
+    
     const sqlQuery = "SELECT ses.student_exam_submission_id FROM student_exam_submission ses WHERE ses.exam_id = ? AND ses.marked_for_training = 1"
     const bindingParams = [exam_id]
 
     const [responseFromQuery] = await db.query(sqlQuery, bindingParams)
     const markedStudentExamSubmissionIds = responseFromQuery.map(row => row.student_exam_submission_id)
-    // console.log(markedStudentExamSubmissionIds)
-
     // must create an 'example object'
 
     const extensions = await getExtensionsArrayExamId(exam_id)
 
     let markedExamSubmissions = []
     for (const ses_id of markedStudentExamSubmissionIds) {
-
+        // parse and concatenate the submission answer
         const submissionText = await getParsedSubmissionAnswerBySESId(ses_id, extensions)
+        // gather marked rubric components
         const rubricMarkArray = await getRubricMarkArraySESId(ses_id)
 
-
+        // create example object and push to return array
         const exampleObject = {
             submissionText,
             rubricMarkArray

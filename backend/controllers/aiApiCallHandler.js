@@ -70,9 +70,6 @@ async function handleAiApiCall(informationForLLM, student_exam_submission_id) {
     response.testParameters = { ...response.testParameters, ...testParameters }
     writeMessageResponseToCSV(student_exam_submission_id, response)
     return response
-
-
-
 }
 
 /**
@@ -225,7 +222,7 @@ async function handleApiCallClaude(informationForLLM, student_exam_submission_id
             }
         }
         console.log(`fetching from claude... ${rubricComponentCounter}`)
-        // continue;
+        // continue; // comment in for testing to prevent triggering api call
         const aiResponse = anthropic.messages.create(claudeObject)
         promises.push(aiResponse)
     }
@@ -235,9 +232,6 @@ async function handleApiCallClaude(informationForLLM, student_exam_submission_id
         responsesContentArray.push(...parameterizedAiMessage)
         claude_fingerprint = resolvedPromiseArray[i].system_fingerprint
     }
-
-
-
 
     const claudeTestParameters = {
         TEMPERATURE: claudeTemp,
@@ -252,7 +246,6 @@ async function handleApiCallClaude(informationForLLM, student_exam_submission_id
     }
 
     writeMessageResponseToCSV(student_exam_submission_id, responseObject)
-
     return responseObject
 }
 

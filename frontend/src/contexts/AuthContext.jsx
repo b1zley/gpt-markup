@@ -19,11 +19,8 @@ const AuthContext = createContext()
  * @returns {React.ReactElement} The `AuthProvider` component.
  */
 export const AuthProvider = ({ children }) => {
-
     const [user, setUser] = useState(null)
     const [isLoading, setLoading] = useState(true); 
-
-
     useEffect(()=>{
         const token = Cookies.get('jwt')
         if(token){
@@ -34,30 +31,19 @@ export const AuthProvider = ({ children }) => {
 
 
     }, [])
-
     const login = (token) => {
-        // setUser(userData)
-        console.log('token: ',token)
         const decodedToken = jwtDecode(token)
         setUser(decodedToken)
         Cookies.set('jwt', token, {expires: 7})
     }
-
-
     const logout = () => {
         setUser(null)
         Cookies.remove('jwt');
     }
-
-
     return (
         <AuthContext.Provider value={{ user, login, logout, isLoading }}>
             {children}
         </AuthContext.Provider>
     )
-
-
 }
-
-
 export const useAuth = () => useContext(AuthContext)

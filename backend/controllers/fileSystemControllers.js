@@ -34,9 +34,6 @@ async function uploadFile(req, res) {
                 resolve(size);
             });
         });
-        // console.log(`Uncompressed size of the uploaded zip: ${tempZipFileSize} bytes`);
-
-        // await logZipContents(tempFilePath); // Log the contents of the zip file
 
         const file_system_id = await handleUpload(uploadType, tempFilePath);
         return res.status(201).json(file_system_id);
@@ -56,15 +53,6 @@ async function handleUpload(uploadType, tempFilePath) {
     switch (uploadType) {
         case 'EXAM_SUBMISSION':
             uploadSubDirectory = 'EXAM_SUBMISSION';
-            break;
-        case 'EXAM_RUBRIC':
-            uploadSubDirectory = 'EXAM_RUBRIC';
-            break;
-        case 'TRAINING_DATA':
-            uploadSubDirectory = 'TRAINING_DATA';
-            break;
-        case 'TRAINING_EXAM':
-            uploadSubDirectory = 'TRAINING_EXAM';
             break;
         case 'EXAM_MODEL_ANSWER':
             uploadSubDirectory = 'EXAM_MODEL_ANSWER';

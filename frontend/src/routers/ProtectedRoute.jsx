@@ -21,7 +21,6 @@ import { Navigate } from 'react-router-dom'
 const ProtectedRoute = ({ element, ...rest }) => {
 
     const { user, isLoading } = useAuth()
-    console.log(user)
 
     if (isLoading) {
         return <LoadingSpinner />;

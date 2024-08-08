@@ -86,10 +86,10 @@ async function concatenateAnyFiles(directoryPath, extensions) {
             }
         }
     } catch (err) {
-        throw err; // Forward error to the caller
+        throw err; 
     }
 
-    return concatenatedString; // Return the concatenated string
+    return concatenatedString; 
 }
 
 

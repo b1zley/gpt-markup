@@ -23,11 +23,8 @@ import useConfirmation from '../../../hooks/useConfirmation'
  * return <EditableModuleDisplay modules={modules} setModules={setModules} />;
  */
 const EditableModuleDisplay = ({ modules, setModules }) => {
-
     const [confirm, ConfirmationModal] = useConfirmation()
-
     const DeleteModuleConfirmModal = ({ module }) => {
-
         return (
             <>
                 <div>
@@ -39,39 +36,26 @@ const EditableModuleDisplay = ({ modules, setModules }) => {
                 </div>
             </>
         )
-
     }
-
     async function handleDeleteButtonClick(module_id, index) {
-
         try {
             const confirmation = await confirm(<DeleteModuleConfirmModal module={modules[index]} />)
             if (!confirmation) {
                 return
             }
-
             const deleteUrl = `${BASE_API_URL}module/${module_id}`
             const responseFromDelete = await axiosToBackend.delete(deleteUrl)
-            console.log(responseFromDelete)
-
             if (responseFromDelete.status === 204) {
-                // do stuff
                 let newModules = modules.slice(0, index).concat(modules.slice(index + 1))
                 setModules(newModules)
             }
         } catch (error) {
             await confirm('Failed to delete module')
         }
-
     }
-
     return (
-
         <ListGroup>
-
-
             {modules.map((module, index) =>
-
                 <ListGroup.Item key={module.module_id}
                     className="d-flex justify-content-between align-items-start"
                 >
@@ -83,9 +67,7 @@ const EditableModuleDisplay = ({ modules, setModules }) => {
                             <li key={exam.exam_id}>
                                 <Link to={`/module/${module.module_id}/exam/${exam.exam_id}`} className="text-dark" style={{ textDecoration: 'none' }}>{exam.exam_name}</Link>
                             </li>
-
                         )}
-
                     </div>
                     <Button
                         variant="warning"
@@ -98,9 +80,6 @@ const EditableModuleDisplay = ({ modules, setModules }) => {
             )}
             <ConfirmationModal />
         </ListGroup>
-
     )
-
 }
-
 export default EditableModuleDisplay

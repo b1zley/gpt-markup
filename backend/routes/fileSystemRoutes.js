@@ -3,7 +3,6 @@ const router = express.Router();
 const multer = require('multer');            // Import Multer middleware for handling file uploads
 const path = require('path');                // Import Path module for file path manipulations
 
-const { storageDirectory } = require('../routesCommonDependencies')
 
 // Configure Multer to store uploaded files in the 'uploads/' directory
 // upload path must depend on node env

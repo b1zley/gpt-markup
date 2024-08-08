@@ -37,11 +37,6 @@ const ModulesView = () => {
 
         handleFetch()
     }, [])
-
-
-
-
-
     if (loading) {
         return (
             <Container>
@@ -65,7 +60,6 @@ const ModulesView = () => {
             </Container>
         )
     }
-
     return (
         <Container>
             <div className='border border-light rounded p-3'>
@@ -85,9 +79,5 @@ const ModulesView = () => {
             </div>
         </Container>
     )
-
-
 }
-
-
 export default ModulesView 

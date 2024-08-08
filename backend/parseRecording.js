@@ -11,40 +11,18 @@ const { backendRoot } = require('./routesCommonDependencies')
  * {messages: [], testParameters}
  */
 function writeMessageResponseToCSV(student_exam_submission_id, responseFromApiCall) {
-
     const messages = responseFromApiCall.content
-
     let csvString = `${student_exam_submission_id},`
-    // const system_fingerprint = responseFromApiCall.system_fingerprint
-    // console.log(responseFromApiCall)
-    // console.log(Object.keys(responseFromApiCall))
     const { TEMPERATURE, TOP_P, SEED, MODEL, system_fingerprint } = responseFromApiCall.testParameters
-    // console.log(responseFromApiCall)
     messages.forEach((response, i) => {
-
-
-
         const critique = response.aiFeedbackToParse
         const mark = response.aiMarkToParse
         csvString += `${escapeCSV(critique)},"${escapeCSV(mark)}",`
-
-        // if (i < messages.length - 1) {
-        //     csvString += ',';
-        // }
-
     })
-
     csvString += `"${system_fingerprint}","${TEMPERATURE}","${TOP_P}","${SEED}","${MODEL}"`
-
-    // console.log(csvString)
-
     const environment = process.env.NODE_ENV;
     let filePath
-
     environment === 'test' ? filePath = `${backendRoot}/recordOfInputsTest.csv` :  filePath = `${backendRoot}/recordOfInputs.csv`
-
-     
-
     fs.appendFile(filePath, csvString + '\n', function (err) {
         if (err) {
             console.error('Error appending to file:', err);

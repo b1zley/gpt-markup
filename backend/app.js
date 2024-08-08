@@ -54,7 +54,7 @@ const swaggerSpec = swaggerJsdoc(swaggerOptions);
 const createApp = () => {
 
 
-    console.log('DB_NAME: ', process.env.DB_NAME)
+    // console.log('DB_NAME: ', process.env.DB_NAME)
     const app = express()
 
 

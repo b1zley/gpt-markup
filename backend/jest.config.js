@@ -6,7 +6,8 @@ module.exports = {
     testEnvironment: 'node',
     testMatch: ['**/**/*.test.js'],
     verbose: true,
-    setupFiles: ['dotenv/config']
+    setupFiles: ['dotenv/config'],
+    "setupFilesAfterEnv": ["<rootDir>/jest.setup.js"]
     // forceExit: true,
     // collectCoverage: true,
     // coverageDirectory: 'coverage',

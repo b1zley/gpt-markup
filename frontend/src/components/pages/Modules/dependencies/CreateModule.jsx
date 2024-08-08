@@ -22,9 +22,7 @@ import useConfirmation from '../../../hooks/useConfirmation'
  */
 const CreateModule = ({ modules, setModules }) => {
     const [inputModuleName, setInputModuleName] = useState('')
-
     const [confirm, ConfirmationModal] = useConfirmation()
-
     async function handleInputNameChange(event) {
         setInputModuleName(event.target.value)
     }
@@ -37,9 +35,7 @@ const CreateModule = ({ modules, setModules }) => {
             }
             const responseFromPost = await axiosToBackend.post(postUrl, postBody)
             if(responseFromPost.status === 201){
-                // do stuff
                 let updatedModules = modules.slice(0,modules.length)
-    
                 let newModule = {
                     module_id : responseFromPost.data.module_id,
                     module_name : inputModuleName,
