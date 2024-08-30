@@ -283,7 +283,7 @@ describe('Exam', function () {
     })
 
 
-    describe.only('Entire Exam Journey - bean to cup - generate AI checklist', function () {
+    describe('Entire Exam Journey - bean to cup - generate AI checklist', function () {
         describe('given all values correct', function () {
             it('should generate AI critique', function () {
                 // add exam question
