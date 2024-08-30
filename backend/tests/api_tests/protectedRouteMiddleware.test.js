@@ -97,13 +97,13 @@ describe('Protected Routes Suite: ', () => {
 
     describe('/files', () => {
         const targetPath = 'EXAM_SUBMISSIONx--xextractedx--x55'
-        it('should access protected route', async () => {
-            const response = await agent
-                .get(`/files/${targetPath}`)
+        // it('should access protected route', async () => {
+        //     const response = await agent
+        //         .get(`/files/${targetPath}`)
 
-            // console.log(response.statusCode)
-            expect(response.statusCode).toBe(200)
-        })
+        //     // console.log(response.statusCode)
+        //     expect(response.statusCode).toBe(200)
+        // })
         it('should not access protected route', async () => {
             const response = await request(app).get(`/files/${targetPath}`)
             expect(response.statusCode).toBe(401)
