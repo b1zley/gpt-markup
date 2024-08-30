@@ -431,6 +431,7 @@ describe('Student Exam Submission Suite', () => {
                     file_system_id: validStudentFileSystemId
                 }
                 const validStudentFileSystemRes = await updateSES(agent, createdModuleId, createdExamId, createdSESId, validStudentFileSystemIdPutBody)
+                
                 // update marks
                 await updateRCMarkInSES(agent, createdModuleId, createdExamId, createdSESId, createdRCId1, rc1UpdatedMark)
                 await updateRCMarkInSES(agent, createdModuleId, createdExamId, createdSESId, createdRCId2, rc2UpdatedMark)
