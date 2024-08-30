@@ -251,7 +251,10 @@ async function handleRequestCSVUploadRubricComponents(req, res) {
         // initialize at 1 to skip 0
         for (let lineI = 1; lineI < lines.length; lineI++) {
             const line = lines[lineI]
+            // console.log(line)
+            
             const cells = line.split(',')
+            // console.log(cells)
             const rcName = cells[0]
             const rcDesc = cells[1]
             const maxPoints = cells[2]
@@ -265,6 +268,11 @@ async function handleRequestCSVUploadRubricComponents(req, res) {
                     rangeDesc, rangeMin, rangeMax
                 }
 
+                // console.log(ratingRangeObject)
+                if(!rangeDesc && !rangeMax && !rangeMin){
+                    cellI += 3
+                    continue
+                }
                 rating_ranges.push(ratingRangeObject)
                 cellI += 3
             }
@@ -286,7 +294,7 @@ async function handleRequestCSVUploadRubricComponents(req, res) {
         // console.log(rubricComponents)
 
         // validate rc array
-        validateRCArray(rubricComponents)
+        // validateRCArray(rubricComponents)
 
         await queryCreateNewRubricFromRCArray(rubricComponents, exam_id)
         // might have to send something more complicated so the frontend knows what to render

@@ -37,6 +37,7 @@ const DoubleClickModifyMarkCell = ({ parameterInCell, examSubmissionInformation,
 
     async function handleDoubleClickPart() {
         setEditPart(true)
+        setTextPart(examSubmissionInformation.rubric[index][parameterInCell] ? examSubmissionInformation.rubric[index][parameterInCell] : '')
     }
 
     async function handlePartChange(event) {
