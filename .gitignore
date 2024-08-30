@@ -11,8 +11,8 @@ backend/.env
 
 
 # Ignore folders named upload
-backend/uploads/
-backend/testUploads/
+# backend/uploads/
+# backend/testUploads/
 
 
 backend/coverage
