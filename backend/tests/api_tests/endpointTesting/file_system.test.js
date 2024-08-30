@@ -68,7 +68,7 @@ describe('File System Suite', () => {
 
     describe('GET /file_system/download_zip/:download_type/:file_system_id', () => {
         it('valid download type, valid file_system_id should return status 200 and download file', async () => {
-            const validFileSystemId = 90
+            const validFileSystemId = 128
             const validDownloadType = 'EXAM_MODEL_ANSWER'
             const getUrl = `/file_system/download_zip/${validDownloadType}/${validFileSystemId}`
             const response = await agent.get(getUrl)
